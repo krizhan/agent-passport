@@ -10,6 +10,8 @@ Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get
 
 ## Product homepage
 
+Live website: [Agent Passport](https://vubsb6rq.insforge.site/).
+
 The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. There is no navigation bar; examples are illustrative.
 
 ```bash
