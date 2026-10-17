@@ -8,6 +8,17 @@ function applicability(action: Action) {
   if (action.action_type !== "purchase" || action.to_country !== "US" || action.product_category !== "food") {
     return result(id, "NOT_APPLICABLE", "CATEGORY_NOT_COVERED", "This rule covers declared food imported into the US.");
   }
+  const foodType = action.product_facts?.food_type;
+  const purpose = action.shipment?.purpose;
+  const mode = action.shipment?.transport_mode;
+  // An already known coverage gap does not need unrelated missing facts.
+  if ((foodType && foodType !== "unknown" && foodType !== "packaged_roasted_coffee")
+    || (purpose && purpose !== "unknown" && purpose !== "commercial_sale")
+    || (mode && mode !== "unknown" && !["air", "sea"].includes(mode))) {
+    return result(id, "REVIEW", "FOOD_CONTEXT_OUTSIDE_MODELED_SCOPE", "This food type, purpose, or transport mode is outside the packaged-roasted-coffee commercial air/sea workflow. No exemption is inferred.", {
+      actions: [step(id, "request_review", "Establish the applicable food-import requirements and any exemption for this actual shipment context.")],
+    });
+  }
   const missing: string[] = [];
   if (!action.product_facts?.food_type || action.product_facts.food_type === "unknown") missing.push("product_facts.food_type");
   if (!action.shipment?.purpose || action.shipment.purpose === "unknown") missing.push("shipment.purpose");
@@ -15,12 +26,6 @@ function applicability(action: Action) {
   if (missing.length) return result(id, "MISSING", "FOOD_SHIPMENT_CONTEXT_MISSING", "Food and shipment context are needed to establish the modeled prior-notice scope.", {
     missing_fields: missing, actions: [step(id, "request_information", "Obtain food type, shipment purpose, and transport mode. Do not assume that a prior-notice exemption applies.", missing)],
   });
-  if (action.product_facts?.food_type !== "packaged_roasted_coffee" || action.shipment?.purpose !== "commercial_sale"
-    || !["air", "sea"].includes(action.shipment.transport_mode!)) {
-    return result(id, "REVIEW", "FOOD_CONTEXT_OUTSIDE_MODELED_SCOPE", "This food type, purpose, or transport mode is outside the packaged-roasted-coffee commercial air/sea workflow. No exemption is inferred.", {
-      actions: [step(id, "request_review", "Establish the applicable food-import requirements and any exemption for this actual shipment context.")],
-    });
-  }
   return result(id, "SATISFIED", "PRIOR_NOTICE_APPLIES", "The declared commercial packaged-roasted-coffee air/sea shipment falls within the modeled FDA prior-notice scope.");
 }
 
@@ -53,9 +58,16 @@ export const rules: readonly PolicyRule[] = [
         missing_fields: missing, actions: [step(id, "collect_evidence", "Ask the importer or broker to arrange the applicable prior notice and supply the actual confirmation number, time, method, and product/shipment-matching record; then recheck.", missing, ["fda_prior_notice"])],
       });
       if (evidence!.type !== "fda_prior_notice" || evidence!.product.toLowerCase() !== action.product.toLowerCase()
-        || evidence!.shipment_id !== action.shipment!.id) {
+        || (evidence!.shipment_id !== undefined && evidence!.shipment_id !== action.shipment!.id)) {
         return result(id, "REVIEW", "PRIOR_NOTICE_EVIDENCE_MISMATCH", "The referenced evidence type, product, or shipment does not match this proposed import.", {
           evidence_refs: [evidence!.id], actions: [step(id, "request_review", "Resolve the mismatched confirmation record and recheck using evidence for this product and shipment.")],
+        });
+      }
+      if (!evidence!.shipment_id) {
+        const field = "evidence." + action.evidence!.indexOf(evidence!) + ".shipment_id";
+        return result(id, "MISSING", "PRIOR_NOTICE_SHIPMENT_BINDING_MISSING", "The supplied confirmation record has no shipment identifier establishing its link to this proposed import.", {
+          missing_fields: [field], evidence_refs: [evidence!.id],
+          actions: [step(id, "collect_evidence", "Establish the confirmation record's shipment binding from the actual filing details and recheck; do not infer or invent that binding.", [field], ["fda_prior_notice"])],
         });
       }
       return result(id, "SATISFIED", "PRIOR_NOTICE_REFERENCE_RECORDED", "A product/shipment-matching caller-supplied confirmation reference is recorded. Authenticity, filing contents, and FDA clearance are not established.", {

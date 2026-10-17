@@ -11,7 +11,7 @@ export const requirements = [
     id: "us_food_prior_notice_evidence", title: "Prior-notice confirmation evidence", basis: "legal_readiness",
     description: "Collect a confirmation number and a caller-supplied confirmation reference matching the proposed product and shipment. Authenticity and complete filing contents are not verified.",
     source_url: sources.timing, legal_reference: "21 CFR 1.279(d), (g)", source_reviewed_at: SOURCE_REVIEWED_AT,
-    required_fields: ["shipment.id", "product_facts.prior_notice.confirmation_number", "product_facts.prior_notice.evidence_id", "evidence"],
+    required_fields: ["shipment.id", "product_facts.prior_notice.confirmation_number", "product_facts.prior_notice.evidence_id", "evidence", "evidence[].shipment_id"],
   },
   {
     id: "us_food_prior_notice_timing", title: "Prior-notice filing window", basis: "legal_readiness",
