@@ -6,7 +6,7 @@ Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator
 
 The initial direction is to help agents discover jurisdiction-specific compliance requirements and return structured results with links to their sources.
 
-Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get_requirements`, `check_action`, and `get_remediation_plan`—for international purchases between any two countries using caller-supplied purchase details and document references.
+Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get_requirements`, `check_action`, and `get_remediation_plan`—for international purchases. Each takes `product`, `from_country`, and `to_country`, with an optional amount and budget.
 
 ## MCP server
 

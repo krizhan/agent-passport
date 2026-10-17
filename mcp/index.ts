@@ -3,19 +3,19 @@ import { checkPurchase, getRequirements } from "./src/policy.js";
 import { evaluationSchema, requestSchema, requirementsResponseSchema } from "./src/schemas.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.4.0",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.5.0",
   description: "Advisory requirements, readiness checks, and remediation for international purchases between any two countries.",
-  instructions: "Supply your own action context to all tools. Use get_requirements to discover the modeled requirements, check_action to assess the purchase, and get_remediation_plan for next steps. Document references are caller-supplied and require review; no document verifier is connected. Customs does not execute actions or authorize other tools.",
+  instructions: "Each tool takes product, from_country, and to_country. Optionally supply amount and budget in the same currency and units for a spending check. Use get_requirements for the checklist, check_action for review needs and budget checks, and get_remediation_plan for next steps. Origin and classification require external review. Customs does not execute or authorize purchases.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
 
 server.tool({
   name: "check_action", title: "Check purchase",
-  description: "Check your purchase information, origin/classification document references, and optional budget. Supplied document references require review. No action is executed.",
+  description: "Get review needs for your product and shipping route, with an optional amount-versus-budget check. No purchase is authorized or executed.",
   inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
 }, async (input) => {
   const result = checkPurchase(input);
-  return { content: [{ type: "text", text: `${result.decision}: ${result.summary}` }], structuredContent: result };
+  return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
 });
 
 server.tool({
@@ -24,16 +24,16 @@ server.tool({
   inputSchema: requestSchema, outputSchema: requirementsResponseSchema, annotations,
 }, async (input) => {
   const result = getRequirements(input);
-  return { content: [{ type: "text", text: `${result.requirements.length} requirements. ${result.supported ? "International purchase readiness checks apply." : "A separate policy is required for this action."}` }], structuredContent: result };
+  return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
 });
 
 server.tool({
   name: "get_remediation_plan", title: "Get remediation plan",
-  description: "Check the current purchase context and return next steps for the agent or a human reviewer. Uses the same policy as check_action.",
+  description: "Return next steps for your product and shipping route. Uses the same checklist and optional budget comparison as check_action.",
   inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
 }, async (input) => {
   const result = checkPurchase(input);
-  return { content: [{ type: "text", text: result.remediation_plan.map((step) => `[${step.owner}] ${step.instruction}`).join("\n") || result.summary }], structuredContent: result };
+  return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
 });
 
 export default server;

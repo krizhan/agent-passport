@@ -1,11 +1,11 @@
 # Customs · Agent Passport
 
-Three advisory MCP tools for international purchases between any two countries, built with mcp-use v2. Supply your own purchase details and optional document references. No backend, environment variables, or frontend setup is required.
+Three advisory MCP tools for international purchases, built with mcp-use v2. Each takes just a product and two countries. No backend, environment variables, or frontend setup is required.
 
 | Tool | Purpose |
 | --- | --- |
 | `get_requirements` | List the modeled requirements and source links for your action and route. |
-| `check_action` | Identify missing purchase information, document-review needs, and an optional budget failure. |
+| `check_action` | Return review needs and compare an optional purchase amount with your budget. |
 | `get_remediation_plan` | Run the same check and return next steps for the agent or a human. |
 
 ## Run and test
@@ -18,27 +18,31 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000/mcp/inspector and call each tool. Each requires an `action` object. If port 3000 is busy, run `npm run dev -- --port 3002` and open the Inspector on that port.
+Open http://localhost:3000/mcp/inspector and call each tool with the same three fields:
 
-The required action fields are `action_type` (`cross_border_purchase`), `ship_from_country`, and `destination_country` (two-letter country codes). Any pair of different shipping and destination countries is accepted. Domestic purchases and other action types return REVIEW.
+```json
+{
+  "product": "Your product",
+  "from_country": "DE",
+  "to_country": "GB"
+}
+```
 
-Add your own `supplier_id`, `product_description`, `quantity`, `amount_minor`, `currency`, and `country_of_origin` to complete the purchase context. `sku` and `budget_minor` are optional. Amounts are integer minor currency units; the budget uses the same currency as the purchase total.
+Use your own product and two-letter shipping/destination country codes. Any pair of different countries uses the international checklist. Country codes are normalized to uppercase; validation currently checks their format rather than membership in a country registry.
 
-Optional `evidence` is an array of objects with:
+Optionally add `amount` and `budget` to the same object for a spending check. Both are nonnegative numbers in the same currency and units; decimals and a zero budget are allowed. No currency conversion is performed. There is no action wrapper, action type, or document-reference array.
 
-- `requirement_id`: `origin_documentation` or `tariff_classification`.
-- `reference`: your document URL, file ID, or other reference.
-
-Origin and classification references are readiness inputs; the documents actually needed depend on the countries and product. References are passed through for review. The server does not fetch documents or authenticate their contents, and caller-supplied approval/verification flags are rejected. A trusted document-verification integration is required before READY can be issued; submitting references alone produces REVIEW.
+If port 3000 is busy, run `npm run dev -- --port 3011` and open http://localhost:3011/mcp/inspector. Tool results include the complete JSON in both text and structured content.
 
 ## Policy behavior
 
-- Missing purchase fields or document references → NEEDS_EVIDENCE.
-- Submitted document references, domestic purchases, or unsupported action types → REVIEW.
-- Submitted total above your submitted budget → BLOCK.
-- No fixed company spending limit is built in.
+- Product and route → REVIEW, with origin and classification checks for a human reviewer.
+- Amount above your submitted budget → BLOCK.
+- Budget supplied without amount → NEEDS_EVIDENCE, asking for the amount.
+- Domestic route → REVIEW, requesting a separate checklist.
+- Invalid or missing required fields → input validation error.
 
-All requirement results and next steps are returned. Decision precedence is BLOCK > REVIEW > NEEDS_EVIDENCE > READY. Responses echo the normalized action, policy version, assessment scope, and timestamp. Customs remains advisory; the agent executes through its existing tools.
+Decision precedence is BLOCK > NEEDS_EVIDENCE > REVIEW. Responses echo the normalized purchase, requirement statuses, next steps, policy version, scope, and timestamp. Origin and classification are review tasks, not fields to fill in. This MVP does not issue READY or authorize/execute purchases.
 
 For US-bound purchases, source links include [19 CFR 141.86](https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86) and [USITC tariff information](https://www.usitc.gov/harmonized_tariff_information). Other destinations receive [WCO Harmonized System background](https://www.wcoomd.org/en/topics/nomenclature/overview.aspx) for classification and no US-specific rules. Sources reviewed 2026-10-17. Accepting a route means the general readiness checks apply; the server does not resolve country- or product-specific legal requirements or determine actual classifications, duties, admissibility, sanctions, or complete import/export compliance.
 
