@@ -1,31 +1,35 @@
 import { evaluationSchema, requestSchema, requirementsResponseSchema, type Action, type CheckInput, type Evaluation, type Requirement, type RequirementResult } from "./schemas.js";
 
-const POLICY_VERSION = "purchase-vn-us/0.3.0";
-const SCOPE = "Advisory Vietnam-to-US purchase readiness: input completeness, origin/classification document references, and an optional caller-supplied budget. Document authenticity, classification correctness, duties, sanctions, admissibility, and full import/export compliance are not verified.";
+const POLICY_VERSION = "international-purchase/0.4.0";
+const SCOPE = "Advisory international purchase readiness: input completeness, origin/classification document references, and an optional caller-supplied budget for any cross-border country pair. Country- and product-specific legal requirements, document authenticity, classification correctness, duties, sanctions, and admissibility are not verified.";
 const INVOICE_SOURCE = "https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86";
 const HTS_SOURCE = "https://www.usitc.gov/harmonized_tariff_information";
+const HS_SOURCE = "https://www.wcoomd.org/en/topics/nomenclature/overview.aspx";
 
 function supports(action: Action) {
-  return action.action_type === "cross_border_purchase" && action.ship_from_country === "VN" && action.destination_country === "US";
+  return action.action_type === "cross_border_purchase" && action.ship_from_country !== action.destination_country;
 }
 
 function definitions(action: Action): Requirement[] {
   if (!supports(action)) return [{
-    id: "supported_scope", title: "Supported route and action", basis: "assessment_input", source_url: null,
-    description: "This policy currently covers cross-border purchases shipped from Vietnam to the United States.",
+    id: "supported_scope", title: "International purchase scope", basis: "assessment_input", source_url: null,
+    description: "Use cross_border_purchase with different shipping and destination countries. Domestic purchases and other action types require a separate policy.",
   }];
+  const usImport = action.destination_country === "US";
   const result: Requirement[] = [
     {
       id: "purchase_details", title: "Purchase details", basis: "assessment_input", source_url: null,
       description: "Supply the supplier, product description, quantity, total, currency, and manufacturing origin so the purchase can be assessed.",
     },
     {
-      id: "origin_documentation", title: "Origin documentation", basis: "legal_readiness", source_url: INVOICE_SOURCE,
-      description: "Provide a document reference supporting manufacturing origin. The cited import-invoice rule requires origin information; this readiness check does not claim every purchase requires an origin certificate. Source reviewed 2026-10-17.",
+      id: "origin_documentation", title: "Origin documentation", basis: usImport ? "legal_readiness" : "assessment_input", source_url: usImport ? INVOICE_SOURCE : null,
+      description: usImport
+        ? "Provide a document reference supporting manufacturing origin. The cited US import-invoice rule requires origin information; this readiness check does not claim every purchase requires an origin certificate. Source reviewed 2026-10-17."
+        : "Provide an origin-information reference for review. Required documents depend on the countries, product, and trade agreement; this is a readiness input, not a universal certificate requirement.",
     },
     {
-      id: "tariff_classification", title: "Classification review", basis: "legal_readiness", source_url: HTS_SOURCE,
-      description: "Provide a classification-review reference for the product. A qualified reviewer must assess it; this server does not assign an HTS code or calculate duties. Source reviewed 2026-10-17.",
+      id: "tariff_classification", title: "Classification review", basis: usImport ? "legal_readiness" : "assessment_input", source_url: usImport ? HTS_SOURCE : HS_SOURCE,
+      description: "Provide a classification-review reference appropriate to the destination and product. A qualified reviewer must assess it; this server does not assign HS/HTS codes or calculate duties. Source reviewed 2026-10-17.",
     },
   ];
   if (action.budget_minor !== undefined) result.push({
@@ -48,7 +52,7 @@ export function checkPurchase(raw: CheckInput, now = new Date()): Evaluation {
   const { action, evidence = [] } = requestSchema.parse(raw);
   const requirements = definitions(action).map((requirement): RequirementResult => {
     const result = (status: RequirementResult["status"], detail: string, references: string[] = []) => ({ ...requirement, status, detail, references });
-    if (requirement.id === "supported_scope") return result("REVIEW", "A policy for this route/action is needed before it can be assessed.");
+    if (requirement.id === "supported_scope") return result("REVIEW", "This action is outside the international purchase scope and requires a separate policy.");
     if (requirement.id === "purchase_details") {
       const fields = ["supplier_id", "product_description", "quantity", "amount_minor", "currency", "country_of_origin"] as const;
       const missing = fields.filter((field) => action[field] === undefined);

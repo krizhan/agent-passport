@@ -1,6 +1,6 @@
 # Customs · Agent Passport
 
-Three advisory MCP tools for Vietnam-to-US purchases, built with mcp-use v2. Supply your own purchase details and optional document references. No backend, environment variables, or frontend setup is required.
+Three advisory MCP tools for international purchases between any two countries, built with mcp-use v2. Supply your own purchase details and optional document references. No backend, environment variables, or frontend setup is required.
 
 | Tool | Purpose |
 | --- | --- |
@@ -20,7 +20,7 @@ npm run dev
 
 Open http://localhost:3000/mcp/inspector and call each tool. Each requires an `action` object. If port 3000 is busy, run `npm run dev -- --port 3002` and open the Inspector on that port.
 
-The required action fields are `action_type` (`cross_border_purchase`), `ship_from_country`, and `destination_country` (two-letter country codes). The supported route is VN → US. Other routes/action types return REVIEW.
+The required action fields are `action_type` (`cross_border_purchase`), `ship_from_country`, and `destination_country` (two-letter country codes). Any pair of different shipping and destination countries is accepted. Domestic purchases and other action types return REVIEW.
 
 Add your own `supplier_id`, `product_description`, `quantity`, `amount_minor`, `currency`, and `country_of_origin` to complete the purchase context. `sku` and `budget_minor` are optional. Amounts are integer minor currency units; the budget uses the same currency as the purchase total.
 
@@ -29,18 +29,18 @@ Optional `evidence` is an array of objects with:
 - `requirement_id`: `origin_documentation` or `tariff_classification`.
 - `reference`: your document URL, file ID, or other reference.
 
-References are passed through for review. The server does not fetch documents or authenticate their contents, and caller-supplied approval/verification flags are rejected. A trusted document-verification integration is the remaining prerequisite for issuing READY; submitting references alone produces REVIEW.
+Origin and classification references are readiness inputs; the documents actually needed depend on the countries and product. References are passed through for review. The server does not fetch documents or authenticate their contents, and caller-supplied approval/verification flags are rejected. A trusted document-verification integration is required before READY can be issued; submitting references alone produces REVIEW.
 
 ## Policy behavior
 
 - Missing purchase fields or document references → NEEDS_EVIDENCE.
-- Submitted document references or unsupported routes → REVIEW.
+- Submitted document references, domestic purchases, or unsupported action types → REVIEW.
 - Submitted total above your submitted budget → BLOCK.
 - No fixed company spending limit is built in.
 
 All requirement results and next steps are returned. Decision precedence is BLOCK > REVIEW > NEEDS_EVIDENCE > READY. Responses echo the normalized action, policy version, assessment scope, and timestamp. Customs remains advisory; the agent executes through its existing tools.
 
-Origin and classification readiness references come from [19 CFR 141.86](https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86) and [USITC tariff information](https://www.usitc.gov/harmonized_tariff_information), reviewed 2026-10-17. The server does not determine actual tariff classifications, duties, admissibility, sanctions, or complete import/export compliance.
+For US-bound purchases, source links include [19 CFR 141.86](https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86) and [USITC tariff information](https://www.usitc.gov/harmonized_tariff_information). Other destinations receive [WCO Harmonized System background](https://www.wcoomd.org/en/topics/nomenclature/overview.aspx) for classification and no US-specific rules. Sources reviewed 2026-10-17. Accepting a route means the general readiness checks apply; the server does not resolve country- or product-specific legal requirements or determine actual classifications, duties, admissibility, sanctions, or complete import/export compliance.
 
 ## Code and checks
 

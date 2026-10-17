@@ -3,8 +3,8 @@ import { checkPurchase, getRequirements } from "./src/policy.js";
 import { evaluationSchema, requestSchema, requirementsResponseSchema } from "./src/schemas.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.3.0",
-  description: "Advisory purchase requirements, readiness checks, and remediation for Vietnam-to-US purchases.",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.4.0",
+  description: "Advisory requirements, readiness checks, and remediation for international purchases between any two countries.",
   instructions: "Supply your own action context to all tools. Use get_requirements to discover the modeled requirements, check_action to assess the purchase, and get_remediation_plan for next steps. Document references are caller-supplied and require review; no document verifier is connected. Customs does not execute actions or authorize other tools.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
@@ -20,11 +20,11 @@ server.tool({
 
 server.tool({
   name: "get_requirements", title: "Get purchase requirements",
-  description: "List the modeled requirements and source links for your purchase context. Currently supports shipments from Vietnam to the United States.",
+  description: "List general purchase-readiness requirements for any international route. Source links are scoped to the destination; country- and product-specific legal requirements still need review.",
   inputSchema: requestSchema, outputSchema: requirementsResponseSchema, annotations,
 }, async (input) => {
   const result = getRequirements(input);
-  return { content: [{ type: "text", text: `${result.requirements.length} requirements. ${result.supported ? "Supported route." : "Policy review required for this route/action."}` }], structuredContent: result };
+  return { content: [{ type: "text", text: `${result.requirements.length} requirements. ${result.supported ? "International purchase readiness checks apply." : "A separate policy is required for this action."}` }], structuredContent: result };
 });
 
 server.tool({
