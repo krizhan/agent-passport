@@ -50,6 +50,17 @@ npm run preview -- --port 4173
 
 Open **http://127.0.0.1:4173/** to inspect the production bundle. The build includes TypeScript checking and writes to `web/dist/`.
 
+## Deploy with InsForge
+
+From the repository root, with the existing InsForge project linked:
+
+```bash
+npm --prefix web run build
+npx -y @insforge/cli deployments deploy ./web
+```
+
+Deploy the `web/` source directory. InsForge builds the Vite app using `web/vercel.json` and returns the hosted URL. The homepage needs no environment variables or backend credentials.
+
 ## Code map
 
 - `src/components/Home.tsx`: the three sections and illustrative import/export switch.
@@ -57,3 +68,4 @@ Open **http://127.0.0.1:4173/** to inspect the production bundle. The build incl
 - `src/components/ui.tsx`: wordmark, icons, and status labels.
 - `src/styles.css`: responsive styles, bundled fonts, and reduced motion.
 - `src/illustrations.css`: readable, responsive illustration layouts and trade requirement panels.
+- `vercel.json`: frontend build settings and single-page routing for InsForge hosting.
