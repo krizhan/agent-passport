@@ -1,0 +1,23 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+.aws/
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Dependencies, builds, and caches
+node_modules/
+dist/
+build/
+coverage/
+.venv/
+__pycache__/
+*.pyc
+*.log
