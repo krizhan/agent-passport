@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "noEmit": false, "outDir": ".demo-build", "rootDir": "." },
+  "include": ["src/**/*.ts", "scripts/demo.ts"],
+  "exclude": ["node_modules", "dist", ".demo-build"]
+}

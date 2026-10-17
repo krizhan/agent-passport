@@ -15,21 +15,14 @@ Requires Node.js 22.22.2 or later. From `mcp/`:
 ```bash
 npm ci
 npm run typecheck
-npm test
 npm run demo
 npm run build
 npm run dev -- --port 3017
 ```
 
-Open http://localhost:3017/mcp/inspector. In another terminal, run the real MCP client verification:
+Open http://localhost:3017/mcp/inspector to call the three tools and try the fixture inputs. For production, run `npm start -- --port 3017` after building.
 
-```bash
-npm run test:mcp -- http://127.0.0.1:3017/mcp
-```
-
-This uses the official MCP client SDK to list tools, call all three tools, check structured/text responses, exercise the missing-evidence/recheck loop, and verify schema rejection. It works against development and production servers. For production, run `npm start -- --port 3017` after building.
-
-`npm run demo` uses synthetic records under `fixtures/`, with assessment time pinned to `2026-10-17T12:00:00Z`. The notice fixture is not a real FDA filing. The live smoke test adjusts synthetic timestamps relative to the actual assessment time.
+`npm run demo` uses synthetic records under `fixtures/`, with assessment time pinned to `2026-10-17T12:00:00Z`. The notice fixture is not a real FDA filing.
 
 ## Implemented scope
 
@@ -119,10 +112,8 @@ src/
     us-import/                # pack, requirements, sources, rules
     general-purchase/         # Review fallback
     general-marketing/        # Review fallback
-tests/                        # Rule, schema, aggregation, timing tests
 fixtures/                     # Synthetic purchases and evidence
 scripts/demo.ts               # Reproducible evaluator demo
-scripts/smoke.mjs             # Real MCP lifecycle verification
 ```
 
 Extend coverage by adding a sourced rule to a pack. New destinations also need registry/router entries. Keep exceptions, review dates, and unassessed topics explicit. Runtime evaluation uses curated local rules rather than live legal searches.

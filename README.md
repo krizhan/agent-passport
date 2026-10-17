@@ -31,7 +31,6 @@ Requires Node.js 22.22.2 or later.
 ```bash
 cd mcp
 npm install
-npm test
 npm run demo
 npm run dev
 ```
