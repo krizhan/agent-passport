@@ -1,193 +1,147 @@
-# Customs · Agent Passport
+# Agent Passport MCP · regulatory checks
 
-Three advisory MCP tools for international purchases and marketing emails, built with mcp-use v2. Each accepts an `action_type` and the fields for that action. No backend, environment variables, or frontend setup is required.
+Three advisory tools for international compliance, built with `mcp-use` 2.10.1. No backend, environment variables, API keys, or external lookups are required.
 
 | Tool | Purpose |
 | --- | --- |
-| `get_requirements` | List the modeled requirements and source links for your action and route. |
-| `check_action` | Route a purchase or marketing email, return review needs, and compare an optional purchase amount with your budget. |
-| `get_remediation_plan` | Run the same check and return next steps for the agent or a human. |
+| `get_requirements` | Discover the selected pack's requirements, required fields, and official sources. |
+| `check_action` | Evaluate declared product/shipment facts and return findings, coverage, and proposed actions. |
+| `get_remediation_plan` | Return the same assessment and typed next steps as `check_action`. |
 
-## Run and test
+## Start and verify
 
-Requires Node.js 22.22.2 or later. From the repository root:
+Requires Node.js 22.22.2 or later. From `mcp/`:
 
 ```bash
-cd mcp
-npm install
-npm run dev
+npm ci
+npm run typecheck
+npm test
+npm run demo
+npm run build
+npm run dev -- --port 3017
 ```
 
-Open http://localhost:3000/mcp/inspector and call any tool with a purchase action:
+Open http://localhost:3017/mcp/inspector. In another terminal, run the real MCP client verification:
+
+```bash
+npm run test:mcp -- http://127.0.0.1:3017/mcp
+```
+
+This uses the official MCP client SDK to list tools, call all three tools, check structured/text responses, exercise the missing-evidence/recheck loop, and verify schema rejection. It works against development and production servers. For production, run `npm start -- --port 3017` after building.
+
+`npm run demo` uses synthetic records under `fixtures/`, with assessment time pinned to `2026-10-17T12:00:00Z`. The notice fixture is not a real FDA filing. The live smoke test adjusts synthetic timestamps relative to the actual assessment time.
+
+## Implemented scope
+
+| Destination | Declared product | Implemented behavior |
+| --- | --- | --- |
+| Singapore (`SG`) | `chewing_gum` | Ordinary gum or explicitly unapproved dental/medicinal gum is blocked. Claimed approved exclusions need matching evidence and human review. |
+| India (`IN`) | `electronic_cigarette` | Devices without a claimed licensed medicinal exclusion are blocked, including nicotine-free devices. Licence claims require evidence and review. |
+| US (`US`) | `food`, specifically packaged roasted coffee | For commercial air/sea arrivals, assess prior-notice applicability, matching supplied confirmation references, and the filing window. |
+| Other product/destination combinations | Any | Review required; unmatched products are never automatically cleared. |
+| Domestic purchase | Any | Unsupported; review required. |
+| Marketing email | Any recipient country | General review checklist; no implemented country-specific marketing rules. |
+
+Singapore's approved dental/medicinal exclusion and India's licensed medicinal exclusion are not automatically granted from a label or caller assertion. Other food types, personal-use contexts, transit, samples, mail, road, rail, and exemption claims require review.
+
+## Inputs
+
+Purchase calls require `product`, `from_country`, and `to_country`; `action_type` defaults to `purchase`. Supply `product_category` from specifications: `chewing_gum`, `electronic_cigarette`, `food`, `other`, or `unknown`. Missing/unknown categories request information for implemented destination packs. Product names are not keyword-classified.
 
 ```json
 {
-  "action_type": "purchase",
-  "product": "Your product",
-  "from_country": "DE",
-  "to_country": "GB"
+  "product": "Ordinary mint chewing gum",
+  "from_country": "MY",
+  "to_country": "SG",
+  "product_category": "chewing_gum",
+  "product_facts": { "gum_type": "ordinary" }
 }
 ```
 
-Use your own product and two-letter shipping/destination country codes. International US-bound purchases select the US import pack; other international destinations select the general purchase pack. Omitting `action_type` defaults to `purchase`, so existing three-field purchase calls still work.
+Expected: `BLOCK`, official source, and `stop_action`. Use `fixtures/in-vape.json` for the Indian prohibition and `fixtures/us-coffee-missing-notice.json` for evidence collection.
 
-Optionally add `amount` and `budget` to a purchase for a spending check. Both are nonnegative numbers in the same currency and units; decimals and a zero budget are allowed. No currency conversion is performed.
-
-For a marketing email, use:
-
-```json
-{
-  "action_type": "marketing_email",
-  "recipient_country": "CA",
-  "recipient_count": 1000,
-  "purpose": "Product launch campaign"
-}
-```
-
-`recipient_country` is required; `recipient_count` and `purpose` are optional. A supplied recipient count must be a positive integer. Submit one action per recipient country. Marketing emails select the `general-marketing` pack with review tasks for recipient permissions, sender identification, and unsubscribe/suppression handling. This fallback has no curated country-specific legal sources and always requires review.
-
-Each action type rejects fields belonging to the other type: marketing cannot include `product`, shipping countries, `amount`, or `budget`; purchase cannot include recipient fields or a campaign purpose. Unknown action types are rejected. There is no nested action wrapper or document-reference array in tool inputs.
-
-If port 3000 is busy, run `npm run dev -- --port 3011` and open http://localhost:3011/mcp/inspector. Tool results include the complete JSON in both text and structured content.
-
-## Country validation
-
-All three tools validate purchase shipping/destination countries and the marketing recipient country with the same schema. Country codes are trimmed and normalized to uppercase. The accepted codes come from the assigned-entry dataset in [`iso-3166`](https://github.com/wooorm/iso-3166), pinned to version `4.4.0`. Validation uses this local dataset and makes no network requests.
-
-| Input | Behavior |
+| Category | `product_facts` fields |
 | --- | --- |
-| `" us "`, `"gb"` | Normalize to `US`, `GB` and accept. |
-| Assigned country or territory codes, such as `DE`, `HK`, or `PR` | Accept. |
-| `USA`, `840`, `United States`, or an empty string | Reject; supply a two-letter code. |
-| `ZZ`, `QQ`, `EU`, or obsolete codes such as `SU` | Reject as unrecognized or unassigned. |
-| `UK` | Reject with guidance to use `GB`; aliases are not converted. |
-| `XK` | Reject; user-assigned extensions are not enabled. |
+| `chewing_gum` | `gum_type`: `ordinary`, `oral_dental`, `medicinal`, or `unknown`; optional `hsa_approval_claimed` |
+| `electronic_cigarette` | `licensed_medicine_claimed`: explicitly true/false; optional `contains_nicotine` |
+| `food` | `food_type`: `packaged_roasted_coffee`, `other`, or `unknown`; optional `prior_notice` |
 
-Invalid codes produce a validation error on `from_country`, `to_country`, or `recipient_country` before policy selection. Recognizing a country does not imply country-specific policy coverage or clearance: valid countries can still use a general checklist, and domestic purchases still require a separate review.
+Food `shipment` fields are `id`, `purpose`, `transport_mode`, `arrival_at`, and `arrival_timezone` (IANA zone of the first US port). `arrival_at` includes a UTC offset. Only `purpose: commercial_sale` and air/sea are evaluated. Unmodeled contexts return `REVIEW`; omitted prerequisites return `NEEDS_EVIDENCE`.
 
-Membership is enforced by the server at runtime. The MCP input schema advertises the two-letter format and acceptance rules in its field descriptions rather than listing every code.
+`prior_notice` contains `confirmation_number`, `confirmed_at`, `submission_method` (`pnsi` or `abi_ace`), and `evidence_id`. The filing clock starts at the declared FDA confirmation time. The modeled minimum is 4 hours for air or 8 hours for sea. Maximum windows are 15 calendar days for PNSI and 30 for ABI/ACE, compared in the declared arrival-port time zone. Future confirmations and past arrivals require review. A failed window blocks the proposed arrangement and requests lawful rescheduling/refiling.
 
-When updating `iso-3166`, review changes to the assigned-code dataset against [ISO's country-code guidance](https://www.iso.org/iso-3166-country-codes.html), update the exact dependency version and lockfile, and record any changes to accepted inputs here. Additional aliases or extensions require an explicit change in `src/countries.ts`.
+Evidence records have unique `id`, `type`, `reference`, and `product` fields. FDA records also need `shipment_id` matching the proposed shipment. Supported types: `product_specification`, `hsa_approval`, `medicinal_licence`, `fda_prior_notice`, `other`. Product labels must match, ignoring case. Evidence is not fetched or authenticated; callers cannot set `verified`. Complete filing contents and evidence authenticity remain unassessed.
 
-## Policy behavior
+Optional `origin_country` means manufacturing origin, independently of shipping country; no origin-specific restrictions are implemented. Optional `amount` remains transaction context and does not affect decisions.
 
-- Product and route → REVIEW, with origin and classification checks for a human reviewer.
-- Amount above your submitted budget → BLOCK.
-- Budget supplied without amount → NEEDS_EVIDENCE, asking for the amount.
-- Domestic route → REVIEW, requesting a separate checklist.
-- Marketing email → REVIEW, with permission, sender-identification, and unsubscribe review tasks.
-- Invalid or missing required fields → input validation error.
+Marketing calls require `action_type: marketing_email` and `recipient_country`; optional fields are `recipient_count` and `purpose`. Purchase/marketing fields cannot be mixed. Category-specific facts are checked for consistency. Unknown fields and duplicate evidence IDs reject.
 
-Decision precedence is BLOCK > NEEDS_EVIDENCE > REVIEW. Responses echo the normalized `action`, requirement statuses, next steps, policy version, scope, and timestamp. Purchase responses also retain the existing `purchase` field for compatibility; marketing responses do not include it. Origin and classification are review tasks, not fields to fill in. This MVP does not issue READY or authorize/execute purchases or send emails.
+### Country validation
 
-For US-bound purchases, source links include [19 CFR 141.86](https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86) and [USITC tariff information](https://www.usitc.gov/harmonized_tariff_information). Other destinations receive [WCO Harmonized System background](https://www.wcoomd.org/en/topics/nomenclature/overview.aspx) for classification and no US-specific rules. Sources reviewed 2026-10-17. Accepting a route means the general readiness checks apply; the server does not resolve country- or product-specific legal requirements or determine actual classifications, duties, admissibility, sanctions, or complete import/export compliance.
+Shipping, destination, origin, and recipient countries use the local `iso-3166` assigned-code dataset, pinned to `4.4.0`. Whitespace/lowercase normalize. Assigned codes such as `US`, `GB`, `HK`, `PR` are accepted. Names, three-letter codes, `ZZ`, `EU`, `UK`, and `XK` reject; use `GB` for the United Kingdom. Valid country codes do not imply regulatory coverage. Review assigned-code changes against [ISO guidance](https://www.iso.org/iso-3166-country-codes.html) when updating.
 
-## Policy routing
+### Migration from 0.5
 
-All three tools use the same router after input validation. The router first checks `action_type`, then uses the countries relevant to that action. Routing selects a checklist; the existing evaluation and remediation logic in `src/policy.ts` then processes its requirements. The optional budget comparison is shared across the international purchase packs.
+`budget` is removed and rejected with migration guidance. There is no spending-policy evaluation. Existing calls without `action_type` still work; missing category now requests information in implemented destination packs. The normalized `purchase` alias remains for purchase responses. Version 0.6.0 adds `CHECKS_PASSED`, structured finding/action fields, and coverage.
 
-| Action type | Route | Selected pack | Routing kind |
-| --- | --- | --- | --- |
-| `purchase` | Same shipping and destination country | None; domestic review required | `unsupported` |
-| `purchase` | Different countries, destination US | `us-import` | `destination_specific` |
-| `purchase` | Different countries, other destination | `general-purchase` | `general` |
-| `marketing_email` | Any valid recipient country | `general-marketing` | `general` |
+## Results and rechecking
 
-Every tool response includes the selected pack's `policy_version` and `scope`, plus routing details:
+Decision precedence: `BLOCK` > `NEEDS_EVIDENCE` > `REVIEW` > `CHECKS_PASSED`.
 
-```json
-{
-  "routing": {
-    "policy_id": "us-import",
-    "kind": "destination_specific",
-    "reason": "International purchase with destination US."
-  }
-}
-```
+- `BLOCK`: a modeled prohibition or shipment condition fails.
+- `NEEDS_EVIDENCE`: collect the named facts or records and recheck.
+- `REVIEW`: an exception, evidence conflict, rule error, or coverage gap remains.
+- `CHECKS_PASSED`: at least one applicable modeled rule was satisfied, with no unresolved finding among those checks. Conditional on supplied facts; not complete import clearance.
 
-Domestic purchase routes return `policy_id: null`, `kind: "unsupported"`, and a review task. General packs are fallback checklists, not country-specific policy implementations. In `get_requirements`, `supported: true` means a checklist was selected, not that the action is cleared. Product is retained in purchase context without being classified. Import and export are not separate action types in this MVP; current trade packs cover purchasing readiness rather than complete import/export authorization.
+Requirements return status (`SATISFIED`, `MISSING`, `FAILED`, `REVIEW`, `NOT_APPLICABLE`), stable `reason_code`, explanation, missing fields, evidence references, source URL, legal reference, and source review date. Broken evaluators remain unresolved review findings. Empty and entirely inapplicable rule sets cannot pass.
 
-Policy packs are stored as separate folders:
+`remediation_plan` steps include `requirement_id`, `kind`, `owner`, `instruction`, `required_fields`, and `evidence_types`. Kinds: `stop_action`, `request_information`, `collect_evidence`, `request_review`, `recheck_action`, `reschedule_or_refile`. Assignment does not authorize external execution. The calling agent uses its existing tools and actual updated records.
+
+Coverage reports `evaluated_rule_ids`, `unassessed_topics`, `status: partial | none`, and `evidence_assurance: caller_supplied`. `get_requirements` does no evaluation, so discovery coverage is `none`; `supported` means a pack was selected. `advisory_only` is always true. `execution_performed` and the deprecated compatibility flag `can_proceed_under_checked_rules` always remain false, including after `CHECKS_PASSED`.
+
+Demo: read the supplier specification and incomplete coffee fixture, call `check_action`, obtain the synthetic corrected confirmation, then resubmit. Missing notice findings resolve while remaining import requirements stay listed as unassessed.
+
+## Policy routing and code map
+
+`src/router/route.ts` selects by action type and countries, rejecting domestic purchases first. `src/engine.ts` runs rules and aggregates findings. `src/policy.ts` handles validation, context, coverage, fallback findings, and remediation. Product prohibitions and exceptions live inside packs.
 
 ```text
 src/
-  router/
-    registry.ts                     # Available policy packs
-    route.ts                        # Selection rules and reasons
+  schemas.ts                  # MCP input/output and evidence contracts
+  engine.ts                   # Rule execution and aggregation
+  policy.ts                   # Shared assessment/discovery facade
+  router/                     # Registry and destination selection
   policies/
-    types.ts                        # Shared PolicyPack contract
-    us-import/
-      pack.ts                       # ID, version, scope, requirements
-      requirements.ts               # US readiness requirements
-      sources.ts                    # US references and review date
-    general-purchase/
-      pack.ts                       # ID, version, scope, requirements
-      requirements.ts               # General readiness requirements
-      sources.ts                    # General references and review date
-    general-marketing/
-      pack.ts                       # ID, version, scope, requirements
-      requirements.ts               # General marketing review tasks
-      sources.ts                    # Null URLs until legal sources are curated
+    types.ts                  # PolicyPack and executable PolicyRule
+    helpers.ts                # Finding/action and evidence helpers
+    sg-import/                # pack, requirements, sources, rules
+    in-import/                # pack, requirements, sources, rules
+    us-import/                # pack, requirements, sources, rules
+    general-purchase/         # Review fallback
+    general-marketing/        # Review fallback
+tests/                        # Rule, schema, aggregation, timing tests
+fixtures/                     # Synthetic purchases and evidence
+scripts/demo.ts               # Reproducible evaluator demo
+scripts/smoke.mjs             # Real MCP lifecycle verification
 ```
 
-To add a pack, create its folder with `pack.ts`, `requirements.ts`, and `sources.ts`, register it in `src/router/registry.ts`, and add its selection rule in `src/router/route.ts`. Dispatch by action type first; within purchase routing, keep the domestic-country check before destination-specific selection and the general fallback. A new action type also needs its own schema in `src/schemas.ts`. Packs contain requirement data; evaluation remains in `src/policy.ts` for the next stage of development.
+Extend coverage by adding a sourced rule to a pack. New destinations also need registry/router entries. Keep exceptions, review dates, and unassessed topics explicit. Runtime evaluation uses curated local rules rather than live legal searches.
 
-## Check routing locally
+## Sources
 
-From `mcp/`, run `npm install` if dependencies are not installed, then `npm run dev`. Open http://localhost:3000/mcp/inspector, select `check_action`, and submit:
+Reviewed 2026-10-17:
 
-```json
-{
-  "action_type": "purchase",
-  "product": "Cooling fan",
-  "from_country": "VN",
-  "to_country": "US"
-}
-```
+- [Singapore Customs controlled and prohibited imports](https://www.customs.gov.sg/doing-business/import-operations/import-procedures/controlled-and-prohibited-goods-for-imports/).
+- [India Electronic Cigarettes Act, sections 3(d) and 4](https://www.indiacode.nic.in/bitstream/123456789/13078/1/A2019-42.pdf), with [government guidance](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2205198&lang=1&reg=1).
+- [21 CFR 1.277: scope and exemptions](https://www.ecfr.gov/current/title-21/chapter-I/subchapter-A/part-1/subpart-I/section-1.277).
+- [21 CFR 1.279: confirmation and filing windows](https://www.ecfr.gov/current/title-21/chapter-I/subchapter-A/part-1/subpart-I/section-1.279).
 
-Inspect the response's `routing` object, then change the countries to exercise each branch:
+## Deployment
 
-| `from_country` | `to_country` | Expected `routing.policy_id` | Expected `routing.kind` |
-| --- | --- | --- | --- |
-| `VN` | `US` | `us-import` | `destination_specific` |
-| `VN` | `CA` | `general-purchase` | `general` |
-| `US` | `US` | `null` | `unsupported` |
-| `vn` | `us` | `us-import` | `destination_specific` |
+Existing endpoint: https://bold-cloud-g95ht.run.mcp-use.com/mcp. Local changes do not update that deployment.
 
-All these `check_action` calls return `REVIEW` with the current advisory engine. Run the same input through `get_requirements` and `get_remediation_plan`; their routing metadata should agree. `get_requirements` also returns `supported: false` for a domestic route.
-
-On the `VN` → `US` input, add `"amount": 1500, "budget": 1000` to see `BLOCK`, or add only `"budget": 1000` to see `NEEDS_EVIDENCE`. These change the assessment, not the selected pack. A three-letter country such as `USA` or an unassigned two-letter value such as `ZZ` produces an input validation error before routing.
-
-Then submit the `marketing_email` example above. Expect `routing.policy_id: "general-marketing"`, `routing.kind: "general"`, and decision `REVIEW`. Repeat it through all three tools; the selected pack should agree. Changing only `recipient_country` to `US` retains the general marketing pack. Missing `recipient_country`, an unknown action type, or mixing purchase and marketing fields produces an input validation error.
-
-## Code and checks
-
-The implementation is split by responsibility:
-
-- `index.ts`: registers the three tools.
-- `src/countries.ts`: assigned country-code membership, normalization, and validation messages.
-- `src/schemas.ts`: input/output validation and TypeScript types.
-- `src/router/`: registry, pack selection, and routing explanations.
-- `src/policies/`: granular policy packs, requirement definitions, and source links.
-- `src/policy.ts`: shared budget checks, decisions, and remediation using the selected pack.
-
-```bash
-npm run typecheck
-npm run build
-npm start
-```
-
-Stop any process on the same port before running `npm start`, or use `npm start -- --port 3003`. Production Inspector is optional: add `--with-inspector`.
-
-## Manufact deployment
-
-- MCP endpoint: https://bold-cloud-g95ht.run.mcp-use.com/mcp
-- Management dashboard: https://manufact.com/cloud/org-312cbb99-5qvf5/servers/ff38bb29-7976-4069-84af-c3c190735e2d/overview
-
-Redeploy from this directory:
+Deployment, when requested, runs from `mcp/`:
 
 ```bash
 npx -y mcp-use@latest deploy --no-github -y
 ```
-
-Follow the deployment until running. Local environment files and generated build files are excluded from Git.

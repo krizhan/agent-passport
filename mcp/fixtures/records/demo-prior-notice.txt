@@ -1,0 +1,7 @@
+DEMO DATA ONLY — not an FDA filing, confirmation, or approval.
+Product: Packaged roasted coffee
+Shipment: demo-coffee-001
+Confirmation: DEMO-NOT-A-REAL-FILING
+Confirmed at: 2026-10-17T10:00:00Z
+Method: PNSI
+This fixture demonstrates evaluation against caller-supplied facts only.

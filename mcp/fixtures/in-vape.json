@@ -1,0 +1,10 @@
+{
+  "product": "Consumer nicotine-free vaping device",
+  "from_country": "CN",
+  "to_country": "IN",
+  "product_category": "electronic_cigarette",
+  "product_facts": {
+    "licensed_medicine_claimed": false,
+    "contains_nicotine": false
+  }
+}

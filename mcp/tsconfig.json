@@ -12,6 +12,6 @@
     "noEmit": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["index.ts", "src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["index.ts", "src/**/*.ts", "tests/**/*.ts", "scripts/demo.ts"],
+  "exclude": ["node_modules", "dist", ".test-build"]
 }

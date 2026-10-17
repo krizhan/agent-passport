@@ -30,14 +30,18 @@ export function routeAction(action: Action): PolicyRoute {
     },
   };
 
-  if (action.to_country === "US") {
-    const policy = policyRegistry["us-import"];
+  const destinationPolicies: Readonly<Record<string, PolicyPack>> = {
+    SG: policyRegistry["sg-import"], IN: policyRegistry["in-import"], US: policyRegistry["us-import"],
+  };
+  const destinationPolicy = destinationPolicies[action.to_country];
+  if (destinationPolicy) {
+    const policy = destinationPolicy;
     return {
       policy,
       routing: {
         policy_id: policy.id,
         kind: "destination_specific",
-        reason: "International purchase with destination US.",
+        reason: "International purchase with destination " + action.to_country + ".",
       },
     };
   }

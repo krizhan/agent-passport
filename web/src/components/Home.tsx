@@ -4,7 +4,7 @@ import { CampaignCompliance, PurchaseFlow } from "./Illustrations.tsx";
 
 const tradeExamples = {
   import: {
-    title: "Order packaged coffee for our US store.",
+    title: "Order packaged roasted coffee for our US store.",
     route: [
       ["Ships from", "Dominican Republic"],
       ["Destination", "United States"],
@@ -190,15 +190,15 @@ export function Home() {
               Check campaign compliance <span>before sending.</span>
             </h2>
             <p>
-              Your agent checks campaign content and recipient permissions
-              against local requirements, then resolves issues and rechecks
-              before sending.
+              Your agent gathers campaign content and recipient permissions
+              for review against local requirements, then follows the required
+              next steps before sending.
             </p>
             <p>
               <strong>Example:</strong> You ask your agent to send a promotion
-              to customers in Canada. Agent Passport flags the missing
-              unsubscribe option and consent records, so the agent fixes the
-              campaign and rechecks before sending.
+              to customers in Canada. In this illustrative workflow, a review
+              identifies missing unsubscribe and consent information, so the
+              agent gathers corrections before sending.
             </p>
           </div>
           <CampaignCompliance />
@@ -206,8 +206,10 @@ export function Home() {
         <div className="page-note">
           <span>Agent Passport</span>
           <p>
-            This page illustrates the product and does not perform business
-            actions.
+            Current MCP checks cover Singapore chewing gum, Indian electronic
+            cigarettes, and selected US coffee prior-notice requirements. Export
+            and marketing examples illustrate workflows requiring review. This
+            page performs no business actions.
           </p>
         </div>
       </section>

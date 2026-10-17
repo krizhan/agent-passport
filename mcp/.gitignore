@@ -1,9 +1,10 @@
 # Dependencies
-node_modules/
+node_modules
 .pnpm-store/
 
 # Build output
 dist/
+.test-build/
 .mcp-use/
 .vite/
 mcp-env.d.ts

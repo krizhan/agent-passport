@@ -1,74 +1,98 @@
-import { evaluationSchema, parseAction, requirementsResponseSchema, type Action, type CheckInput, type Evaluation, type Requirement, type RequirementResult } from "./schemas.js";
-import type { PolicyPack } from "./policies/types.js";
+import { evaluationSchema, parseAction, requirementSchema, requirementsResponseSchema,
+  type Action, type CheckInput, type Requirement, type RequirementResult, type Step } from "./schemas.js";
+import { aggregateDecision, evaluateRules } from "./engine.js";
 import { routeAction, type PolicyRoute } from "./router/route.js";
 
-const UNSUPPORTED_POLICY_VERSION = "international-purchase/0.5.0";
-const UNSUPPORTED_SCOPE = "Domestic purchases are outside this international purchase checklist. A reviewer must define the applicable domestic requirements. No purchase is authorized or executed.";
+const classification: Requirement = {
+  id: "product_classification", title: "Declared product category", basis: "assessment_input", source_url: null,
+  description: "Establish the product category from specifications. Product-name keyword matching is not regulatory classification.",
+  required_fields: ["product_category"],
+};
+const unsupported: Requirement = {
+  id: "supported_scope", title: "International trade scope", basis: "assessment_input", source_url: null,
+  description: "This server covers cross-border purchases. A domestic checklist requires separate review.",
+};
+const coverageGap: Requirement = {
+  id: "policy_coverage", title: "Product/jurisdiction coverage", basis: "assessment_input", source_url: null,
+  description: "No implemented rule covers the declared category in this destination pack. A reviewer must establish the applicable requirements.",
+};
 
-function definitions(action: Action, policy: PolicyPack | null): Requirement[] {
-  if (!policy) return [{
-    id: "supported_scope", title: "International purchase scope", basis: "assessment_input", source_url: null,
-    description: "This checklist covers purchases shipped between different countries. Have a reviewer define the requirements for a domestic purchase.",
-  }];
-  const result: Requirement[] = [...policy.requirements];
-  if (action.action_type === "purchase" && action.budget !== undefined) result.push({
-    id: "purchase_budget", title: "Your purchase budget", basis: "purchase_constraint", source_url: null,
-    description: "Compare the submitted total with your submitted budget in the same currency. This is your purchase constraint, not a legal spending limit.",
-  });
-  return result;
+function unknownCategory(action: Action) {
+  return action.action_type === "purchase" && (!action.product_category || action.product_category === "unknown");
 }
-
+function definitions(action: Action, route: PolicyRoute): Requirement[] {
+  if (!route.policy) return [unsupported];
+  return [...(route.policy.rules?.length && unknownCategory(action) ? [classification] : []), ...route.policy.requirements];
+}
 function context(action: Action, route: PolicyRoute) {
   return {
-    action,
-    ...(action.action_type === "purchase" ? { purchase: action } : {}),
-    policy_version: route.policy ? `${route.policy.id}/${route.policy.version}` : UNSUPPORTED_POLICY_VERSION,
-    scope: route.policy?.scope ?? UNSUPPORTED_SCOPE,
-    advisory_only: true as const,
-    routing: route.routing,
+    action, ...(action.action_type === "purchase" ? { purchase: action } : {}),
+    policy_version: route.policy ? route.policy.id + "/" + route.policy.version : "unsupported/0.6.0",
+    scope: route.policy?.scope ?? "Domestic purchases are outside the international trade scope. No action is authorized or executed.",
+    advisory_only: true as const, routing: route.routing,
   };
+}
+function coverage(route: PolicyRoute, requirements: readonly RequirementResult[] = []) {
+  const ids = new Set(route.policy?.rules?.map((rule) => rule.requirement.id));
+  const evaluated = requirements.filter((item) => ids.has(item.id) && item.status !== "NOT_APPLICABLE").map((item) => item.id);
+  return {
+    status: evaluated.length ? "partial" as const : "none" as const, evaluated_rule_ids: evaluated,
+    unassessed_topics: [...(route.policy?.unassessed_topics ?? [route.policy?.scope ?? unsupported.description])],
+    evidence_assurance: "caller_supplied" as const,
+  };
+}
+function review(requirement: Requirement, reason_code: string): RequirementResult {
+  return { ...requirementSchema.parse(requirement), status: "REVIEW", reason_code, detail: requirement.description, missing_fields: [], evidence_refs: [] };
 }
 
 export function getRequirements(raw: CheckInput) {
   const action = parseAction(raw);
   const route = routeAction(action);
   return requirementsResponseSchema.parse({
-    ...context(action, route), supported: route.policy !== null, requirements: definitions(action, route.policy),
+    ...context(action, route), supported: route.policy !== null,
+    requirements: definitions(action, route), coverage: coverage(route),
   });
 }
 
-export function checkAction(raw: CheckInput, now = new Date()): Evaluation {
+export function checkAction(raw: CheckInput, now = new Date()) {
   const action = parseAction(raw);
   const route = routeAction(action);
-  const requirements = definitions(action, route.policy).map((requirement): RequirementResult => {
-    const result = (status: RequirementResult["status"], detail: string) => ({ ...requirement, status, detail });
-    if (requirement.id === "supported_scope") return result("REVIEW", requirement.description);
-    if (requirement.id === "purchase_budget" && action.action_type === "purchase") {
-      if (action.amount === undefined) return result("MISSING", "Supply amount in the same currency and units as budget to compare them.");
-      return action.amount > action.budget!
-        ? result("FAILED", "The submitted total exceeds your submitted purchase budget.")
-        : result("SATISFIED", "The submitted total is within your submitted purchase budget.");
+  let requirements: RequirementResult[];
+  let remediation: Step[];
+  if (route.policy?.rules?.length) {
+    const evaluated = evaluateRules(route.policy.rules, action, now);
+    requirements = evaluated.requirements;
+    remediation = evaluated.actions;
+    if (unknownCategory(action)) {
+      requirements.unshift({ ...requirementSchema.parse(classification), status: "MISSING", reason_code: "PRODUCT_CATEGORY_MISSING",
+        detail: classification.description, missing_fields: ["product_category"], evidence_refs: [] });
+      remediation.unshift({ requirement_id: classification.id, kind: "request_information", owner: "agent",
+        instruction: "Obtain product specifications and establish product_category before rechecking.", required_fields: ["product_category"], evidence_types: ["product_specification"] });
+    } else if (requirements.every((item) => item.status === "NOT_APPLICABLE")) {
+      requirements.push(review(coverageGap, "PRODUCT_JURISDICTION_NOT_COVERED"));
+      remediation.push({ requirement_id: coverageGap.id, kind: "request_review", owner: "human",
+        instruction: coverageGap.description, required_fields: [], evidence_types: [] });
     }
-    return result("REVIEW", requirement.description);
-  });
-  const decision: Evaluation["decision"] = requirements.some((item) => item.status === "FAILED") ? "BLOCK"
-    : requirements.some((item) => item.status === "MISSING") ? "NEEDS_EVIDENCE" : "REVIEW";
-  const remediation = requirements.filter((item) => item.status !== "SATISFIED").map((item) => ({
-    requirement_id: item.id,
-    owner: (item.status === "REVIEW" ? "human" : "agent") as "human" | "agent",
-    instruction: item.id === "purchase_budget" && item.status === "FAILED"
-      ? "Revise the purchase amount or budget, then submit a fresh check."
-      : item.detail,
-  }));
+  } else {
+    requirements = definitions(action, route).map((item) => review(item, route.policy ? "CHECKLIST_REQUIRES_REVIEW" : "DOMESTIC_ROUTE_UNSUPPORTED"));
+    remediation = requirements.map((item) => ({ requirement_id: item.id, kind: "request_review" as const, owner: "human" as const,
+      instruction: item.detail, required_fields: [], evidence_types: [] }));
+  }
+  const decision = aggregateDecision(requirements);
+  if (decision === "NEEDS_EVIDENCE" || decision === "REVIEW") {
+    const unresolved = requirements.find((item) => item.status === "MISSING" || item.status === "REVIEW");
+    if (unresolved) remediation.push({ requirement_id: unresolved.id, kind: "recheck_action", owner: "agent",
+      instruction: "Submit the actual updated product/shipment facts and evidence to check_action after resolving these findings.", required_fields: [], evidence_types: [] });
+  }
   const summary = {
-    BLOCK: "The purchase exceeds the budget you supplied.",
-    REVIEW: action.action_type === "marketing_email"
-      ? "Review the applicable recipient-permission, sender-identification, and unsubscribe requirements before sending."
-      : route.policy ? "Review the applicable origin and classification requirements before proceeding." : "A separate checklist is required for a domestic purchase.",
-    NEEDS_EVIDENCE: "A purchase amount is needed to check the budget you supplied.",
+    BLOCK: "A modeled regulatory prohibition or shipment condition fails. Hold the proposed action and follow the findings.",
+    NEEDS_EVIDENCE: "Supply the identified product/shipment facts or evidence, then recheck.",
+    REVIEW: "An exception, coverage gap, or unresolved assessment requires review before proceeding.",
+    CHECKS_PASSED: "The modeled checks passed against caller-supplied facts. This is not complete import clearance or authorization to execute.",
   }[decision];
   return evaluationSchema.parse({
-    ...context(action, route), assessed_at: now.toISOString(), decision, summary, requirements, remediation_plan: remediation,
+    ...context(action, route), assessed_at: now.toISOString(), decision, summary, requirements,
+    remediation_plan: remediation, coverage: coverage(route, requirements),
     can_proceed_under_checked_rules: false, execution_performed: false,
   });
 }

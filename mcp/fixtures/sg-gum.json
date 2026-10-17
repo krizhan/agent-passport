@@ -1,0 +1,9 @@
+{
+  "product": "Ordinary mint chewing gum",
+  "from_country": "MY",
+  "to_country": "SG",
+  "product_category": "chewing_gum",
+  "product_facts": {
+    "gum_type": "ordinary"
+  }
+}

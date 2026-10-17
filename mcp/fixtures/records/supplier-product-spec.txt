@@ -1,0 +1,6 @@
+DEMO SUPPLIER SPECIFICATION
+Product: Packaged roasted coffee
+Food type: packaged_roasted_coffee
+Purpose: commercial sale
+Manufacturing origin and shipping country: Dominican Republic
+This is synthetic demo data, not verified supplier evidence.

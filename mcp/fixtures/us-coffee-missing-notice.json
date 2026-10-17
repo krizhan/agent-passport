@@ -1,0 +1,16 @@
+{
+  "product": "Packaged roasted coffee",
+  "from_country": "DO",
+  "to_country": "US",
+  "product_category": "food",
+  "product_facts": {
+    "food_type": "packaged_roasted_coffee"
+  },
+  "shipment": {
+    "id": "demo-coffee-001",
+    "purpose": "commercial_sale",
+    "transport_mode": "air",
+    "arrival_at": "2026-10-18T12:00:00Z",
+    "arrival_timezone": "America/New_York"
+  }
+}

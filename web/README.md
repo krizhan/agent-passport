@@ -26,7 +26,7 @@ No environment variables, API keys, InsForge connection, or running MCP server a
 
 ## What to test
 
-1. Confirm there are three sections: overview, import/export, and marketing. The top has a wordmark and no navigation bar or coverage notes.
+1. Confirm there are three sections: overview, import/export, and marketing. The top has a wordmark and no navigation bar. The final page note identifies implemented coverage.
 2. Confirm **Import & export** and **Marketing** have matching button styles and follow them to their sections.
 3. Read the overview illustration: the agent holds the food order, gathers filing details, and rechecks before buying.
 4. Switch **Import example / Export example**. The import example shows coffee from the Dominican Republic to the US, explains the FDA prior notice requirement before arrival, and tells the agent to arrange the filing and return the confirmation. The export example flags missing technical details and keeps the shipment held pending review. Source links change with the example.
@@ -36,7 +36,7 @@ No environment variables, API keys, InsForge connection, or running MCP server a
 
 All examples are synthetic and illustrative. This homepage runs no compliance checks and performs no business actions.
 
-The food and marketing requirements shown here are presentation examples. They do not expand the current MCP server’s coverage.
+The MCP server implements selected FDA prior-notice checks for commercial packaged roasted coffee arriving by air/sea, Singapore chewing-gum restrictions, and India's electronic-cigarette prohibition. Export and marketing examples remain illustrative review workflows. The page note describes this coverage; the homepage itself makes no tool calls.
 
 ## Check and build
 

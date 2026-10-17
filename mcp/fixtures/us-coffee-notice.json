@@ -1,0 +1,31 @@
+{
+  "product": "Packaged roasted coffee",
+  "from_country": "DO",
+  "to_country": "US",
+  "product_category": "food",
+  "product_facts": {
+    "food_type": "packaged_roasted_coffee",
+    "prior_notice": {
+      "confirmation_number": "DEMO-NOT-A-REAL-FILING",
+      "confirmed_at": "2026-10-17T10:00:00Z",
+      "submission_method": "pnsi",
+      "evidence_id": "demo-notice-001"
+    }
+  },
+  "shipment": {
+    "id": "demo-coffee-001",
+    "purpose": "commercial_sale",
+    "transport_mode": "air",
+    "arrival_at": "2026-10-18T12:00:00Z",
+    "arrival_timezone": "America/New_York"
+  },
+  "evidence": [
+    {
+      "id": "demo-notice-001",
+      "type": "fda_prior_notice",
+      "reference": "fixtures/records/demo-prior-notice.txt",
+      "product": "Packaged roasted coffee",
+      "shipment_id": "demo-coffee-001"
+    }
+  ]
+}
