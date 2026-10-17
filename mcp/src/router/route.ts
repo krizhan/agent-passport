@@ -1,5 +1,5 @@
 import type { PolicyPack } from "../policies/types.js";
-import type { Purchase, Routing } from "../schemas.js";
+import type { Action, Routing } from "../schemas.js";
 import { policyRegistry } from "./registry.js";
 
 export interface PolicyRoute {
@@ -8,8 +8,20 @@ export interface PolicyRoute {
 }
 
 // Tool handlers validate and normalize country codes before selecting a pack.
-export function routePurchase(purchase: Pick<Purchase, "from_country" | "to_country">): PolicyRoute {
-  if (purchase.from_country === purchase.to_country) return {
+export function routeAction(action: Action): PolicyRoute {
+  if (action.action_type === "marketing_email") {
+    const policy = policyRegistry["general-marketing"];
+    return {
+      policy,
+      routing: {
+        policy_id: policy.id,
+        kind: "general",
+        reason: `Marketing email to recipients in ${action.recipient_country}; the general marketing review checklist applies.`,
+      },
+    };
+  }
+
+  if (action.from_country === action.to_country) return {
     policy: null,
     routing: {
       policy_id: null,
@@ -18,7 +30,7 @@ export function routePurchase(purchase: Pick<Purchase, "from_country" | "to_coun
     },
   };
 
-  if (purchase.to_country === "US") {
+  if (action.to_country === "US") {
     const policy = policyRegistry["us-import"];
     return {
       policy,
@@ -36,7 +48,7 @@ export function routePurchase(purchase: Pick<Purchase, "from_country" | "to_coun
     routing: {
       policy_id: policy.id,
       kind: "general",
-      reason: `No destination-specific pack is registered for ${purchase.to_country}; the general international purchase checklist applies.`,
+      reason: `No destination-specific purchase pack is registered for ${action.to_country}; the general international purchase checklist applies.`,
     },
   };
 }
