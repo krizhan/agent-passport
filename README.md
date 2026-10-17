@@ -6,7 +6,9 @@ Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator
 
 The initial direction is to help agents discover jurisdiction-specific compliance requirements and return structured results with links to their sources.
 
-Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get_requirements`, `check_action`, and `get_remediation_plan`—for international purchases. Each takes `product`, `from_country`, and `to_country`, with an optional amount and budget.
+Project status: the [`mcp/`](./mcp/README.md) app implements three advisory tools—`check_action`, `get_requirements`, and `get_remediation_plan`—for international purchases and marketing emails. Each accepts an `action_type`: `purchase` uses `product`, `from_country`, and `to_country`, with an optional amount and budget; `marketing_email` uses `recipient_country`, with optional recipient count and purpose. Existing inputs without an action type default to purchase. The server returns readiness requirements, available reference links, and next steps; the calling agent executes through its own tools.
+
+The [policy router](./mcp/README.md#policy-routing) selects a US import, general international purchase, or general marketing review pack and explains the selection in every tool response. Each pack stores metadata, requirements, and sources in separate files under `mcp/src/policies/`; domestic purchases return an unsupported routing result and request review. Marketing currently uses a general checklist requiring human review rather than a country-specific legal implementation.
 
 ## Product homepage
 
