@@ -8,6 +8,18 @@ The initial direction is to help agents discover jurisdiction-specific complianc
 
 Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get_requirements`, `check_action`, and `get_remediation_plan`—for international purchases. Each takes `product`, `from_country`, and `to_country`, with an optional amount and budget.
 
+## Product homepage
+
+The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. There is no navigation bar; examples are illustrative.
+
+```bash
+cd web
+npm ci
+npm run dev -- --port 5173
+```
+
+Open http://127.0.0.1:5173/. No backend connection or API keys are required. See [`web/README.md`](./web/README.md) for local testing and production-build instructions.
+
 ## MCP server
 
 Requires Node.js 22.22.2 or later.

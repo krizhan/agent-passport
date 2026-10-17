@@ -1,0 +1,351 @@
+.agent-flow,
+.campaign-review-card {
+  background: #fff;
+  border: 1px solid #d8e0e9;
+  border-radius: 12px;
+  box-shadow: 0 14px 45px #243e600a;
+  overflow: hidden;
+}
+.agent-flow,
+.campaign-review {
+  min-width: 0;
+  width: 100%;
+}
+.illustration-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e9edf2;
+  color: #526b8b;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+.agent-plan {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 20px 22px;
+  padding: 15px;
+  border: 1px solid #e1e7ef;
+  border-radius: 7px;
+  background: #f7f9fd;
+}
+.agent-plan small,
+.check-exchange small,
+.campaign-plan small,
+.trade-required > small {
+  display: block;
+  color: #5f7290;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.25px;
+  line-height: 1.6;
+}
+.agent-plan p {
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.65;
+  font-weight: 500;
+}
+.check-exchange {
+  list-style: none;
+  margin: 0 22px 24px;
+  padding: 0;
+}
+.check-exchange > li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 12px;
+  position: relative;
+}
+.check-exchange > li + li {
+  padding-top: 22px;
+}
+.check-exchange > li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  background: #dbe4f1;
+  top: 32px;
+  bottom: -22px;
+  left: 15px;
+}
+.check-exchange > li + li:not(:last-child)::before {
+  top: 54px;
+}
+.exchange-marker {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  background: #fff;
+  border: 1px solid #dce4ef;
+  color: #506d99;
+  position: relative;
+  z-index: 1;
+}
+.tool-response .exchange-marker {
+  border-color: #cfddf5;
+  background: #f1f5fd;
+}
+.check-exchange h3 {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin-top: 3px;
+}
+.check-exchange p {
+  color: #61728a;
+  font-size: 12px;
+  line-height: 1.75;
+  margin-top: 4px;
+}
+.trade-example .badge,
+.campaign-review .badge {
+  font-size: 10px;
+  padding: 5px 7px;
+}
+.illustration-footer {
+  padding: 13px 22px;
+  background: #fafbfd;
+  border-top: 1px solid #e8edf4;
+}
+.trade-example .example-footer,
+.illustration-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #47658f;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.source-link svg {
+  transform: rotate(-45deg);
+}
+.source-link:hover {
+  text-decoration: underline;
+}
+.illustration-footer .example-label,
+.trade-example .example-label {
+  font-size: 10px;
+  color: #66798f;
+  line-height: 1.6;
+}
+.trade-example h3 {
+  margin-top: 0;
+}
+.trade-example .route-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 13px 10px;
+}
+.trade-example .route-stop {
+  gap: 6px;
+}
+.trade-example .route-stop small {
+  color: #667d6d;
+  font-size: 10px;
+}
+.trade-example .route-stop strong {
+  color: #3e5a47;
+  font-size: 12px;
+}
+.trade-required {
+  margin-top: 20px;
+  border: 1px solid #e8d6aa;
+  border-radius: 7px;
+  padding: 16px;
+  background: #fffbf2;
+}
+.trade-required > small {
+  color: #83632b;
+}
+.trade-required > h4 {
+  margin-top: 7px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #654d24;
+}
+.trade-required > p {
+  margin-top: 7px;
+  color: #786747;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.trade-next-step {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid #ecdfc3;
+  color: #654d24;
+}
+.trade-next-step > strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.trade-next-step > p {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #786747;
+  line-height: 1.75;
+}
+.trade-hold {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: #83632b;
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.trade-hold > svg {
+  margin-top: 1px;
+}
+.campaign-review-body {
+  padding: 22px;
+}
+.review-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.review-title h3 {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  line-height: 1.4;
+}
+.campaign-plan {
+  margin-top: 20px;
+  padding: 13px;
+  border-radius: 6px;
+  background: #f5f8fd;
+}
+.campaign-plan p {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #465d7e;
+}
+.campaign-issues {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+.campaign-issues li {
+  padding-block: 18px;
+  border-bottom: 1px solid #e7ecf3;
+}
+.campaign-issues li:last-child {
+  border-bottom: 0;
+}
+.campaign-issues h4 {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.campaign-issues p {
+  color: #61728a;
+  font-size: 12px;
+  line-height: 1.75;
+  margin-top: 5px;
+}
+.campaign-next-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px;
+  background: #f0f5fe;
+  border: 1px solid #dae5f8;
+  border-radius: 6px;
+  color: #365b93;
+}
+.campaign-next-step > svg {
+  margin-top: 2px;
+}
+.campaign-next-step strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.campaign-next-step p {
+  font-size: 12px;
+  line-height: 1.75;
+  margin-top: 3px;
+}
+@media (max-width: 900px) {
+  .overview-layout,
+  .use-case-layout {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+  .overview-copy,
+  .use-case-copy {
+    max-width: 620px;
+  }
+  .agent-flow,
+  .trade-example,
+  .campaign-review {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+}
+@media (max-width: 640px) {
+  .illustration-heading {
+    padding: 16px;
+    font-size: 10px;
+  }
+  .agent-plan {
+    margin: 16px;
+    padding: 13px;
+    gap: 10px;
+  }
+  .agent-plan p {
+    font-size: 13px;
+  }
+  .check-exchange {
+    margin: 0 16px 20px;
+  }
+  .check-exchange > li {
+    gap: 10px;
+  }
+  .check-exchange h3 {
+    font-size: 13px;
+  }
+  .illustration-footer {
+    padding-inline: 16px;
+  }
+  .trade-required {
+    padding: 14px;
+  }
+  .campaign-issues .finding-heading {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .campaign-review-body {
+    padding: 18px 16px;
+  }
+  .review-title h3 {
+    font-size: 21px;
+  }
+}
+@media (max-width: 370px) {
+  .overview-links .button {
+    gap: 6px;
+    padding-inline: 8px;
+  }
+}
