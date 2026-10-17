@@ -52,6 +52,8 @@ Open **http://127.0.0.1:4173/** to inspect the production bundle. The build incl
 
 ## Deploy with InsForge
 
+Live website: [Agent Passport](https://vubsb6rq.insforge.site/).
+
 From the repository root, with the existing InsForge project linked:
 
 ```bash
