@@ -28,7 +28,7 @@ Open http://localhost:3000/mcp/inspector and call each tool with the same three 
 }
 ```
 
-Use your own product and two-letter shipping/destination country codes. Any pair of different countries uses the international checklist. Country codes are normalized to uppercase; validation currently checks their format rather than membership in a country registry.
+Use your own product and two-letter shipping/destination country codes. International US-bound purchases select the US import pack; other international destinations select the general purchase pack. Country codes are normalized to uppercase before routing; validation currently checks their format rather than membership in a country registry.
 
 Optionally add `amount` and `budget` to the same object for a spending check. Both are nonnegative numbers in the same currency and units; decimals and a zero budget are allowed. No currency conversion is performed. There is no action wrapper, action type, or document-reference array.
 
@@ -46,13 +46,85 @@ Decision precedence is BLOCK > NEEDS_EVIDENCE > REVIEW. Responses echo the norma
 
 For US-bound purchases, source links include [19 CFR 141.86](https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86) and [USITC tariff information](https://www.usitc.gov/harmonized_tariff_information). Other destinations receive [WCO Harmonized System background](https://www.wcoomd.org/en/topics/nomenclature/overview.aspx) for classification and no US-specific rules. Sources reviewed 2026-10-17. Accepting a route means the general readiness checks apply; the server does not resolve country- or product-specific legal requirements or determine actual classifications, duties, admissibility, sanctions, or complete import/export compliance.
 
+## Policy routing
+
+All three tools use the same router after input validation. Routing selects a checklist; the existing evaluation and remediation logic in `src/policy.ts` then processes its requirements. The optional budget comparison is shared across the international packs.
+
+| Route | Selected pack | Routing kind |
+| --- | --- | --- |
+| Same shipping and destination country | None; domestic review required | `unsupported` |
+| Different countries, destination US | `us-import` | `destination_specific` |
+| Different countries, other destination | `general-purchase` | `general` |
+
+Every tool response includes the selected pack's `policy_version` and `scope`, plus routing details:
+
+```json
+{
+  "routing": {
+    "policy_id": "us-import",
+    "kind": "destination_specific",
+    "reason": "International purchase with destination US."
+  }
+}
+```
+
+Domestic routes return `policy_id: null`, `kind: "unsupported"`, and a review task. The general pack is explicitly a fallback checklist, not a country-specific policy implementation. In `get_requirements`, `supported: true` means a checklist was selected, not that the purchase is cleared. Product is retained in the purchase context; this router selects packs by shipping and destination countries without classifying the product.
+
+Policy packs are stored as separate folders:
+
+```text
+src/
+  router/
+    registry.ts                     # Available policy packs
+    route.ts                        # Selection rules and reasons
+  policies/
+    types.ts                        # Shared PolicyPack contract
+    us-import/
+      pack.ts                       # ID, version, scope, requirements
+      requirements.ts               # US readiness requirements
+      sources.ts                    # US references and review date
+    general-purchase/
+      pack.ts                       # ID, version, scope, requirements
+      requirements.ts               # General readiness requirements
+      sources.ts                    # General references and review date
+```
+
+To add a pack, create its folder with `pack.ts`, `requirements.ts`, and `sources.ts`, register it in `src/router/registry.ts`, and add its selection rule in `src/router/route.ts` before the general fallback. Keep the domestic-route check first. Packs contain requirement data; evaluation remains in `src/policy.ts` for the next stage of development.
+
+## Check routing locally
+
+From `mcp/`, run `npm install` if dependencies are not installed, then `npm run dev`. Open http://localhost:3000/mcp/inspector, select `check_action`, and submit:
+
+```json
+{
+  "product": "Cooling fan",
+  "from_country": "VN",
+  "to_country": "US"
+}
+```
+
+Inspect the response's `routing` object, then change the countries to exercise each branch:
+
+| `from_country` | `to_country` | Expected `routing.policy_id` | Expected `routing.kind` |
+| --- | --- | --- | --- |
+| `VN` | `US` | `us-import` | `destination_specific` |
+| `VN` | `CA` | `general-purchase` | `general` |
+| `US` | `US` | `null` | `unsupported` |
+| `vn` | `us` | `us-import` | `destination_specific` |
+
+All these `check_action` calls return `REVIEW` with the current advisory engine. Run the same input through `get_requirements` and `get_remediation_plan`; their routing metadata should agree. `get_requirements` also returns `supported: false` for a domestic route.
+
+On the `VN` → `US` input, add `"amount": 1500, "budget": 1000` to see `BLOCK`, or add only `"budget": 1000` to see `NEEDS_EVIDENCE`. These change the assessment, not the selected pack. A three-letter country such as `USA` produces an input validation error. Two-letter code membership is not verified, so use actual country codes for the demo.
+
 ## Code and checks
 
-The implementation has three core files:
+The implementation is split by responsibility:
 
 - `index.ts`: registers the three tools.
 - `src/schemas.ts`: input/output validation and TypeScript types.
-- `src/policy.ts`: requirements, decisions, sources, and remediation.
+- `src/router/`: registry, pack selection, and routing explanations.
+- `src/policies/`: granular policy packs, requirement definitions, and source links.
+- `src/policy.ts`: shared budget checks, decisions, and remediation using the selected pack.
 
 ```bash
 npm run typecheck

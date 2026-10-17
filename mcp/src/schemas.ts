@@ -31,11 +31,25 @@ export const stepSchema = z.object({
   instruction: z.string(),
 });
 
+export const routingSchema = z.union([
+  z.object({
+    policy_id: z.string(),
+    kind: z.enum(["destination_specific", "general"]),
+    reason: z.string(),
+  }),
+  z.object({
+    policy_id: z.null(),
+    kind: z.literal("unsupported"),
+    reason: z.string(),
+  }),
+]);
+
 const contextSchema = z.object({
   policy_version: z.string(),
   scope: z.string(),
   purchase: requestSchema,
   advisory_only: z.literal(true),
+  routing: routingSchema,
 });
 
 export const requirementsResponseSchema = contextSchema.extend({
@@ -54,6 +68,7 @@ export const evaluationSchema = contextSchema.extend({
 });
 
 export type Purchase = z.infer<typeof requestSchema>;
+export type Routing = z.infer<typeof routingSchema>;
 export type CheckInput = z.input<typeof requestSchema>;
 export type Requirement = z.infer<typeof requirementSchema>;
 export type RequirementResult = z.infer<typeof requirementResultSchema>;

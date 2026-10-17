@@ -8,6 +8,8 @@ The initial direction is to help agents discover jurisdiction-specific complianc
 
 Project status: [`mcp/`](./mcp/README.md) implements three advisory tools—`get_requirements`, `check_action`, and `get_remediation_plan`—for international purchases. Each takes `product`, `from_country`, and `to_country`, with an optional amount and budget.
 
+The [policy router](./mcp/README.md#policy-routing) selects a US import pack or a general international purchase pack and explains the selection in every tool response. Each pack stores metadata, requirements, and sources in separate files under `mcp/src/policies/`; domestic purchases return an unsupported routing result and request review.
+
 ## Product homepage
 
 The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. There is no navigation bar; examples are illustrative.

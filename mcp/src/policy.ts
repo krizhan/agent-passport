@@ -1,33 +1,16 @@
 import { evaluationSchema, requestSchema, requirementsResponseSchema, type Purchase, type CheckInput, type Evaluation, type Requirement, type RequirementResult } from "./schemas.js";
+import type { PolicyPack } from "./policies/types.js";
+import { routePurchase, type PolicyRoute } from "./router/route.js";
 
-const POLICY_VERSION = "international-purchase/0.5.0";
-const SCOPE = "Advisory international purchase checklist based on the product and shipping countries, plus an optional caller-supplied budget comparison. Country- and product-specific legal requirements, manufacturing origin, classifications, documents, duties, sanctions, and admissibility require external review. No purchase is authorized or executed.";
-const INVOICE_SOURCE = "https://www.ecfr.gov/current/title-19/chapter-I/part-141/subpart-F/section-141.86";
-const HTS_SOURCE = "https://www.usitc.gov/harmonized_tariff_information";
-const HS_SOURCE = "https://www.wcoomd.org/en/topics/nomenclature/overview.aspx";
+const UNSUPPORTED_POLICY_VERSION = "international-purchase/0.5.0";
+const UNSUPPORTED_SCOPE = "Domestic purchases are outside this international purchase checklist. A reviewer must define the applicable domestic requirements. No purchase is authorized or executed.";
 
-function supports(purchase: Purchase) {
-  return purchase.from_country !== purchase.to_country;
-}
-
-function definitions(purchase: Purchase): Requirement[] {
-  if (!supports(purchase)) return [{
+function definitions(purchase: Purchase, policy: PolicyPack | null): Requirement[] {
+  if (!policy) return [{
     id: "supported_scope", title: "International purchase scope", basis: "assessment_input", source_url: null,
     description: "This checklist covers purchases shipped between different countries. Have a reviewer define the requirements for a domestic purchase.",
   }];
-  const usImport = purchase.to_country === "US";
-  const result: Requirement[] = [
-    {
-      id: "origin_documentation", title: "Origin documentation", basis: usImport ? "legal_readiness" : "assessment_input", source_url: usImport ? INVOICE_SOURCE : null,
-      description: usImport
-        ? "Have a reviewer confirm the manufacturing origin and applicable US invoice documentation. The cited rule requires origin information; this does not mean every purchase requires an origin certificate. Source reviewed 2026-10-17."
-        : "Have a reviewer confirm manufacturing origin and applicable documentation for this route and product. This checklist does not impose a universal origin-certificate requirement.",
-    },
-    {
-      id: "tariff_classification", title: "Classification review", basis: usImport ? "legal_readiness" : "assessment_input", source_url: usImport ? HTS_SOURCE : HS_SOURCE,
-      description: "Have a qualified reviewer identify the applicable destination tariff classification for the product. This server does not assign HS/HTS codes or calculate duties. Source reviewed 2026-10-17.",
-    },
-  ];
+  const result: Requirement[] = [...policy.requirements];
   if (purchase.budget !== undefined) result.push({
     id: "purchase_budget", title: "Your purchase budget", basis: "purchase_constraint", source_url: null,
     description: "Compare the submitted total with your submitted budget in the same currency. This is your purchase constraint, not a legal spending limit.",
@@ -35,18 +18,28 @@ function definitions(purchase: Purchase): Requirement[] {
   return result;
 }
 
-function context(purchase: Purchase) {
-  return { purchase, policy_version: POLICY_VERSION, scope: SCOPE, advisory_only: true as const };
+function context(purchase: Purchase, route: PolicyRoute) {
+  return {
+    purchase,
+    policy_version: route.policy ? `${route.policy.id}/${route.policy.version}` : UNSUPPORTED_POLICY_VERSION,
+    scope: route.policy?.scope ?? UNSUPPORTED_SCOPE,
+    advisory_only: true as const,
+    routing: route.routing,
+  };
 }
 
 export function getRequirements(raw: CheckInput) {
   const purchase = requestSchema.parse(raw);
-  return requirementsResponseSchema.parse({ ...context(purchase), supported: supports(purchase), requirements: definitions(purchase) });
+  const route = routePurchase(purchase);
+  return requirementsResponseSchema.parse({
+    ...context(purchase, route), supported: route.policy !== null, requirements: definitions(purchase, route.policy),
+  });
 }
 
 export function checkPurchase(raw: CheckInput, now = new Date()): Evaluation {
   const purchase = requestSchema.parse(raw);
-  const requirements = definitions(purchase).map((requirement): RequirementResult => {
+  const route = routePurchase(purchase);
+  const requirements = definitions(purchase, route.policy).map((requirement): RequirementResult => {
     const result = (status: RequirementResult["status"], detail: string) => ({ ...requirement, status, detail });
     if (requirement.id === "supported_scope") return result("REVIEW", requirement.description);
     if (requirement.id === "purchase_budget") {
@@ -68,11 +61,11 @@ export function checkPurchase(raw: CheckInput, now = new Date()): Evaluation {
   }));
   const summary = {
     BLOCK: "The purchase exceeds the budget you supplied.",
-    REVIEW: supports(purchase) ? "Review the applicable origin and classification requirements before proceeding." : "A separate checklist is required for a domestic purchase.",
+    REVIEW: route.policy ? "Review the applicable origin and classification requirements before proceeding." : "A separate checklist is required for a domestic purchase.",
     NEEDS_EVIDENCE: "A purchase amount is needed to check the budget you supplied.",
   }[decision];
   return evaluationSchema.parse({
-    ...context(purchase), assessed_at: now.toISOString(), decision, summary, requirements, remediation_plan: remediation,
+    ...context(purchase, route), assessed_at: now.toISOString(), decision, summary, requirements, remediation_plan: remediation,
     can_proceed_under_checked_rules: false, execution_performed: false,
   });
 }
