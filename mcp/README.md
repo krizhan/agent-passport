@@ -28,11 +28,30 @@ Open http://localhost:3000/mcp/inspector and call each tool with the same three 
 }
 ```
 
-Use your own product and two-letter shipping/destination country codes. International US-bound purchases select the US import pack; other international destinations select the general purchase pack. Country codes are normalized to uppercase before routing; validation currently checks their format rather than membership in a country registry.
+Use your own product and two-letter shipping/destination country codes. International US-bound purchases select the US import pack; other international destinations select the general purchase pack. Country codes are trimmed, normalized to uppercase, and checked against assigned ISO 3166-1 alpha-2 country and territory codes before routing.
 
 Optionally add `amount` and `budget` to the same object for a spending check. Both are nonnegative numbers in the same currency and units; decimals and a zero budget are allowed. No currency conversion is performed. There is no action wrapper, action type, or document-reference array.
 
 If port 3000 is busy, run `npm run dev -- --port 3011` and open http://localhost:3011/mcp/inspector. Tool results include the complete JSON in both text and structured content.
+
+## Country validation
+
+All three tools validate both country fields with the same schema. The accepted codes come from the assigned-entry dataset in [`iso-3166`](https://github.com/wooorm/iso-3166), pinned to version `4.4.0`. Validation uses this local dataset and makes no network requests.
+
+| Input | Behavior |
+| --- | --- |
+| `" us "`, `"gb"` | Normalize to `US`, `GB` and accept. |
+| Assigned country or territory codes, such as `DE`, `HK`, or `PR` | Accept. |
+| `USA`, `840`, `United States`, or an empty string | Reject; supply a two-letter code. |
+| `ZZ`, `QQ`, `EU`, or obsolete codes such as `SU` | Reject as unrecognized or unassigned. |
+| `UK` | Reject with guidance to use `GB`; aliases are not converted. |
+| `XK` | Reject; user-assigned extensions are not enabled. |
+
+Invalid codes produce a validation error on `from_country` or `to_country` before policy selection. Recognizing a country does not imply destination-specific policy coverage or purchase clearance: valid destinations can still use the general checklist, and domestic routes still require a separate review.
+
+Membership is enforced by the server at runtime. The MCP input schema advertises the two-letter format and acceptance rules in its field descriptions rather than listing every code.
+
+When updating `iso-3166`, review changes to the assigned-code dataset against [ISO's country-code guidance](https://www.iso.org/iso-3166-country-codes.html), update the exact dependency version and lockfile, and record any changes to accepted inputs here. Additional aliases or extensions require an explicit change in `src/countries.ts`.
 
 ## Policy behavior
 
@@ -114,13 +133,14 @@ Inspect the response's `routing` object, then change the countries to exercise e
 
 All these `check_action` calls return `REVIEW` with the current advisory engine. Run the same input through `get_requirements` and `get_remediation_plan`; their routing metadata should agree. `get_requirements` also returns `supported: false` for a domestic route.
 
-On the `VN` → `US` input, add `"amount": 1500, "budget": 1000` to see `BLOCK`, or add only `"budget": 1000` to see `NEEDS_EVIDENCE`. These change the assessment, not the selected pack. A three-letter country such as `USA` produces an input validation error. Two-letter code membership is not verified, so use actual country codes for the demo.
+On the `VN` → `US` input, add `"amount": 1500, "budget": 1000` to see `BLOCK`, or add only `"budget": 1000` to see `NEEDS_EVIDENCE`. These change the assessment, not the selected pack. A three-letter country such as `USA` or an unassigned two-letter value such as `ZZ` produces an input validation error before routing.
 
 ## Code and checks
 
 The implementation is split by responsibility:
 
 - `index.ts`: registers the three tools.
+- `src/countries.ts`: assigned country-code membership, normalization, and validation messages.
 - `src/schemas.ts`: input/output validation and TypeScript types.
 - `src/router/`: registry, pack selection, and routing explanations.
 - `src/policies/`: granular policy packs, requirement definitions, and source links.

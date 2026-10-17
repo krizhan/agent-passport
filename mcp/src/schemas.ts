@@ -1,13 +1,13 @@
 import { z } from "zod";
+import { countrySchema } from "./countries.js";
 
 const text = z.string().trim().min(1).max(500);
-const country = z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/);
 const money = z.number().nonnegative().max(Number.MAX_SAFE_INTEGER);
 
 export const requestSchema = z.object({
   product: text.describe("What you want to purchase"),
-  from_country: country.describe("Shipping country, as a two-letter country code"),
-  to_country: country.describe("Destination country, as a two-letter country code"),
+  from_country: countrySchema.describe("Shipping country/territory: an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; aliases such as UK and extensions such as XK are rejected."),
+  to_country: countrySchema.describe("Destination country/territory: an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; aliases such as UK and extensions such as XK are rejected."),
   amount: money.optional().describe("Optional purchase total, in the same currency and units as budget"),
   budget: money.optional().describe("Optional spending limit, in the same currency and units as amount; zero is allowed"),
 }).strict();
