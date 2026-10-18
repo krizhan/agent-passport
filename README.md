@@ -1,6 +1,6 @@
 # agent-passport
 
-Local and international compliance tooling for AI agents.
+Compliance tooling for AI agents.
 
 Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator.com/MakeSomethingAgentsWant) hackathon.
 
