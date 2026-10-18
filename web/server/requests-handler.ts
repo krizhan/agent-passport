@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { normalizeEvent } from "./normalize.ts";
-import { latestRequests, REQUEST_LIMIT_PER_CATEGORY, type RequestPage, type RequestRecord } from "../src/lib/requests.ts";
+import { normalizeEvent } from "./normalize.js";
+import { latestRequests, REQUEST_LIMIT_PER_CATEGORY, type RequestPage, type RequestRecord } from "../src/lib/requests.js";
 
 export type GatewayConfig = { apiKey?: string; serverId?: string };
 
