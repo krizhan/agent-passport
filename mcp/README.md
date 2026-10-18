@@ -7,7 +7,7 @@ Five advisory MCP tools, built with mcp-use v2. Purchase readiness, marketing re
 | `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
 | `check_import_export` | Product and route → compliance review needs and remediation. |
 | `get_import_export_remediation_plan` | Purchase inputs → the same evaluation and next steps as `check_import_export`. |
-| `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
+| `check_marketing_email` | Rendered email, recipient and supplied evidence → US CAN-SPAM, Canada CASL and UK PECR findings, missing evidence and proposed corrections. |
 | `screen_restricted_party` | Party name and optional aliases/country/address → bundled U.S. CSL snapshot search, provenance, and review steps. |
 
 Each workflow has dedicated tools. Import/export tools accept international purchase inputs, and none of the public tools accepts an `action_type` field. The router adds this discriminator internally.
@@ -24,21 +24,13 @@ npm run dev
 
 Open http://localhost:3000/mcp/inspector. If that port is occupied, use `npm run dev -- --port 3011` and the matching Inspector URL.
 
-## Marketing review
+## Marketing policy checks
 
-Select `check_marketing_email` and submit:
+`check_marketing_email` now requires `sender`, `recipient`, `message` and `planned_send_at`, with `dispatch_country` and typed `evidence`. The former country/count/purpose contract has been replaced. It evaluates one rendered commercial email for one recipient, using candidate US CAN-SPAM, Canada CASL and UK PECR packs.
 
-```json
-{
-  "recipient_country": "CA",
-  "recipient_count": 1000,
-  "purpose": "Product launch campaign"
-}
-```
+Start the MCP server and use the Inspector at http://localhost:3000/mcp/inspector. Read `marketing://examples` for fresh copyable requests, then call `check_marketing_email`. Run `npm run demo:marketing` to evaluate and export the 18 examples. See the [engine guide](src/marketing/README.md) and [copyable demonstration requests](src/marketing/requests.json). The website displays captured marketing results at `/demo`; it does not run marketing checks.
 
-Only `recipient_country` is required. Recipient count, if supplied, must be a positive integer; purpose is optional context. Submit one check per recipient country. The dedicated tool does not require `action_type`; the response echoes `action_type: "marketing_email"`.
-
-This restores the original `general-marketing` policy pack: recipient-permission, sender-identification, and unsubscribe/suppression review tasks. It always returns `REVIEW`, with requirements and remediation. It does not inspect email content, verify consent records, maintain suppression lists, or send email. Count and purpose are context and do not change the assessment. Country-specific legal sources have not been curated; requirement URLs remain null.
+Results distinguish `BLOCK`, `NEEDS_EVIDENCE`, `REVIEW`, and `NO_BLOCKERS_FOUND`. They include sources, evidence scope/freshness, exact message SHA-256, proposed corrections and recheck instructions. Supplied evidence is not independently authenticated. No live provider calls or email sending occur, and no-blockers results remain limited to the implemented checks. Changed drafts need fresh reviews bound to the new fingerprint.
 
 ## Restricted-party screening
 
@@ -110,7 +102,6 @@ Product and both countries are required. The tool selects the workflow; `action_
 | Same shipping and destination country | No pack; separate domestic review required | `unsupported` |
 | Different countries, destination US | `us-import` | `destination_specific` |
 | Different countries, other destination | `general-purchase` | `general` |
-| Separate marketing tool, any recipient country | `general-marketing` | `general` |
 | Separate screening tool, any party country | `us-restricted-party` | `list_screening` |
 
 Purchase requirement checks remain advisory. Valid checks return `REVIEW` with the applicable requirements and next steps; missing or invalid required inputs are rejected. Product names are retained without classification. Purchase results retain both `action` and legacy `purchase`; screening results have `action` and `screening`.
@@ -126,8 +117,9 @@ Snapshots marked `STALE` can still return `POTENTIAL_MATCH` or `NO_CANDIDATES`, 
 - `index.ts`: five public tools, distinct purchase/marketing/screening schemas, and MCP envelopes.
 - `src/schemas.ts`, `src/countries.ts`: shared action/result schemas and country validation.
 - `src/router/`: policy registration, selection, and reasons.
-- `src/policies/`: independent `us-import`, `general-purchase`, `general-marketing`, and `us-restricted-party` packs.
-- `src/policy.ts`: purchase and marketing checks with remediation.
+- `src/policies/`: independent `us-import`, `general-purchase`, and `us-restricted-party` packs.
+- `src/policy.ts`: purchase checks with remediation.
+- `src/marketing/`: independent schemas, evidence validation, three policy packs and demonstration scenarios.
 - `src/screening/`: bundled snapshot validation, age reporting, matching, results.
 - `data/`: full CSL JSON snapshot and provenance metadata, embedded by the build.
 - `scripts/refresh-screening-list.mjs`: explicit refresh from the official public download.

@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+node_modules
 .pnpm-store/
 
 # Build output
@@ -42,3 +42,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Marketing demo compiler output
+.marketing-build/

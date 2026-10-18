@@ -37,6 +37,12 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         <section>
           <h3><span>02</span> Result & next steps</h3>
           <p className="demo-result-summary">{record.summary}</p>
+          {record.marketing && <div className="demo-screening-results">
+            <p>Marketing coverage: {record.marketing.policies.join(", ") || "Separate review required"}. Evidence is supplied by the caller.</p>
+            {record.marketing.corrections.map((correction, index) => <article key={index}><strong>Proposed correction · {correction.field}</strong><p>{correction.value}</p><p>{correction.reason}</p></article>)}
+            <details className="demo-scope"><summary>Evidence freshness and scope</summary>{record.marketing.evidence.map((item) => <article key={item.kind}><strong>{item.kind.replaceAll("_", " ")} · {item.status.replaceAll("_", " ")}</strong><p>{item.detail}</p>{item.reference && <p>{item.reference}{item.observedAt ? ` · ${timeLabel(item.observedAt)}` : ""}</p>}</article>)}</details>
+            <details className="demo-scope"><summary>Message fingerprint and coverage</summary><p>{record.marketing.messageHash}</p>{record.marketing.limitations.map((note) => <p key={note}>{note}</p>)}</details>
+          </div>}
           {record.screening && <div className="demo-screening-results">
             <p>{record.screening.status?.replaceAll("_", " ") ?? "Screening status not captured"}
               {record.screening.totalMatches !== null ? ` · ${record.screening.totalMatches} candidate records` : ""}</p>
@@ -154,7 +160,7 @@ export function Demo() {
                 <article className={`demo-request ${openId === record.id ? "demo-request-open" : ""}`} key={record.id}>
                   <button className="demo-request-row" aria-expanded={openId === record.id} aria-controls={`detail-${record.id}`} onClick={() => setOpenId(openId === record.id ? null : record.id)}>
                     <span className="demo-request-main"><span className={`demo-type-icon demo-type-${record.category}`}><Icon name={record.category === "screening" ? "shield" : record.category === "marketing" ? "mail" : record.category === "trade" ? "briefcase" : "file"} size={18} /></span><span><strong>{record.title}</strong><span className="demo-request-route">{record.route}</span><span className="demo-request-time">{timeLabel(record.time)} <span>·</span> {toolLabels[record.tool]}</span></span></span>
-                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
+                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "composed" ? "Marketing policy checks" : record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
                   </button>
                   {openId === record.id && <RequestDetails record={record} />}
                 </article>

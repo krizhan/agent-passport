@@ -25,6 +25,10 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
+## Marketing request results
+
+Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Read `marketing://examples` in the MCP Inspector for fresh synthetic requests, and see the [marketing engine guide](../mcp/src/marketing/README.md).
+
 ## Request-history demo
 
 Open **http://127.0.0.1:5173/demo** (or the port printed by Vite). It reads real captured requests from the existing Manufact gateway; it does not generate examples or execute business actions.
@@ -50,7 +54,7 @@ Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules
 
 Manufact’s [gateway events API](https://manufact.com/openapi.json) is read with a bearer token on the server. [Payload capture](https://docs.manufact.com/dashboard/observability) must have been enabled when a request happened to recover its inputs and outputs. Metadata-only history cannot be reconstructed. History retention is controlled by the Manufact plan. The endpoint returns a projection of compliance fields; it excludes gateway headers, IP addresses, actor IDs, and raw request/response bodies.
 
-All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
+All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool evaluates supplied draft/evidence records against selected policies, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
 
 ## Check and build
 

@@ -41,6 +41,7 @@
 .demo-outcome-block, .demo-outcome-error { color: #aa5849; background: #fbefeb; }
 .demo-outcome-checklist { color: #5c7ea6; background: #edf3fa; }
 .demo-outcome-unavailable { color: #7a877e; background: #f0f3ef; }
+.demo-outcome-no_blockers_found { color: #4e7842; background: #edf4e9; }
 .demo-policy-cell { font-size: 11px; color: #566b59; line-height: 1.5; overflow-wrap: anywhere; }
 .demo-policy-cell small { display: block; color: #a1aa9e; font-size: 9px; margin-top: 4px; }
 .demo-expand { font-size: 20px; font-weight: 300; color: #80977e; text-align: center; }
