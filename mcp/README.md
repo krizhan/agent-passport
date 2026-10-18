@@ -88,7 +88,7 @@ The evaluator normalizes ISO countries, maps EU members to the EU pack, and comb
 
 Supplied documents remain `PROVIDED_UNVERIFIED`; expired documents are checked against the planned date. Each supplied party is searched against the bundled CSL. Stale/unavailable screening adds a current-evidence gap while retaining historical candidates. A candidate is neither confirmed identity nor an automatic legal prohibition.
 
-Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or failed modeled shipment condition, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, otherwise `REVIEW`. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. Executable findings add `check` with `status`, `reason_code`, evidence references, missing fields, and next steps; individual `SATISFIED` checks do not create a transaction-level pass.
+Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or failed modeled shipment condition, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, `REVIEW` for substantive or coverage review, or `NO_BLOCKERS_FOUND` when the implemented checks have complete supplied evidence, recent no-candidate screening, no substantive review finding and no unsupported route side. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. `NO_BLOCKERS_FOUND` is scoped, advisory, and not legal clearance or authorization to ship; evidence remains unverified. Executable findings add `check` with `status`, `reason_code`, evidence references, missing fields, and next steps.
 
 ### Singapore, India, and FDA prior-notice checks
 
@@ -103,6 +103,8 @@ Timing uses FDA confirmation time: at least four hours before air arrival or eig
 Examples include prohibition, exception, conflict, expired/mismatched evidence, missing shipment context, missing notice → matching evidence, air/sea minimum boundaries, calendar-day limits, and time-zone cases. Rerun `demo:trade` to refresh timestamped synthetic evidence before presenting the demo.
 
 Every result has `advisory_only: true`, `can_proceed_under_checked_rules: false`, `execution_performed: false`, and `coverage.full_transaction_coverage: false`. Unsupported route sides remain explicit. Sources include verification status/date; Japanese METI references that could not be fetched are marked `reference_only` with a null review date. EU national overlays, Northern Ireland, indirect ownership, FDP/de minimis calculations, current quotas, tariffs/duties and emergency measures require additional review.
+
+The narrow Canadian `general_goods` import-readiness check can support a `NO_BLOCKERS_FOUND` demo when the request supplies a Canadian importer BN15/CARM reference, origin, proposed classification, quantity/value/currency, commercial invoice, classification record, end-user statement, ownership evidence, low-risk end use and parties whose recent bundled screening returns no candidates. Product-specific controls, final tariff treatment, duties, taxes and customs release remain outside that result.
 
 ### Regenerate the demo
 

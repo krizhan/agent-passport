@@ -10,6 +10,11 @@ const canadaExport: LegalSource = {
   url: "https://www.international.gc.ca/trade-commerce/controls-controles/ecl-lec/index.aspx?lang=eng",
   verified_as_of: "2026-10-17", verification_status: "verified_guidance",
 };
+const canadaCommercialImport: LegalSource = {
+  title: "CBSA: Guide to importing commercial goods into Canada",
+  url: "https://www.cbsa-asfc.gc.ca/import/guide-eng.html",
+  verified_as_of: "2026-10-18", verification_status: "verified_guidance",
+};
 const bicon: LegalSource = {
   title: "DAFF: Biosecurity Import Conditions system (BICON)",
   url: "https://www.agriculture.gov.au/import/online-services/bicon",
@@ -32,6 +37,21 @@ const australiaExceptions: LegalSource = {
 };
 
 export const canadaAustraliaRules: readonly TradeRule[] = [
+  {
+    id: "CA-IMPORT-GENERAL-GOODS-READINESS", version: "1.0.0", jurisdiction: "CA", direction: "import",
+    title: "Canadian general commercial-goods import readiness",
+    categories: ["general_goods"], transaction_types: ["shipment", "reexport"],
+    conditions: { field: "to_country", op: "eq", value: "CA" },
+    required_inputs: ["origin_country", "hs_code", "classification_evidence", "quantity", "value", "currency",
+      "technical_specifications.importer_bn15", "end_user", "end_use"],
+    finding: "DOCUMENT_REQUIRED",
+    explanation: "For this narrow general-goods scenario, retain the importer account identifier, commercial invoice, origin, value and proposed customs classification before presenting the shipment for Canadian release. Supplied facts remain unverified, and product-specific controls, tariff treatment, duties, taxes, marking and other-agency requirements remain outside this basic check.",
+    required_documents: ["classification_record", "commercial_invoice", "canada_importer_account_confirmation"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect the importer BN15/CARM account confirmation, commercial invoice, origin, value, quantity and proposed Canadian tariff classification." },
+      { owner: "human", instruction: "Validate the importer account, invoice, origin, value and 10-digit Canadian tariff classification; separately confirm product-specific controls, tariff treatment, duties, taxes and release instructions." },
+    ], sources: [canadaCommercialImport],
+  },
   {
     id: "CA-IMPORT-FOOD-REVIEW", version: "1.0.0", jurisdiction: "CA", direction: "import",
     title: "Determine Canadian food-import licensing and commodity conditions",
