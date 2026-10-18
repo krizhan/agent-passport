@@ -1,0 +1,1500 @@
+[
+  {
+    "id": "us-ordinary-import",
+    "title": "Canadian furniture import needs customs evidence",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "940360",
+      "product": "Wooden office tables",
+      "product_category": "general_goods"
+    }
+  },
+  {
+    "id": "us-food-import",
+    "title": "Packaged food requires FDA applicability review",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "190531",
+      "product": "Packaged oat biscuits",
+      "product_category": "food_agriculture",
+      "technical_specifications": {
+        "food_type": "Baked biscuits",
+        "manufacturer": "Demo Canadian bakery",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      }
+    }
+  },
+  {
+    "id": "us-plant-import",
+    "title": "Fresh plant commodity needs exact APHIS lookup",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "080810",
+      "product": "Fresh apples",
+      "product_category": "food_agriculture",
+      "technical_specifications": {
+        "food_type": "Fresh fruit",
+        "manufacturer": "Demo orchard",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": true,
+        "botanical_name": "Malus domestica",
+        "plant_part": "Fruit",
+        "processing": "Fresh, untreated"
+      }
+    }
+  },
+  {
+    "id": "us-medical-import",
+    "title": "Medical device jurisdiction and registration review",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "901812",
+      "product": "Diagnostic ultrasound system",
+      "product_category": "medical",
+      "technical_specifications": {
+        "medical_product_type": "Diagnostic medical device",
+        "intended_medical_use": "Clinical diagnostic imaging",
+        "manufacturer": "Demo Canadian medical systems"
+      }
+    }
+  },
+  {
+    "id": "us-chemical-import",
+    "title": "Chemical mixture needs TSCA assessment",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "340290",
+      "product": "Industrial cleaning mixture",
+      "product_category": "chemicals",
+      "end_use": "Industrial equipment cleaning",
+      "technical_specifications": {
+        "chemical_identity": "Demo supplier SDS identifies all constituents",
+        "chemical_form": "Liquid mixture, not part of an article"
+      }
+    }
+  },
+  {
+    "id": "us-wildlife-import",
+    "title": "Wildlife specimen requires species and permit assessment",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "010620",
+      "product": "Captive-bred reptile specimens",
+      "product_category": "wildlife",
+      "technical_specifications": {
+        "scientific_name": "Python regius",
+        "specimen_source": "Captive bred; supplier claim unverified",
+        "specimen_type": "Live animals"
+      }
+    }
+  },
+  {
+    "id": "us-forced-labor-risk",
+    "title": "Supply-chain labor risk requires human admissibility review",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [
+        "forced_labor"
+      ],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "620342",
+      "product": "Cotton uniforms",
+      "product_category": "general_goods",
+      "technical_specifications": {
+        "supply_chain_traceability": "Demo fabric, spinning, and cotton supplier records"
+      }
+    }
+  },
+  {
+    "id": "us-ordinary-export",
+    "title": "Ordinary export retains classification and end-use evidence",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Office tables",
+      "product_category": "general_goods",
+      "control_classification": "EAR99",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-dual-use-export",
+    "title": "Precision equipment requires technical control classification",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Precision machine tool",
+      "product_category": "dual_use",
+      "control_classification": "Proposed ECCN pending technical confirmation",
+      "technical_specifications": {
+        "manufacturer_model": "Demo precision model A",
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-computing-export",
+    "title": "Computing module needs model and recipient-specific review",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "AI computing module",
+      "product_category": "advanced_computing",
+      "control_classification": "Supplier proposes advanced-computing ECCN; unverified",
+      "technical_specifications": {
+        "manufacturer_model": "Demo accelerator A",
+        "performance": "Supplier performance datasheet attached in evidence store",
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-encryption-export",
+    "title": "Encrypted software needs ENC/classification assessment",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Encrypted backup software",
+      "product_category": "encryption",
+      "transaction_type": "technology_transfer",
+      "control_classification": "Supplier proposes 5D002; unverified",
+      "technical_specifications": {
+        "manufacturer_model": "Demo Backup 1.0",
+        "cryptographic_function": "Encrypted customer backups",
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-military-export",
+    "title": "Military component requires DDTC/BIS jurisdiction review",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Military aircraft component",
+      "product_category": "military",
+      "control_classification": "Supplier proposes USML entry; unverified",
+      "technical_specifications": {
+        "manufacturer_model": "Demo military component A",
+        "subject_to_ear": false,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-nuclear-export",
+    "title": "Nuclear equipment requires authorization and agency review",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Nuclear reactor component",
+      "product_category": "nuclear",
+      "technical_specifications": {
+        "nuclear_item_type": "Reactor equipment component",
+        "nuclear_material_details": "No radioactive material according to demo supplier",
+        "subject_to_ear": false,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-sensitive-end-use",
+    "title": "EAR99 goods can still trigger end-use review",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [
+        "diversion"
+      ],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Industrial spare parts",
+      "product_category": "general_goods",
+      "control_classification": "EAR99",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false,
+        "end_use_evidence": "Demo request includes unexplained onward shipment"
+      }
+    }
+  },
+  {
+    "id": "us-bis-specific-notice",
+    "title": "Supplied BIS notice establishes a conditional license finding",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Controlled industrial equipment",
+      "product_category": "dual_use",
+      "control_classification": "Demo classified item per notice",
+      "technical_specifications": {
+        "manufacturer_model": "Demo equipment B",
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": true,
+        "bis_notice_reference": "DEMO ONLY: supplied BIS notice for this exact transaction"
+      }
+    }
+  },
+  {
+    "id": "us-missing-classification",
+    "title": "Missing classification remains unknown and requests evidence",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "product": "Industrial sensor",
+      "product_category": "dual_use",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-missing-plant-status",
+    "title": "Agricultural product with missing plant status requests follow-up",
+    "input": {
+      "from_country": "CA",
+      "to_country": "US",
+      "origin_country": "CA",
+      "end_use_flags": [],
+      "quantity": 10,
+      "value": 2500,
+      "currency": "USD",
+      "hs_code": "940360",
+      "product": "Unspecified agricultural commodity",
+      "product_category": "food_agriculture"
+    }
+  },
+  {
+    "id": "us-origin-reexport",
+    "title": "U.S.-origin goods retain export review on foreign reexport",
+    "input": {
+      "from_country": "CA",
+      "to_country": "JP",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "U.S.-origin precision machine tool",
+      "transaction_type": "reexport",
+      "product_category": "dual_use",
+      "control_classification": "Supplier classification awaiting review",
+      "technical_specifications": {
+        "manufacturer_model": "Demo precision model A",
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "us-category-nonmatch",
+    "title": "Ordinary furniture does not match specialized product packs",
+    "input": {
+      "from_country": "US",
+      "to_country": "CA",
+      "origin_country": "US",
+      "end_use_flags": [],
+      "quantity": 2,
+      "value": 5000,
+      "currency": "USD",
+      "end_user": "Demo Canadian laboratory",
+      "end_use": "Civil laboratory research",
+      "classification_evidence": "Demo manufacturer classification record; human verification required",
+      "product": "Wooden office tables",
+      "product_category": "general_goods",
+      "control_classification": "EAR99",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      }
+    }
+  },
+  {
+    "id": "eu-classification-missing",
+    "title": "EU category supplied without a control classification",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": false,
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "eu-annex-i-physical-export",
+    "title": "Caller-confirmed Annex I export outside the EU",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "EU Annex I 2B006 (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": true,
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "eu-annex-i-technology",
+    "title": "Annex I technology made available outside the EU",
+    "input": {
+      "product": "Restricted process documentation for a controlled module",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "EU Annex I technology entry (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": true,
+        "eu_annex_iv_listed": false
+      },
+      "transaction_type": "technology_transfer"
+    }
+  },
+  {
+    "id": "eu-annex-iv-intra-union",
+    "title": "Annex IV item transferred between Member States",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "FR",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "EU Annex IV entry (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": true,
+        "eu_annex_iv_listed": true
+      }
+    }
+  },
+  {
+    "id": "eu-end-use-review",
+    "title": "Non-listed item with WMD concerns",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "general_goods",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Buyer inquiry suggests WMD-related use; clarification required",
+      "end_use_flags": [
+        "wmd"
+      ],
+      "technical_specifications": {
+        "eu_annex_i_listed": false,
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "eu001-candidate",
+    "title": "EU001 destination with a caller-confirmed controlled item",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "US",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "EU Annex I 2B006 (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": true,
+        "eu_annex_iv_listed": false
+      },
+      "documents": [
+        {
+          "type": "eu_export_authorization",
+          "reference": "Demo EU001 eligibility claim; not verified",
+          "expires_on": "2027-01-31"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eu-food-review",
+    "title": "Food import with commodity-specific requirements unresolved",
+    "input": {
+      "product": "Packaged roasted coffee",
+      "from_country": "BR",
+      "to_country": "NL",
+      "origin_country": "BR",
+      "planned_date": "2026-10-17",
+      "product_category": "food_agriculture",
+      "hs_code": "090121",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "food_type": "roasted coffee",
+        "eu_official_certificate_required": false
+      }
+    }
+  },
+  {
+    "id": "eu-food-official-certificate",
+    "title": "Food import with confirmed official certification requirements",
+    "input": {
+      "product": "Chilled dairy product",
+      "from_country": "NZ",
+      "to_country": "FR",
+      "origin_country": "NZ",
+      "planned_date": "2026-10-17",
+      "product_category": "food_agriculture",
+      "hs_code": "040690",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "food_type": "dairy product",
+        "eu_official_certificate_required": true
+      }
+    }
+  },
+  {
+    "id": "eu-wildlife-review",
+    "title": "Wildlife specimen requires listing and permit review",
+    "input": {
+      "product": "Captive-propagated orchid specimen",
+      "from_country": "TH",
+      "to_country": "DE",
+      "origin_country": "TH",
+      "planned_date": "2026-10-17",
+      "product_category": "wildlife",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "scientific_name": "Paphiopedilum rothschildianum",
+        "specimen_source": "artificial propagation claimed; verify"
+      }
+    }
+  },
+  {
+    "id": "eu-waste-movement-review",
+    "title": "Waste classification and procedure review for an intra-EU shipment",
+    "input": {
+      "product": "Scrap electrical assemblies for recovery",
+      "from_country": "DE",
+      "to_country": "BE",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "waste",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "waste_code": "Y49 (caller assertion)",
+        "hazardous": false,
+        "recovery_or_disposal": "recovery"
+      }
+    }
+  },
+  {
+    "id": "eu-sanctions-diversion",
+    "title": "EU export with an indirect-route diversion concern",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Buyer requests resale; ultimate recipient is unresolved",
+      "end_use_flags": [
+        "diversion"
+      ],
+      "technical_specifications": {
+        "eu_annex_i_listed": false,
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "gb-classification-missing",
+    "title": "UK strategic category without supporting classification",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": false,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "gb-controlled-physical-export",
+    "title": "Caller-confirmed strategic item exported from Great Britain",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "UK strategic list 2B006 (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": true,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "gb-controlled-cloud-access",
+    "title": "Controlled technology remotely accessed overseas",
+    "input": {
+      "product": "Controlled production drawings shared with an overseas engineering team",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "UK controlled technology entry (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": false,
+        "uk_controlled_technology": true,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      },
+      "transaction_type": "technology_transfer"
+    }
+  },
+  {
+    "id": "gb-military-catch-all-review",
+    "title": "Unlisted commercial item with military end-use concerns",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "general_goods",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under UK strategic control lists",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [
+        "military"
+      ],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": false,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "gb-ogel-candidate",
+    "title": "Controlled item with a proposed OGEL",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "UK strategic list entry (caller assertion)",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": true,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": true
+      },
+      "documents": [
+        {
+          "type": "uk_ogel_registration",
+          "reference": "Demo SPIRE registration requiring validation",
+          "expires_on": "2026-09-01"
+        }
+      ]
+    }
+  },
+  {
+    "id": "gb-sanctions-diversion",
+    "title": "UK export with indirect Russia diversion concerns",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under UK strategic control lists",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Distributor cannot confirm ultimate recipient",
+      "end_use_flags": [
+        "diversion"
+      ],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": false,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "eu-controlled-status-unknown",
+    "title": "EU item classification supplied but Annex I status missing",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "SG",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "eu-intra-union-annex-i-nonmatch",
+    "title": "Ordinary Annex I intra-EU transfer without Annex IV status",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "DE",
+      "to_country": "FR",
+      "origin_country": "DE",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "eu_annex_i_listed": true,
+        "eu_annex_iv_listed": false
+      }
+    }
+  },
+  {
+    "id": "eu-food-origin-unknown",
+    "title": "Food origin and commodity details missing",
+    "input": {
+      "product": "Food ingredients",
+      "from_country": "BR",
+      "to_country": "NL",
+      "planned_date": "2026-10-17",
+      "product_category": "food_agriculture",
+      "control_classification": "Assessed as not listed under EU Annex I or IV",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {}
+    }
+  },
+  {
+    "id": "gb-export-region-unknown",
+    "title": "UK controlled item without Great Britain or Northern Ireland detail",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under UK strategic control lists",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_strategic_listed": true,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "gb-northern-ireland-scope",
+    "title": "Northern Ireland item requires a separate territorial assessment",
+    "input": {
+      "product": "Industrial measurement module for a civilian factory",
+      "from_country": "GB",
+      "to_country": "FR",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "dual_use",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under UK strategic control lists",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "northern_ireland",
+        "uk_strategic_listed": true,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      }
+    }
+  },
+  {
+    "id": "gb-public-brochure-nonmatch",
+    "title": "Caller-confirmed non-controlled public brochure transfer",
+    "input": {
+      "product": "Public product brochure",
+      "from_country": "GB",
+      "to_country": "CA",
+      "origin_country": "GB",
+      "planned_date": "2026-10-17",
+      "product_category": "general_goods",
+      "hs_code": "903180",
+      "control_classification": "Assessed as not listed under UK strategic control lists",
+      "classification_evidence": "Demo manufacturer classification assessment: module specifications reviewed; status requires human validation.",
+      "end_user": "Example Civilian Factory",
+      "end_use": "Quality measurements on a civilian production line",
+      "end_use_flags": [],
+      "technical_specifications": {
+        "uk_export_region": "great_britain",
+        "uk_strategic_listed": false,
+        "uk_controlled_technology": false,
+        "ecju_end_use_notification": false,
+        "ogel_candidate": false
+      },
+      "transaction_type": "technology_transfer"
+    }
+  },
+  {
+    "id": "cn-rare-earth-classification",
+    "title": "Rare-earth magnet: establish Chinese list scope",
+    "input": {
+      "product": "DEMO samarium-cobalt magnet",
+      "product_category": "rare_earth",
+      "from_country": "CN",
+      "to_country": "DE",
+      "technical_specifications": {
+        "composition": "Samarium-cobalt; manufacturer composition report required",
+        "material_form": "Finished permanent magnet"
+      },
+      "end_user": "DEMO industrial motor maker",
+      "end_use": "Commercial motors"
+    }
+  },
+  {
+    "id": "cn-confirmed-listed-rare-earth",
+    "title": "Asserted listed magnet: obtain and verify authorization",
+    "input": {
+      "product": "DEMO listed samarium-cobalt magnet",
+      "product_category": "rare_earth",
+      "from_country": "CN",
+      "to_country": "DE",
+      "control_classification": "1C902.a.4",
+      "classification_evidence": "DEMO ONLY: reviewer asserts the applicable listed entry; verify before reliance",
+      "technical_specifications": {
+        "composition": "Samarium-cobalt",
+        "material_form": "Permanent magnet",
+        "cn_rare_earth_listed": true
+      },
+      "end_user": "DEMO industrial motor maker",
+      "end_use": "Commercial motors"
+    }
+  },
+  {
+    "id": "cn-dual-use-review",
+    "title": "Chinese machine tool: review national technical control scope",
+    "input": {
+      "product": "DEMO precision machine tool",
+      "product_category": "dual_use",
+      "from_country": "CN",
+      "to_country": "CA",
+      "technical_specifications": {
+        "performance": "Manufacturer accuracy and axis specification not yet supplied"
+      },
+      "end_user": "DEMO civil manufacturer",
+      "end_use": "Industrial machining"
+    }
+  },
+  {
+    "id": "india-scomet-review",
+    "title": "Indian chemical export: determine SCOMET entry",
+    "input": {
+      "product": "DEMO specialty chemical",
+      "product_category": "chemicals",
+      "from_country": "IN",
+      "to_country": "CA",
+      "technical_specifications": {
+        "performance": "CAS, composition and concentration evidence needed"
+      },
+      "end_user": "DEMO chemical plant",
+      "end_use": "Industrial synthesis"
+    }
+  },
+  {
+    "id": "india-import-code-policy",
+    "title": "Indian import: exact ITC(HS) policy lookup needed",
+    "input": {
+      "product": "DEMO industrial pump",
+      "product_category": "general_goods",
+      "from_country": "DE",
+      "to_country": "IN",
+      "origin_country": "DE",
+      "hs_code": "841370",
+      "technical_specifications": {
+        "india_itc_hs_code": "84137010"
+      }
+    }
+  },
+  {
+    "id": "india-confirmed-restricted-import",
+    "title": "Confirmed authorization route: DGFT document review",
+    "input": {
+      "product": "DEMO item with supplied restricted import policy evidence",
+      "product_category": "general_goods",
+      "from_country": "DE",
+      "to_country": "IN",
+      "origin_country": "DE",
+      "hs_code": "841370",
+      "classification_evidence": "DEMO ONLY: qualified reviewer classification attachment",
+      "technical_specifications": {
+        "india_itc_hs_code": "84137010",
+        "india_import_policy": "restricted_authorization",
+        "india_policy_evidence": "DEMO ONLY: synthetic policy assertion to exercise authorization branch; not the actual policy for this illustrative code"
+      }
+    }
+  },
+  {
+    "id": "canada-food-import",
+    "title": "Canadian food import: determine license and commodity requirements",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "CA",
+      "origin_country": "BR",
+      "technical_specifications": {
+        "food_commodity": "Coffee",
+        "processing": "Roasted and packaged",
+        "intended_use": "Human consumption for retail sale",
+        "importer_business_activity": "Commercial food import and distribution"
+      }
+    }
+  },
+  {
+    "id": "canada-controlled-export",
+    "title": "Canadian sensor export: classify under current ECL",
+    "input": {
+      "product": "DEMO optical sensor",
+      "product_category": "dual_use",
+      "from_country": "CA",
+      "to_country": "DE",
+      "technical_specifications": {
+        "performance": "Spectral and sensitivity specifications pending"
+      },
+      "end_user": "DEMO research laboratory",
+      "end_use": "Materials analysis"
+    }
+  },
+  {
+    "id": "australia-biosecurity-review",
+    "title": "Australian seed import: find precise BICON case",
+    "input": {
+      "product": "DEMO wheat seeds for laboratory research",
+      "product_category": "food_agriculture",
+      "from_country": "DE",
+      "to_country": "AU",
+      "origin_country": "DE",
+      "technical_specifications": {
+        "commodity": "Triticum aestivum seeds",
+        "processing": "Untreated research material",
+        "intended_use": "Contained laboratory research"
+      }
+    }
+  },
+  {
+    "id": "australia-confirmed-bicon-permit",
+    "title": "Supplied BICON permit requirement: obtain grant before arrival",
+    "input": {
+      "product": "DEMO biological research material",
+      "product_category": "food_agriculture",
+      "from_country": "DE",
+      "to_country": "AU",
+      "origin_country": "DE",
+      "technical_specifications": {
+        "commodity": "Biological research material",
+        "processing": "As described in synthetic case",
+        "intended_use": "Contained research",
+        "bicon_case_reference": "DEMO ONLY: synthetic case requiring permit; select a real matching BICON case before reliance",
+        "bicon_permit_required": true
+      }
+    }
+  },
+  {
+    "id": "australia-controlled-export",
+    "title": "Australian component: determine DSGL and exemption scope",
+    "input": {
+      "product": "DEMO aerospace navigation component",
+      "product_category": "dual_use",
+      "from_country": "AU",
+      "to_country": "GB",
+      "technical_specifications": {
+        "performance": "Navigation accuracy specification pending"
+      },
+      "end_user": "DEMO civil aircraft supplier",
+      "end_use": "Civil aircraft integration"
+    }
+  },
+  {
+    "id": "japan-strategic-export",
+    "title": "Japanese sensor export: review list classification",
+    "input": {
+      "product": "DEMO infrared detector",
+      "product_category": "dual_use",
+      "from_country": "JP",
+      "to_country": "CA",
+      "technical_specifications": {
+        "performance": "Detector specifications pending"
+      },
+      "end_user": "DEMO research laboratory",
+      "end_use": "Scientific observation"
+    }
+  },
+  {
+    "id": "japan-technology-transfer",
+    "title": "Japanese research-file transfer: examine technology content and recipient",
+    "input": {
+      "product": "DEMO laboratory process instructions",
+      "product_category": "general_goods",
+      "from_country": "JP",
+      "to_country": "DE",
+      "transaction_type": "technology_transfer",
+      "technical_specifications": {
+        "technology_content": "Process instructions requiring scope review",
+        "recipient_status": "Foreign research institute; details require verification"
+      },
+      "end_user": "DEMO research institute",
+      "end_use": "Joint research"
+    }
+  },
+  {
+    "id": "korea-strategic-export",
+    "title": "Korean equipment export: determine strategic-item status",
+    "input": {
+      "product": "DEMO precision production equipment",
+      "product_category": "dual_use",
+      "from_country": "KR",
+      "to_country": "DE",
+      "technical_specifications": {
+        "performance": "Precision and throughput specifications pending"
+      },
+      "end_user": "DEMO civil manufacturer",
+      "end_use": "Industrial manufacturing"
+    }
+  },
+  {
+    "id": "korea-sensitive-end-use",
+    "title": "Korean general equipment: review declared nuclear end use",
+    "input": {
+      "product": "DEMO industrial control equipment",
+      "product_category": "general_goods",
+      "from_country": "KR",
+      "to_country": "DE",
+      "end_use_flags": [
+        "nuclear"
+      ],
+      "technical_specifications": {
+        "performance": "Equipment performance sheet pending"
+      },
+      "end_user": "DEMO civilian energy research facility",
+      "end_use": "Civil nuclear research; exact activity to verify"
+    }
+  },
+  {
+    "id": "cn-rare-earth-missing-evidence",
+    "title": "Missing rare-earth evidence asks for inputs without assuming licensing",
+    "input": {
+      "product": "DEMO unspecified rare-earth item",
+      "product_category": "rare_earth",
+      "from_country": "CN",
+      "to_country": "DE"
+    }
+  },
+  {
+    "id": "cn-rare-earth-false-list-assertion",
+    "title": "Explicit unlisted assertion does not trigger confirmed-list authorization",
+    "input": {
+      "product": "DEMO rare-earth sample",
+      "product_category": "rare_earth",
+      "from_country": "CN",
+      "to_country": "DE",
+      "control_classification": "DEMO reviewed as outside supplied entry",
+      "classification_evidence": "DEMO ONLY: synthetic reviewer attachment",
+      "technical_specifications": {
+        "cn_rare_earth_listed": false,
+        "composition": "Composition requires independent validation",
+        "material_form": "Sample"
+      }
+    }
+  },
+  {
+    "id": "country-pack-nearby-nonmatch",
+    "title": "Ordinary Japanese furniture does not match strategic-item rules",
+    "input": {
+      "product": "DEMO metal office chair",
+      "product_category": "general_goods",
+      "from_country": "JP",
+      "to_country": "DE"
+    }
+  },
+  {
+    "id": "common-physical",
+    "title": "Cooling fans: origin and customs evidence",
+    "input": {
+      "product": "Cooling fans",
+      "from_country": "VN",
+      "to_country": "US",
+      "product_category": "general_goods"
+    }
+  },
+  {
+    "id": "common-technology",
+    "title": "Software access: technical classification needed",
+    "input": {
+      "product": "Encryption software access",
+      "from_country": "US",
+      "to_country": "GB",
+      "transaction_type": "technology_transfer",
+      "product_category": "encryption"
+    }
+  },
+  {
+    "id": "common-reexport",
+    "title": "U.S.-origin equipment reexported from Britain",
+    "input": {
+      "product": "U.S.-origin laboratory instrument",
+      "from_country": "GB",
+      "to_country": "JP",
+      "origin_country": "US",
+      "transaction_type": "reexport",
+      "product_category": "dual_use"
+    }
+  },
+  {
+    "id": "common-ownership",
+    "title": "Declared aggregate blocked ownership needs review",
+    "input": {
+      "product": "Commercial spare parts",
+      "from_country": "US",
+      "to_country": "CA",
+      "product_category": "general_goods",
+      "ownership": {
+        "blocked_ownership_percent": 50,
+        "evidence": "Synthetic ownership record; reviewer verification required"
+      }
+    }
+  },
+  {
+    "id": "common-unknown-category",
+    "title": "Unclassified goods on an unsupported route",
+    "input": {
+      "product": "Unspecified equipment",
+      "from_country": "MX",
+      "to_country": "ZA"
+    }
+  },
+  {
+    "id": "common-transit",
+    "title": "Transit through Singapore needs a local review",
+    "input": {
+      "product": "Industrial equipment",
+      "from_country": "US",
+      "to_country": "AU",
+      "transit_countries": [
+        "SG"
+      ],
+      "product_category": "dual_use"
+    }
+  },
+  {
+    "id": "evidence-collected-review",
+    "title": "Evidence collected: ordinary goods still need review",
+    "input": {
+      "product": "DEMO commercial cooling fans",
+      "from_country": "US",
+      "to_country": "GB",
+      "origin_country": "US",
+      "product_category": "general_goods",
+      "hs_code": "841459",
+      "control_classification": "EAR99",
+      "classification_evidence": "DEMO manufacturer assessment; qualified review still required",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      },
+      "end_user": "Example Components 9F21 Ltd",
+      "end_use": "Civilian equipment maintenance",
+      "end_use_flags": [],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record; unverified"
+      },
+      "parties": [
+        {
+          "name": "Example Components 9F21 Ltd",
+          "role": "end_user",
+          "country": "GB"
+        }
+      ],
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO manufacturer record; unverified"
+        },
+        {
+          "type": "end_user_statement",
+          "reference": "DEMO civilian end-user statement; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "expired-document",
+    "title": "Expired classification evidence needs replacement",
+    "input": {
+      "product": "DEMO commercial cooling fans",
+      "from_country": "US",
+      "to_country": "GB",
+      "origin_country": "US",
+      "product_category": "general_goods",
+      "hs_code": "841459",
+      "control_classification": "EAR99",
+      "classification_evidence": "DEMO manufacturer assessment; qualified review still required",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      },
+      "end_user": "Example Components 9F21 Ltd",
+      "end_use": "Civilian equipment maintenance",
+      "end_use_flags": [],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record; unverified"
+      },
+      "parties": [
+        {
+          "name": "Example Components 9F21 Ltd",
+          "role": "end_user",
+          "country": "GB"
+        }
+      ],
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO manufacturer record; unverified",
+          "expires_on": "2025-01-01"
+        },
+        {
+          "type": "end_user_statement",
+          "reference": "DEMO civilian end-user statement; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "bundled-party-candidate",
+    "title": "Bank-name candidate needs identity and sanctions review",
+    "input": {
+      "product": "DEMO goods with an intermediary screening query",
+      "from_country": "US",
+      "to_country": "GB",
+      "origin_country": "US",
+      "product_category": "general_goods",
+      "hs_code": "841459",
+      "control_classification": "EAR99",
+      "classification_evidence": "DEMO manufacturer assessment; qualified review still required",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": false
+      },
+      "end_user": "Example Components 9F21 Ltd",
+      "end_use": "Civilian equipment maintenance",
+      "end_use_flags": [],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record; unverified"
+      },
+      "parties": [
+        {
+          "name": "VTB BANK PUBLIC JOINT STOCK COMPANY",
+          "role": "intermediary",
+          "country": "RU"
+        }
+      ],
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO manufacturer record; unverified"
+        },
+        {
+          "type": "end_user_statement",
+          "reference": "DEMO civilian end-user statement; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "supplied-license-review",
+    "title": "Supplied license remains unverified",
+    "input": {
+      "product": "DEMO commercial cooling fans",
+      "from_country": "US",
+      "to_country": "GB",
+      "origin_country": "US",
+      "product_category": "general_goods",
+      "hs_code": "841459",
+      "control_classification": "EAR99",
+      "classification_evidence": "DEMO manufacturer assessment; qualified review still required",
+      "technical_specifications": {
+        "subject_to_ear": true,
+        "bis_specific_notice_requires_license": true,
+        "bis_notice_reference": "DEMO transaction-specific notice; unverified"
+      },
+      "end_user": "Example Components 9F21 Ltd",
+      "end_use": "Civilian equipment maintenance",
+      "end_use_flags": [],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record; unverified"
+      },
+      "parties": [
+        {
+          "name": "Example Components 9F21 Ltd",
+          "role": "end_user",
+          "country": "GB"
+        }
+      ],
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO manufacturer record; unverified"
+        },
+        {
+          "type": "end_user_statement",
+          "reference": "DEMO civilian end-user statement; unverified"
+        },
+        {
+          "type": "bis_specific_notice",
+          "reference": "DEMO notice; unverified"
+        },
+        {
+          "type": "export_license",
+          "reference": "DEMO authorization; issuer and scope unverified"
+        }
+      ]
+    }
+  }
+]

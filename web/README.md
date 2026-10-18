@@ -25,6 +25,10 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
+## Scenario gallery
+
+Open `/scenarios` to browse 70 recorded assessments from 52 hardcoded rules. Select a scenario, read separate import/export findings, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
+
 ## Marketing request results
 
 Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Read `marketing://examples` in the MCP Inspector for fresh synthetic requests, and see the [marketing engine guide](../mcp/src/marketing/README.md).

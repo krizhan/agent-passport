@@ -55,7 +55,7 @@ function sourceUrl(value: unknown): string | null {
   } catch { return null; }
 }
 
-// Retain names from recorded history; only the explicit names are public tools.
+// Historical aliases remain readable; only the explicit tool names are public.
 const tradeTools = new Set(["check_import_export", "get_import_export_requirements", "get_import_export_remediation_plan",
   "check_action", "get_requirements", "get_remediation_plan"]);
 const tools = new Set([...tradeTools, "check_marketing_email", "screen_restricted_party"]);
@@ -83,7 +83,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   const action = Object.keys(input).length ? input : echoed;
   const category = action.action_type === "restricted_party_screening" || tool === "screen_restricted_party" ? "screening"
     : action.action_type === "marketing_email" || tool === "check_marketing_email" ? "marketing"
-    : tradeTools.has(tool) || action.action_type === "purchase" || (action.product && action.from_country && action.to_country) ? "trade" : "unknown";
+    : tradeTools.has(tool) || action.action_type === "purchase" || action.action_type === "import_export" || (action.product && action.from_country && action.to_country) ? "trade" : "unknown";
   const error = object(response.error);
   const failed = result.isError === true || event.tool_call_success === false
     || event.mcp_response_status === "error" || event.status === "error"
@@ -133,12 +133,22 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     fact("Message SHA-256", string(data.message_sha256));
     fact("Evidence mode", data.live_lookup_performed === false ? "Caller-supplied records; no live provider lookup" : null);
   } else if (category === "trade") {
-    title = `Purchase ${string(action.product, 500) ?? "goods"}`;
+    const isTrade = action.action_type === "import_export" || Object.keys(object(data.findings)).length > 0;
+    title = `${isTrade ? "Assess" : "Purchase"} ${string(action.product, 500) ?? "goods"}`;
     route = `${country(action.from_country) ?? "Origin not recorded"} → ${country(action.to_country) ?? "Destination not recorded"}`;
-    fact("Requested action", "International purchase");
+    fact("Requested action", isTrade ? "Import and export assessment" : "International purchase");
     fact("Product", string(action.product, 500));
     fact("Ships from", country(action.from_country));
     fact("Destination", country(action.to_country));
+    if (isTrade) {
+      fact("Transaction type", string(action.transaction_type));
+      fact("Manufacturing origin", country(action.origin_country));
+      fact("Product category", string(action.product_category));
+      fact("HS/customs code", string(action.hs_code));
+      fact("Control classification", string(action.control_classification));
+      fact("End use", string(action.end_use));
+      fact("Planned date", string(data.planned_date) ?? string(action.planned_date));
+    }
   }
   const requirements = list(data.requirements).slice(0, category === "marketing" ? 150 : 50).map((raw, index) => {
     const item = object(raw);
@@ -155,10 +165,29 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     : string(data.summary) ?? (outcome === "CHECKLIST" ? "The tool returned a checklist of requirements to review. This is not a clearance decision."
       : "The captured response does not contain a readable compliance result. Payload capture may have been off or the response may be incomplete.");
   const screening = object(data.screening);
-  const coverage = object(data.coverage);
+  const tradeCoverage = object(data.coverage);
+  const coverage = tradeCoverage;
+  const tradeFindings = object(data.findings);
   return {
     id, time, tool, category, title, route, outcome, summary,
     durationMs: number(event.duration_ms), facts, requirements,
+    ...(tool === "check_import_export" && Object.keys(tradeFindings).length ? { trade: {
+      checkedJurisdictions: list(tradeCoverage.checked_jurisdictions).map((value) => string(value, 50)).filter((value): value is string => !!value),
+      unsupported: list(tradeCoverage.unsupported).slice(0, 20).map((raw) => {
+        const side = object(raw); return { country: string(side.country, 50) ?? "Unknown", direction: string(side.direction, 50) ?? "review", reason: string(side.reason) ?? "Separate review required." };
+      }),
+      missingFields: list(data.missing_information).slice(0, 100).flatMap((raw) => { const field = string(object(raw).field); return field ? [field] : []; }),
+      findings: ["import", "export", "transit", "screening", "general"].flatMap((direction) => list(tradeFindings[direction]).slice(0, 30).map((raw, index) => {
+        const item = object(raw); const source = object(list(item.sources)[0]);
+        return { id: string(item.rule_id) ?? `${direction}.${index}`, direction, title: string(item.title) ?? "Trade finding", code: string(item.code) ?? "HUMAN_REVIEW_REQUIRED",
+          conditionStatus: string(item.condition_status) ?? "UNKNOWN", detail: string(item.detail) ?? "Review required.", sourceUrl: sourceUrl(source.url) };
+      })),
+      screening: list(data.screening).slice(0, 10).map((raw) => {
+        const item = object(raw); const result = object(item.result); const source = object(result.source);
+        return { party: string(item.party_name, 200) ?? "Party", status: string(result.status) ?? "UNAVAILABLE", freshness: string(source.freshness) ?? "UNAVAILABLE",
+          generatedAt: string(source.dataset_generated_at), totalMatches: number(result.total_matches) };
+      }),
+    } } : {}),
     ...(category === "marketing" && string(data.message_sha256) ? { marketing: {
       messageHash: string(data.message_sha256),
       policies: list(coverage.checked_policies).map((value) => string(value, 100)).filter((value): value is string => !!value),

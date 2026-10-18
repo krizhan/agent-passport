@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T02:22:56.422Z",
+  "generated_at": "2026-10-18T02:55:53.705Z",
   "note": "Synthetic demonstration records. For fresh examples read the MCP resource marketing://examples.",
   "scenarios": [
     {
@@ -30,23 +30,23 @@
           "kind": "commercial",
           "purpose": "Coffee collection promotion"
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -61,7 +61,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -71,7 +71,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -80,7 +80,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "3395abd592455a94cfd3a1ae8597f40a202f617e64a2c8a2fe33e2291874c6f3"
@@ -88,7 +88,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -129,23 +129,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -160,7 +160,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -170,7 +170,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -179,7 +179,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -187,7 +187,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -228,23 +228,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -259,7 +259,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -269,7 +269,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -278,7 +278,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -286,7 +286,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -327,23 +327,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -358,7 +358,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -366,7 +366,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -377,7 +377,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -387,7 +387,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -396,7 +396,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -404,7 +404,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -445,23 +445,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -476,7 +476,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -484,21 +484,21 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
             "specific_and_informed": true,
             "freely_given": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332",
-            "qualifying_event_at": "2026-07-10T02:22:56.422Z",
+            "qualifying_event_at": "2026-07-10T02:55:53.705Z",
             "collected_directly": true,
             "during_sale_or_negotiation": true
           },
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -508,7 +508,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -517,7 +517,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -525,7 +525,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -566,23 +566,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -597,7 +597,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -605,14 +605,14 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
             "specific_and_informed": true,
             "freely_given": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332",
-            "qualifying_event_at": "2026-07-10T02:22:56.422Z",
+            "qualifying_event_at": "2026-07-10T02:55:53.705Z",
             "collected_directly": true,
             "during_sale_or_negotiation": true,
             "opt_out_at_collection": true
@@ -620,7 +620,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -630,7 +630,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -639,7 +639,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -647,7 +647,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -688,23 +688,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -719,7 +719,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -727,19 +727,19 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
             "specific_and_informed": true,
             "freely_given": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332",
-            "qualifying_event_at": "2026-03-18T02:22:56.422Z"
+            "qualifying_event_at": "2026-03-18T02:55:53.705Z"
           },
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -749,7 +749,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -758,7 +758,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -766,7 +766,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -807,23 +807,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -838,7 +838,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -846,19 +846,19 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
             "specific_and_informed": true,
             "freely_given": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332",
-            "qualifying_event_at": "2025-10-18T02:22:56.422Z"
+            "qualifying_event_at": "2025-10-18T02:55:53.705Z"
           },
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -868,7 +868,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -877,7 +877,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -885,7 +885,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -926,23 +926,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -957,7 +957,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -967,7 +967,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -976,7 +976,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -984,7 +984,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1025,23 +1025,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1056,7 +1056,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1064,7 +1064,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1075,7 +1075,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1085,7 +1085,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1094,7 +1094,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1102,7 +1102,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1143,23 +1143,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1174,7 +1174,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1182,7 +1182,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": true,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1193,7 +1193,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1203,7 +1203,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1212,7 +1212,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1220,7 +1220,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1261,23 +1261,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1292,7 +1292,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1300,7 +1300,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1311,7 +1311,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1321,7 +1321,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1330,7 +1330,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1338,7 +1338,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1379,23 +1379,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1410,7 +1410,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1418,7 +1418,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1429,7 +1429,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "unavailable",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1439,7 +1439,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1448,7 +1448,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1456,7 +1456,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1497,23 +1497,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1528,7 +1528,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1536,7 +1536,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1547,7 +1547,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T00:22:56.422Z",
+            "observed_at": "2026-10-18T00:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1557,7 +1557,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1566,7 +1566,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1574,7 +1574,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1615,23 +1615,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1646,7 +1646,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1654,7 +1654,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1665,7 +1665,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1675,7 +1675,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1684,7 +1684,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1692,7 +1692,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1733,23 +1733,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1764,7 +1764,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1772,7 +1772,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1783,7 +1783,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1793,7 +1793,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1802,7 +1802,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1810,7 +1810,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1851,23 +1851,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -1882,7 +1882,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1890,7 +1890,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -1901,7 +1901,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1911,7 +1911,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -1920,7 +1920,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "b0152d9e03a3db4cc1f4e1e404fc33423248982216552db030bbee5b3e4df332"
@@ -1928,7 +1928,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -1969,23 +1969,23 @@
             "target": "https://example.com/unsubscribe"
           }
         },
-        "planned_send_at": "2026-10-18T02:22:56.422Z",
+        "planned_send_at": "2026-10-18T02:55:53.705Z",
         "evidence": {
           "sender_profile": {
             "reference": "demo-sender-profile",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "identity_confirmed": true,
             "postal_address_confirmed": true,
             "contact_confirmed": true,
-            "contact_valid_until": "2027-01-16T02:22:56.422Z"
+            "contact_valid_until": "2027-01-16T02:55:53.705Z"
           },
           "content_review": {
             "reference": "demo-draft-review",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "reviewed_by": "Demo reviewer",
@@ -2000,7 +2000,7 @@
           "permission": {
             "reference": "demo-consent-event",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -2008,7 +2008,7 @@
             "channel": "email",
             "covers_message": true,
             "withdrawn": false,
-            "granted_at": "2023-10-19T02:22:56.422Z",
+            "granted_at": "2023-10-19T02:55:53.705Z",
             "collection_method": "Unticked checkbox selected on the sender's own signup form",
             "consent_text": "I agree to receive coffee promotions by email from Example Store.",
             "affirmative_action": true,
@@ -2019,7 +2019,7 @@
           "suppression": {
             "reference": "demo-suppression-search",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",
@@ -2029,7 +2029,7 @@
           "unsubscribe": {
             "reference": "demo-unsubscribe-test",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "target": "https://example.com/unsubscribe",
@@ -2038,7 +2038,7 @@
             "free": true,
             "no_login_required": true,
             "all_marketing_opt_out": true,
-            "available_until": "2027-01-16T02:22:56.422Z",
+            "available_until": "2027-01-16T02:55:53.705Z",
             "max_processing_business_days": 1,
             "processes_without_delay": true,
             "message_sha256": "00becc917892403c46b301643dda5cc772c459a34ed4c735b3946c2aef3e8131"
@@ -2046,7 +2046,7 @@
           "subscriber": {
             "reference": "demo-subscriber-record",
             "source": "Synthetic demo evidence; no real system was queried",
-            "observed_at": "2026-10-18T02:22:56.422Z",
+            "observed_at": "2026-10-18T02:55:53.705Z",
             "status": "available",
             "sender_id": "example-store",
             "recipient_id": "synthetic-recipient-1",

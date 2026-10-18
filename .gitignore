@@ -23,5 +23,7 @@ __pycache__/
 *.pyc
 *.log
 
+.trade-build/
+
 # Marketing demo compiler output
 .marketing-build/

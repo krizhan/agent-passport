@@ -43,5 +43,7 @@ Thumbs.db
 *.swo
 *~
 
+.trade-build/
+
 # Marketing demo compiler output
 .marketing-build/
