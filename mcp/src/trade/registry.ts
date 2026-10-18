@@ -5,6 +5,8 @@ import { euRules } from "./rules/eu.js";
 import { ukRules } from "./rules/uk.js";
 import { chinaRules } from "./rules/china.js";
 import { indiaRules } from "./rules/india.js";
+import { singaporeRules } from "./rules/singapore.js";
+import { usPriorNoticeRules } from "./rules/us-prior-notice.js";
 import { canadaAustraliaRules } from "./rules/canada-australia.js";
 import { japanKoreaRules } from "./rules/japan-korea.js";
 import type { TradeRule } from "./types.js";
@@ -15,7 +17,7 @@ export const jurisdictionFor = (country: string) => EU_COUNTRIES.has(country) ? 
 
 export const tradeRules: readonly TradeRule[] = [
   ...commonRules, ...usImportRules, ...usExportRules, ...euRules, ...ukRules, ...chinaRules,
-  ...indiaRules, ...canadaAustraliaRules, ...japanKoreaRules,
+  ...indiaRules, ...singaporeRules, ...usPriorNoticeRules, ...canadaAustraliaRules, ...japanKoreaRules,
 ];
 
-export const TRADE_POLICY_VERSION = "hardcoded-trade/1.0.0";
+export const TRADE_POLICY_VERSION = "hardcoded-trade/1.1.0";

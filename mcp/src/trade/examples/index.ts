@@ -1,6 +1,7 @@
 import { usExamples } from "./us.js";
 import { euUkExamples } from "./eu-uk.js";
 import { otherExamples } from "./other.js";
+import { regulatoryExamples } from "./regulatory.js";
 import type { z } from "zod";
 import type { tradeInputSchema } from "../schemas.js";
 
@@ -43,4 +44,4 @@ const commonExamples: readonly TradeExample[] = [
     documents: [...evidenceDocuments, { type: "bis_specific_notice", reference: "DEMO notice; unverified" }, { type: "export_license", reference: "DEMO authorization; issuer and scope unverified" }] },
     },
 ];
-export const tradeExamples: readonly TradeExample[] = [...usExamples, ...euUkExamples, ...otherExamples, ...commonExamples];
+export const tradeExamples: readonly TradeExample[] = [...usExamples, ...euUkExamples, ...otherExamples, ...commonExamples, ...regulatoryExamples];

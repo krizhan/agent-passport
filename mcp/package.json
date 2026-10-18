@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Hardcoded trade scenarios, advisory purchase and marketing checks, and bundled U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {

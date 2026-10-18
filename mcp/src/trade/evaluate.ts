@@ -3,8 +3,8 @@ import type { ScreeningInput } from "../schemas.js";
 import type { ScreeningResult } from "../screening/schemas.js";
 import { evaluateCondition, fieldValue, isMissing } from "./conditions.js";
 import { jurisdictionFor, tradeRules, TRADE_POLICY_VERSION } from "./registry.js";
-import { tradeEvaluationSchema, tradeInputSchema, type TradeEvaluation } from "./schemas.js";
-import type { Direction, LegalSource, TradeInput, TradeRule } from "./types.js";
+import { ruleCheckSchema, tradeEvaluationSchema, tradeInputSchema, type TradeEvaluation } from "./schemas.js";
+import type { Direction, LegalSource, RuleCheck, TradeInput, TradeRule } from "./types.js";
 
 export interface EvaluationOptions {
   now?: Date;
@@ -60,13 +60,27 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
       evaluations.push({ ...base, outcome: "NOT_MATCHED", missing_fields: [] }); continue;
     }
     const condition = categoryUnknown ? { status: "UNKNOWN" as const, missing: ["product_category"] } : evaluatedCondition;
-    const required = categoryUnknown ? ["product_category"] : rule.required_inputs;
-    const missingFields = [...new Set([...condition.missing, ...required.filter((field) => isMissing(fieldValue(input, field)))])];
+    let check: RuleCheck | undefined;
+    if (rule.assess && !categoryUnknown && condition.status === "MATCHED") {
+      try {
+        check = ruleCheckSchema.parse(rule.assess(input, { now: new Date(now), plannedDate }));
+        if ((check.status === "SATISFIED" && check.missing_fields.length) || (check.status === "MISSING" && !check.missing_fields.length)) {
+          throw new Error("Inconsistent rule check");
+        }
+      } catch {
+        check = { status: "REVIEW", reason_code: "RULE_EVALUATION_ERROR", detail: "This required check could not be evaluated reliably. Resolve the error and recheck.",
+          missing_fields: [], evidence_refs: [], required_documents: [],
+          remediation_steps: [{ owner: "human", instruction: "Resolve the rule evaluation error before relying on this assessment." }] };
+      }
+    }
+    // Executable checks request their own evidence only after applicability is established.
+    const required = categoryUnknown ? ["product_category"] : rule.assess && !check ? [] : rule.required_inputs;
+    const missingFields = [...new Set([...condition.missing, ...(check ? check.missing_fields : required.filter((field) => isMissing(fieldValue(input, field))))])];
     const outcome = condition.status === "UNKNOWN" || missingFields.length > 0 ? "UNKNOWN" as const : "MATCHED" as const;
     evaluations.push({ ...base, outcome, missing_fields: missingFields });
     missingFields.forEach((field) => addMissing(field, rule.id));
     rule.sources.forEach((source) => sources.set(sourceKey(source), source));
-    const ruleDocs = categoryUnknown ? [] : rule.required_documents;
+    const ruleDocs = categoryUnknown || (rule.assess && !check) ? [] : check?.required_documents ?? rule.required_documents;
     for (const type of ruleDocs) {
       const supplied = input.documents.filter((doc) => doc.type === type);
       const valid = supplied.filter((doc) => !doc.expires_on || doc.expires_on >= plannedDate);
@@ -75,10 +89,11 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
         references: supplied.map((doc) => doc.reference), rule_ids: [...new Set([...(existing?.rule_ids ?? []), rule.id])] });
     }
     findings[rule.direction].push({ ...base, title: rule.title, condition_status: outcome,
-      code: categoryUnknown ? "CLASSIFICATION_REQUIRED"
+      code: categoryUnknown ? "CLASSIFICATION_REQUIRED" : check && check.status !== "FAILED" && rule.finding === "PROHIBITED" ? "HUMAN_REVIEW_REQUIRED"
         : outcome === "UNKNOWN" && (rule.finding === "PROHIBITED" || rule.finding === "LICENSE_REQUIRED") ? "HUMAN_REVIEW_REQUIRED" : rule.finding,
-      detail: rule.explanation, missing_fields: missingFields, required_documents: [...ruleDocs], sources: [...rule.sources] });
-    steps.push(...rule.remediation_steps.map((step) => ({ ...step, requirement_id: rule.id })));
+      detail: check ? `${check.reason_code}: ${check.detail}` : rule.explanation, missing_fields: missingFields,
+      required_documents: [...ruleDocs], sources: [...rule.sources], ...(check ? { check } : {}) });
+    steps.push(...(check?.remediation_steps ?? rule.remediation_steps).map((step) => ({ ...step, requirement_id: rule.id })));
   }
 
   const unsupported: TradeEvaluation["coverage"]["unsupported"] = [];
@@ -122,13 +137,13 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
 
   const allFindings = Object.values(findings).flat();
   const requiredDocuments = [...documents.values()];
-  const confirmedBlock = allFindings.some((finding) => finding.code === "PROHIBITED" && finding.condition_status === "MATCHED");
+  const confirmedBlock = allFindings.some((finding) => (finding.code === "PROHIBITED" || finding.check?.status === "FAILED") && finding.condition_status === "MATCHED");
   const needsEvidence = missing.size > 0 || requiredDocuments.some((doc) => doc.status !== "PROVIDED_UNVERIFIED");
   const decision = confirmedBlock ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : "REVIEW";
   const requirements: TradeEvaluation["requirements"] = allFindings.map((finding) => ({
     id: finding.rule_id, title: finding.title, basis: "legal_readiness", source_url: finding.sources[0]?.url ?? null,
-    description: finding.detail, status: finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
-      : finding.missing_fields.length ? "MISSING" : "REVIEW",
+    description: finding.detail, status: finding.check?.status ?? (finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
+      : finding.missing_fields.length ? "MISSING" : "REVIEW"),
     detail: `${finding.code}: ${finding.detail}${finding.missing_fields.length ? ` Missing: ${finding.missing_fields.join(", ")}.` : ""}`,
   }));
   for (const doc of requiredDocuments) {
@@ -148,7 +163,7 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
   return tradeEvaluationSchema.parse({
     action: { ...input, action_type: "import_export" }, assessed_at: now.toISOString(), planned_date: plannedDate,
     policy_version: TRADE_POLICY_VERSION, decision,
-    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${decision === "BLOCK" ? "A matched prohibition requires resolution." : "Review findings and authorization before acting."}`,
+    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${decision === "BLOCK" ? "A matched prohibition or failed shipment condition requires resolution." : "Review findings and authorization before acting."}`,
     scope: "Hardcoded scenario-level import/export advisory checks. Categories, classifications and documents are caller-supplied; no full legal clearance or business execution is provided.",
     routing: { policy_id: "hardcoded-trade", kind: "composed", reason: "Combine applicable origin/export, destination/import, transit and shared evidence rules. EU member countries map to the EU pack; national overlays remain review items." },
     advisory_only: true, can_proceed_under_checked_rules: false, execution_performed: false,

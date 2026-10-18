@@ -1,8 +1,9 @@
 import type { z } from "zod";
-import type { tradeInputSchema } from "./schemas.js";
+import type { ruleCheckSchema, tradeInputSchema } from "./schemas.js";
 
 export type TradeInput = z.infer<typeof tradeInputSchema>;
 export type Category = NonNullable<TradeInput["product_category"]>;
+export type RuleCheck = z.infer<typeof ruleCheckSchema>;
 export type Direction = "import" | "export" | "transit" | "screening" | "general";
 export type FindingCode = "PROHIBITED" | "LICENSE_REQUIRED" | "GENERAL_AUTHORIZATION_POSSIBLE"
   | "DOCUMENT_REQUIRED" | "QUOTA_REQUIRED" | "RESTRICTED_PARTY_REVIEW" | "END_USE_REVIEW"
@@ -33,4 +34,5 @@ export interface TradeRule {
   sources: readonly LegalSource[];
   legal_effective_from?: string;
   legal_effective_to?: string;
+  assess?: (input: TradeInput, context: { now: Date; plannedDate: string }) => RuleCheck;
 }

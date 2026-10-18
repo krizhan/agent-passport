@@ -6,7 +6,7 @@ import { screeningResultSchema } from "../screening/schemas.js";
 const text = z.string().trim().min(1).max(1000);
 const date = z.iso.date();
 export const productCategories = ["general_goods", "food_agriculture", "medical", "chemicals", "wildlife", "waste",
-  "dual_use", "advanced_computing", "encryption", "military", "nuclear", "rare_earth"] as const;
+  "dual_use", "advanced_computing", "encryption", "military", "nuclear", "rare_earth", "chewing_gum", "electronic_cigarette"] as const;
 export const tradeInputSchema = z.object({
   product: text.describe("Product/model or software/technology being transferred. A description alone does not establish classification."),
   from_country: countrySchema.describe("Shipping/exporting country; separate from manufacturing origin."),
@@ -30,7 +30,29 @@ export const tradeInputSchema = z.object({
   quantity: z.number().positive().finite().optional(),
   value: z.number().nonnegative().finite().optional(),
   currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/).optional(),
-  documents: z.array(z.object({ type: z.string().trim().min(1).max(100), reference: text, expires_on: date.optional() }).strict()).max(30).default([]),
+  shipment: z.object({
+    id: text.optional(),
+    purpose: z.enum(["commercial_sale", "personal_use", "sample", "transit", "other", "unknown"]).optional(),
+    transport_mode: z.enum(["air", "sea", "road", "rail", "international_mail", "unknown"]).optional(),
+    arrival_at: z.iso.datetime({ offset: true }).optional(),
+    arrival_timezone: text.refine((value) => {
+      try { new Intl.DateTimeFormat("en", { timeZone: value }); return true; } catch { return false; }
+    }, "Use an IANA time zone for the first U.S. port of arrival.").optional(),
+  }).strict().optional(),
+  prior_notice: z.object({
+    confirmation_number: text.optional(), confirmed_at: z.iso.datetime({ offset: true }).optional(),
+    submission_method: z.enum(["pnsi", "abi_ace"]).optional(),
+    evidence_reference: text.optional().describe("Reference of the fda_prior_notice_confirmation document for this product and shipment; not authenticated."),
+  }).strict().optional(),
+  documents: z.array(z.object({ type: z.string().trim().min(1).max(100), reference: text, expires_on: date.optional(),
+    product: text.optional(), shipment_id: text.optional(),
+  }).strict()).max(30).default([]),
+}).strict();
+
+export const ruleCheckSchema = z.object({
+  status: z.enum(["SATISFIED", "MISSING", "FAILED", "REVIEW"]), reason_code: z.string().min(1), detail: z.string().min(1),
+  missing_fields: z.array(z.string()), evidence_refs: z.array(z.string()), required_documents: z.array(z.string()),
+  remediation_steps: z.array(z.object({ owner: z.enum(["agent", "human"]), instruction: z.string().min(1) })),
 }).strict();
 
 export const legalSourceSchema = z.object({
@@ -44,6 +66,7 @@ const finding = z.object({
     "QUOTA_REQUIRED", "RESTRICTED_PARTY_REVIEW", "END_USE_REVIEW", "CLASSIFICATION_REQUIRED", "HUMAN_REVIEW_REQUIRED"]),
   condition_status: z.enum(["MATCHED", "UNKNOWN"]), detail: z.string(), missing_fields: z.array(z.string()),
   required_documents: z.array(z.string()), sources: z.array(legalSourceSchema),
+  check: ruleCheckSchema.optional(),
 });
 export const tradeEvaluationSchema = z.object({
   action: tradeInputSchema.extend({ action_type: z.literal("import_export") }),

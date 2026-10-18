@@ -27,7 +27,7 @@ The homepage needs no environment variables, API keys, InsForge connection, or r
 
 ## Scenario gallery
 
-Open `/scenarios` to browse 70 recorded assessments from 52 hardcoded rules. Select a scenario, read separate import/export findings, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
+Open `/scenarios` to browse 100 recorded assessments from 57 hardcoded rules. Select a scenario, read separate import/export findings, individual check statuses, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
 
 ## Marketing request results
 
