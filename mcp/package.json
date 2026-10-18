@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Advisory purchase and marketing checks with U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {
@@ -13,7 +13,8 @@
     "dev": "mcp-use dev",
     "start": "mcp-use start",
     "deploy": "mcp-use deploy",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "refresh:screening-list": "node scripts/refresh-screening-list.mjs"
   },
   "dependencies": {
     "iso-3166": "4.4.0",

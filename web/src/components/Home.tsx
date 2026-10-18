@@ -225,8 +225,8 @@ export function Home() {
               Screen counterparties <span>before acting.</span>
             </h2>
             <p>
-              Your agent checks a person or organization against the U.S.
-              Consolidated Screening List and receives possible matches,
+              Your agent checks a person or organization against a dated U.S.
+              Consolidated Screening List snapshot and receives possible matches,
               source links, and next steps for review.
             </p>
             <p>

@@ -4,9 +4,9 @@ import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, requ
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.7.0",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.8.0",
   description: "Advisory international purchase and marketing checks, plus point-in-time U.S. restricted-party screening.",
-  instructions: "Use get_requirements, check_action, and get_remediation_plan for purchases with product, from_country, and to_country; action_type defaults to purchase. Optional amount and budget must use the same currency and units. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It downloads the official U.S. CSL, screens names and aliases, and returns candidate records, source provenance, and review steps. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Data failures return UNAVAILABLE and require retry. No business actions are authorized or executed.",
+  instructions: "Use get_requirements, check_action, and get_remediation_plan for purchases with product, from_country, and to_country; action_type defaults to purchase. Optional amount and budget must use the same currency and units. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It screens names and aliases against a bundled U.S. CSL JSON snapshot without network access and returns candidate records, snapshot date/age, provenance, and review steps. Report stale snapshots explicitly; they must be refreshed and redeployed to include later list changes. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Invalid or incomplete bundled data returns UNAVAILABLE. No business actions are authorized or executed.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
 
@@ -48,9 +48,9 @@ server.tool({
 
 server.tool({
   name: "screen_restricted_party", title: "Screen restricted party",
-  description: "Screen a person or organization against the official U.S. Consolidated Screening List. Supply name and optional aliases, country, and address. Returns possible name matches, source links, snapshot timestamps, and review steps. Country is context, never a filter. Downloads public data without sending the submitted names upstream. U.S. list coverage only; no-match is not clearance and a candidate is not a confirmed identity. Failed, stale, or incomplete downloads return UNAVAILABLE. No business action is executed.",
+  description: "Screen a person or organization against the bundled U.S. Consolidated Screening List JSON snapshot. Supply name and optional aliases, country, and address. Returns possible name matches, agency links, snapshot date/age, freshness, and review steps. No live lookup or network access occurs. Country is context, never a filter. Stale snapshots still support historical matching and are explicitly flagged for refresh/redeployment. Invalid or incomplete data returns UNAVAILABLE. U.S. list coverage only; no candidates is not clearance and a candidate is not a confirmed identity. No business action is executed.",
   inputSchema: screeningInputSchema, outputSchema: screeningEvaluationSchema,
-  annotations: { ...annotations, openWorldHint: true },
+  annotations,
 }, async (input, context) => {
   const result = await screenRestrictedParty(input, { signal: context.signal });
   return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };

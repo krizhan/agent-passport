@@ -49,7 +49,7 @@ Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules
 
 Manufact’s [gateway events API](https://manufact.com/openapi.json) is read with a bearer token on the server. [Payload capture](https://docs.manufact.com/dashboard/observability) must have been enabled when a request happened to recover its inputs and outputs. Metadata-only history cannot be reconstructed. History retention is controlled by the Manufact plan. The endpoint returns a projection of compliance fields; it excludes gateway headers, IP addresses, actor IDs, and raw request/response bodies.
 
-All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs a U.S. CSL name search.
+All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
 
 ## Check and build
 

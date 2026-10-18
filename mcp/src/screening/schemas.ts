@@ -44,6 +44,9 @@ export const screeningResultSchema = z.object({
     name: z.literal("U.S. Consolidated Screening List"), url: webUrl,
     retrieved_at: z.iso.datetime().nullable(), dataset_generated_at: z.string().nullable(),
     http_last_modified: z.string().nullable(), sha256: z.string().nullable(),
+    upstream_sha256: z.string().nullable(),
+    mode: z.literal("bundled_json"), live_lookup_performed: z.literal(false),
+    freshness: z.enum(["RECENT", "STALE", "UNAVAILABLE"]), age_hours: z.number().nonnegative().nullable(),
     records_screened: z.number().int().nonnegative(), lists: z.array(listMetadataSchema),
   }),
   matching: z.object({

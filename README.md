@@ -6,9 +6,9 @@ Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator
 
 The initial direction is to help agents discover jurisdiction-specific compliance requirements and return structured results with links to their sources.
 
-Project status: the [`mcp/`](./mcp/README.md) app implements three advisory purchase tools (`check_action`, `get_requirements`, `get_remediation_plan`) plus separate `check_marketing_email` and `screen_restricted_party` tools. Purchase calls accept `product`, `from_country`, and `to_country`, with optional amount and budget; omitted action types still default to purchase. Marketing accepts a recipient country and optional recipient count and purpose, returning the original general review checklist. Screening accepts a party name and optional aliases, country, and address, downloads the official public U.S. Consolidated Screening List, and returns possible matches, source provenance, and review steps. No backend or API key is required; screening requires outbound HTTPS.
+Project status: the [`mcp/`](./mcp/README.md) app implements three advisory purchase tools (`check_action`, `get_requirements`, `get_remediation_plan`) plus separate `check_marketing_email` and `screen_restricted_party` tools. Purchase calls accept `product`, `from_country`, and `to_country`, with optional amount and budget; omitted action types still default to purchase. Marketing accepts a recipient country and optional recipient count and purpose, returning the original general review checklist. Screening accepts a party name and optional aliases, country, and address, screens against the official U.S. Consolidated Screening List bundled as a dated JSON snapshot, and returns possible matches, source provenance, and review steps. No backend or API key is required; screening works offline with the bundled snapshot.
 
-The [policy router](./mcp/README.md#purchase-checks) selects a US import, general purchase, general marketing, or U.S. restricted-party pack. Screening uses actual downloaded records rather than a static checklist. Source failures and stale/incomplete data return `UNAVAILABLE`; no candidates is not transaction clearance. The caller remains responsible for business actions.
+The [policy router](./mcp/README.md#purchase-checks) selects a US import, general purchase, general marketing, or U.S. restricted-party pack. Screening compares actual bundled CSL records. Results expose the snapshot date and age; stale data is flagged for refresh, while invalid or incomplete data returns `UNAVAILABLE`; no candidates is not transaction clearance. The caller remains responsible for business actions.
 
 ## Product homepage
 
@@ -34,4 +34,4 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000/mcp/inspector to call the five tools. The server requires no backend or environment variables; screening requires outbound HTTPS. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.
+Open http://localhost:3000/mcp/inspector to call the five tools. The server requires no backend or environment variables; screening works offline with the bundled snapshot. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.

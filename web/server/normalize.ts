@@ -107,6 +107,9 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     fact("Screening result", string(screening.status));
     fact("Possible matches", number(screening.total_matches)?.toLocaleString("en-US") ?? null);
     fact("Records screened", number(source.records_screened)?.toLocaleString("en-US") ?? null);
+    fact("Data mode", source.mode === "bundled_json" ? "Bundled JSON snapshot; no live lookup" : null);
+    fact("Snapshot freshness", string(source.freshness));
+    fact("Snapshot age (hours)", number(source.age_hours)?.toLocaleString("en-US") ?? null);
     fact("Data generated", string(source.dataset_generated_at));
     fact("Data retrieved", string(source.retrieved_at));
     fact("Snapshot SHA-256", string(source.sha256));
