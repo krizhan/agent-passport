@@ -10,6 +10,7 @@ export const commonRules: readonly TradeRule[] = [
   {
     id: "common.physical-classification", version: "1.0.0", jurisdiction: "GLOBAL", direction: "general",
     title: "Physical goods classification and origin evidence", transaction_types: ["shipment", "reexport", "transit"],
+    evidence_mode: "advisory",
     required_inputs: ["product_category", "origin_country", "hs_code", "classification_evidence"], finding: "CLASSIFICATION_REQUIRED",
     explanation: "Collect origin and customs-classification evidence for the physical goods. The category and supplied HS code are caller assertions; national tariff extensions and admissibility still require review. This is an assessment input requirement, not a universal permit requirement.",
     required_documents: ["classification_record"], sources: [hs],
@@ -39,7 +40,9 @@ export const commonRules: readonly TradeRule[] = [
   },
   {
     id: "us.ownership-review", version: "1.0.0", jurisdiction: "US", direction: "screening",
-    title: "OFAC aggregate blocked ownership review", conditions: { field: "ownership.blocked_ownership_percent", op: "gte", value: 50 },
+    title: "OFAC aggregate blocked ownership review",
+    activation: { field: "ownership.blocked_ownership_percent", op: "exists" },
+    conditions: { field: "ownership.blocked_ownership_percent", op: "gte", value: 50 },
     required_inputs: ["ownership.evidence", "parties"], finding: "RESTRICTED_PARTY_REVIEW", required_documents: ["ownership_analysis"], sources: [ofac],
     explanation: "A supplied aggregate blocked-ownership share of at least 50 percent triggers review of OFAC's ownership rule. Validate blocked status, direct/indirect ownership, aggregate calculation and authorization; caller-supplied percentages do not establish a confirmed prohibition. Control alone is not the OFAC 50 Percent Rule.",
     remediation_steps: [{ owner: "human", instruction: "Resolve the ownership chain and source-agency restrictions, preserving evidence and any applicable authorization. Review other jurisdictions' control tests separately." }],

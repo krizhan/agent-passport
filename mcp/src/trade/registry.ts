@@ -20,4 +20,4 @@ export const tradeRules: readonly TradeRule[] = [
   ...indiaRules, ...singaporeRules, ...usPriorNoticeRules, ...canadaAustraliaRules, ...japanKoreaRules,
 ];
 
-export const TRADE_POLICY_VERSION = "hardcoded-trade/1.1.0";
+export const TRADE_POLICY_VERSION = "hardcoded-trade/1.2.0";

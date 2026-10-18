@@ -22,7 +22,8 @@ export const tradeInputSchema = z.object({
   technical_specifications: z.record(z.string().min(1).max(100), z.union([text, z.number().finite(), z.boolean()])).optional(),
   end_user: text.optional(),
   end_use: text.optional(),
-  end_use_flags: z.array(z.enum(["military", "wmd", "nuclear", "surveillance", "diversion", "forced_labor"])).max(6).optional(),
+  end_use_flags: z.array(z.enum(["military", "wmd", "nuclear", "surveillance", "diversion", "forced_labor"])).max(6).default([])
+    .describe("Report known sensitive-use concerns. Omission means none were reported; it is not independent verification."),
   parties: z.array(screeningInputSchema.extend({
     role: z.enum(["exporter", "importer", "consignee", "end_user", "intermediary", "other"]),
   }).strict()).max(10).default([]),

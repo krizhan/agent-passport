@@ -41,6 +41,7 @@ export const canadaAustraliaRules: readonly TradeRule[] = [
     id: "CA-IMPORT-GENERAL-GOODS-READINESS", version: "1.0.0", jurisdiction: "CA", direction: "import",
     title: "Canadian general commercial-goods import readiness",
     categories: ["general_goods"], transaction_types: ["shipment", "reexport"],
+    evidence_mode: "advisory",
     conditions: { field: "to_country", op: "eq", value: "CA" },
     required_inputs: ["origin_country", "hs_code", "classification_evidence", "quantity", "value", "currency",
       "technical_specifications.importer_bn15", "end_user", "end_use"],

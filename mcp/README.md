@@ -68,27 +68,24 @@ npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
 
 ```json
 {
-  "product": "Industrial controller",
+  "product": "100 ordinary plastic ballpoint pens",
   "from_country": "US",
-  "to_country": "DE",
-  "origin_country": "US",
-  "product_category": "dual_use",
-  "transaction_type": "shipment",
-  "end_user": "Example factory",
-  "end_use": "Civilian production line",
-  "parties": [{ "name": "Example Factory GmbH", "role": "end_user", "country": "DE" }]
+  "to_country": "CA",
+  "product_category": "general_goods",
+  "end_user": "Demo Canadian Laboratory",
+  "end_use": "Civilian office use"
 }
 ```
 
-Only `product`, `from_country`, and `to_country` are required at submission. Missing category, classifications, technical details, parties or evidence become explicit follow-up requests. Categories are `general_goods`, `food_agriculture`, `medical`, `chemicals`, `wildlife`, `waste`, `dual_use`, `advanced_computing`, `encryption`, `military`, `nuclear`, `rare_earth`, `chewing_gum`, and `electronic_cigarette`. Categories and technical flags are caller assertions; they do not establish controlled status.
+Only `product`, `from_country`, and `to_country` are required at submission. For the narrow low-risk `general_goods` path, add category, end user and end use; the evaluator derives one end-user screening party when no party array is supplied. Origin, classification, customs and importer paperwork remain advisory follow-ups and do not by themselves prevent `NO_BLOCKERS_FOUND`. Higher-risk categories and affirmatively triggered controls continue to request detailed evidence. Categories are `general_goods`, `food_agriculture`, `medical`, `chemicals`, `wildlife`, `waste`, `dual_use`, `advanced_computing`, `encryption`, `military`, `nuclear`, `rare_earth`, `chewing_gum`, and `electronic_cigarette`. Categories and technical flags are caller assertions; they do not establish controlled status.
 
 Optional inputs include `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, `documents`, `shipment`, and `prior_notice`. Documents use `type`, `reference`, optional `expires_on`, and optional `product`/`shipment_id` bindings. Parties use a name and role, with optional aliases/country/address. Inspect the MCP tool schema for the current technical keys and document types.
 
-The evaluator normalizes ISO countries, maps EU members to the EU pack, and combines applicable rules. Use member-country codes such as `DE`, not `EU`. Conditions are `MATCHED`, `NOT_MATCHED`, or `UNKNOWN`; missing facts never establish negative applicability. Rules with effective intervals use the planned date (inclusive start, exclusive end). Source review dates are separate from legal effective dates, and rules without intervals require current-law review.
+The evaluator normalizes ISO countries, maps EU members to the EU pack, and combines applicable rules. Use member-country codes such as `DE`, not `EU`. Conditions are `MATCHED`, `NOT_MATCHED`, or `UNKNOWN`; missing facts never establish negative applicability for ordinary rules. Explicit positive-risk triggers are opt-in, so an unreported BIS specific notice or blocked-ownership percentage does not create an affirmative-sounding finding or conditional document request. Rules with effective intervals use the planned date (inclusive start, exclusive end). Source review dates are separate from legal effective dates, and rules without intervals require current-law review.
 
 Supplied documents remain `PROVIDED_UNVERIFIED`; expired documents are checked against the planned date. Each supplied party is searched against the bundled CSL. Stale/unavailable screening adds a current-evidence gap while retaining historical candidates. A candidate is neither confirmed identity nor an automatic legal prohibition.
 
-Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or failed modeled shipment condition, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, `REVIEW` for substantive or coverage review, or `NO_BLOCKERS_FOUND` when the implemented checks have complete supplied evidence, recent no-candidate screening, no substantive review finding and no unsupported route side. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. `NO_BLOCKERS_FOUND` is scoped, advisory, and not legal clearance or authorization to ship; evidence remains unverified. Executable findings add `check` with `status`, `reason_code`, evidence references, missing fields, and next steps.
+Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or failed modeled shipment condition, `NEEDS_EVIDENCE` for missing required inputs/documents/current screening, `REVIEW` for substantive or coverage review, or `NO_BLOCKERS_FOUND` when the implemented checks have no required evidence gap, recent no-candidate screening, no substantive review finding and no unsupported route side. Advisory general-goods readiness items may remain `REVIEW` without changing that scoped outcome. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. `NO_BLOCKERS_FOUND` is advisory, not legal clearance or authorization to ship. Executable findings add `check` with `status`, `reason_code`, evidence references, missing fields, and next steps.
 
 ### Singapore, India, and FDA prior-notice checks
 
@@ -102,7 +99,7 @@ Timing uses FDA confirmation time: at least four hours before air arrival or eig
 
 Every result has `advisory_only: true`, `can_proceed_under_checked_rules: false`, `execution_performed: false`, and `coverage.full_transaction_coverage: false`. Unsupported route sides remain explicit. Sources include verification status/date; Japanese METI references that could not be fetched are marked `reference_only` with a null review date. EU national overlays, Northern Ireland, indirect ownership, FDP/de minimis calculations, current quotas, tariffs/duties and emergency measures require additional review.
 
-The narrow Canadian `general_goods` import-readiness check can support a `NO_BLOCKERS_FOUND` demo when the request supplies a Canadian importer BN15/CARM reference, origin, proposed classification, quantity/value/currency, commercial invoice, classification record, end-user statement, ownership evidence, low-risk end use and parties whose recent bundled screening returns no candidates. Product-specific controls, final tariff treatment, duties, taxes and customs release remain outside that result.
+The narrow Canadian `general_goods` demo can support `NO_BLOCKERS_FOUND` from product, route, category, end user and a low-risk end use when derived or supplied party screening returns no candidates. Origin, importer registration, tariff classification, value, invoice and other customs records remain advisory readiness follow-ups. Product-specific controls, final tariff treatment, duties, taxes and customs release remain outside that result.
 
 ### Add or update a rule
 

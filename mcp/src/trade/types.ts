@@ -25,7 +25,11 @@ export interface TradeRule {
   title: string;
   categories?: readonly Category[];
   transaction_types?: readonly TradeInput["transaction_type"][];
+  /** Optional positive trigger. Missing or false trigger facts leave the rule out of scope. */
+  activation?: Condition;
   conditions?: Condition;
+  /** Advisory evidence remains a follow-up but does not prevent a no-blockers result. */
+  evidence_mode?: "required" | "advisory";
   required_inputs: readonly string[];
   finding: FindingCode;
   explanation: string;
