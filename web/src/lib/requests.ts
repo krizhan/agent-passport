@@ -1,4 +1,4 @@
-export type Outcome = "BLOCK" | "NEEDS_EVIDENCE" | "REVIEW" | "CHECKLIST" | "ERROR" | "UNAVAILABLE";
+export type Outcome = "BLOCK" | "NEEDS_EVIDENCE" | "REVIEW" | "NO_BLOCKERS_FOUND" | "CHECKLIST" | "ERROR" | "UNAVAILABLE";
 export const REQUEST_CATEGORIES = ["trade", "marketing", "screening"] as const;
 export type Category = typeof REQUEST_CATEGORIES[number] | "unknown";
 export const REQUEST_LIMIT_PER_CATEGORY = 10;
@@ -21,6 +21,13 @@ export interface RequestRecord {
     kind: string | null;
   };
   facts: { label: string; value: string }[];
+  marketing?: {
+    messageHash: string | null;
+    policies: string[];
+    limitations: string[];
+    corrections: { field: string; value: string; reason: string }[];
+    evidence: { kind: string; reference: string | null; status: string; detail: string; observedAt: string | null }[];
+  };
   screening?: {
     status: string | null;
     totalMatches: number | null;
@@ -66,6 +73,7 @@ export const outcomeLabels: Record<Outcome, string> = {
   BLOCK: "Blocked",
   NEEDS_EVIDENCE: "Needs information",
   REVIEW: "Needs review",
+  NO_BLOCKERS_FOUND: "No blockers found",
   CHECKLIST: "Checklist returned",
   ERROR: "Request failed",
   UNAVAILABLE: "Result unavailable",
@@ -75,5 +83,6 @@ export const policyLabels: Record<string, string> = {
   "us-import": "US import readiness",
   "general-purchase": "International purchase review",
   "general-marketing": "Marketing email review",
+  "marketing-email": "Marketing email policies",
   "us-restricted-party": "U.S. restricted-party screening",
 };

@@ -25,6 +25,14 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
+## Marketing policy editor
+
+Start `npm run dev` from `mcp/` and open **http://127.0.0.1:5173/marketing**. Select a synthetic example, edit its JSON and click **Run policy check**. The editor calls the actual `check_marketing_email` MCP tool; examples come from the `marketing://examples` resource with fresh demonstration timestamps. It needs no Manufact or InsForge credentials. Set server-only `MARKETING_MCP_URL` if the MCP server runs somewhere other than `http://127.0.0.1:3000/mcp`.
+
+The tool checks one rendered email and one recipient against selected US CAN-SPAM, Canada CASL and UK PECR rules. Results include blockers, evidence gaps, source links, proposed corrections, freshness and message-hash checks. Evidence is supplied by the caller; CRM, consent and email platforms are not connected. No email or real unsubscribe request is sent. New message content needs a fresh review for its returned fingerprint. See the [marketing engine guide](../mcp/src/marketing/README.md).
+
+The playground works through the local Vite server and preview middleware. A hosted playground needs a reachable MCP server configured through `MARKETING_MCP_URL`; localhost is only appropriate for local use. Its direct MCP calls are separate from Manufact gateway history at `/demo`.
+
 ## Request-history demo
 
 Open **http://127.0.0.1:5173/demo** (or the port printed by Vite). It reads real captured requests from the existing Manufact gateway; it does not generate examples or execute business actions.
@@ -50,7 +58,7 @@ Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules
 
 Manufact’s [gateway events API](https://manufact.com/openapi.json) is read with a bearer token on the server. [Payload capture](https://docs.manufact.com/dashboard/observability) must have been enabled when a request happened to recover its inputs and outputs. Metadata-only history cannot be reconstructed. History retention is controlled by the Manufact plan. The endpoint returns a projection of compliance fields; it excludes gateway headers, IP addresses, actor IDs, and raw request/response bodies.
 
-All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
+All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool evaluates supplied draft/evidence records against selected policies, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
 
 ## Check and build
 

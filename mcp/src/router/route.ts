@@ -9,18 +9,6 @@ export interface PolicyRoute {
 
 // Tool handlers validate and normalize country codes before selecting a pack.
 export function routeAction(action: Action): PolicyRoute {
-  if (action.action_type === "marketing_email") {
-    const policy = policyRegistry["general-marketing"];
-    return {
-      policy,
-      routing: {
-        policy_id: policy.id,
-        kind: "general",
-        reason: `Marketing email to recipients in ${action.recipient_country}; the general marketing review checklist applies.`,
-      },
-    };
-  }
-
   if (action.action_type === "restricted_party_screening") {
     const policy = policyRegistry["us-restricted-party"];
     return {

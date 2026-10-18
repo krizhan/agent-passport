@@ -197,10 +197,11 @@ export function Home() {
             <h2 id="marketing-title">
               Check campaign compliance <span>before sending.</span>
             </h2>
+            <p><a className="source-link" href="/marketing">Try marketing policy checks <Icon name="arrow" size={15} /></a></p>
             <p>
-              Your agent checks campaign content and recipient permissions
-              against local requirements, then resolves issues and rechecks
-              before sending.
+              Your agent submits a rendered email and recipient evidence for
+              US, Canadian and UK policy checks, then resolves missing details
+              and rechecks the revised message.
             </p>
             <p>
               <strong>Example:</strong> You ask your agent to send a promotion
