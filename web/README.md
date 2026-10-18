@@ -66,7 +66,6 @@ From `web/`:
 
 ```bash
 npm run typecheck
-npm test
 npm run build
 npm run preview -- --port 4173
 ```
@@ -92,7 +91,6 @@ Deploy the `web/` source directory. InsForge builds the Vite app using `web/verc
 - `server/normalize.ts`: captured gateway payloads to readable compliance records.
 - `server/requests-handler.ts` and `api/requests.ts`: bounded, server-side Manufact reads.
 - `vite.config.ts`: local API middleware for development and production preview.
-- `server/*.test.ts`: payload compatibility, decisions, category caps, bounded scans, and credential handling.
 - `src/components/Home.tsx`: the three sections and illustrative import/export switch.
 - `src/components/Illustrations.tsx`: static purchase follow-up and campaign compliance illustrations.
 - `src/components/ui.tsx`: wordmark, icons, and status labels.
