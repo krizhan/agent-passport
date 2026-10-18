@@ -1,4 +1,4 @@
-import { evaluationSchema, parseAction, requirementsResponseSchema, type Action, type CheckInput, type Evaluation, type Requirement, type RequirementResult } from "./schemas.js";
+import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, parseAction, requirementsResponseSchema, type Action, type CheckInput, type Evaluation, type MarketingEmail, type MarketingInput, type Purchase, type Requirement, type RequirementResult } from "./schemas.js";
 import type { PolicyPack } from "./policies/types.js";
 import { routeAction, type PolicyRoute } from "./router/route.js";
 
@@ -38,7 +38,15 @@ export function getRequirements(raw: CheckInput) {
 }
 
 export function checkAction(raw: CheckInput, now = new Date()): Evaluation {
-  const action = parseAction(raw);
+  return evaluateAction(parseAction(raw), now);
+}
+
+export function checkMarketingEmail(raw: MarketingInput) {
+  const input = marketingInputSchema.parse(raw);
+  return marketingEvaluationSchema.parse(evaluateAction({ ...input, action_type: "marketing_email" }, new Date()));
+}
+
+function evaluateAction(action: Purchase | MarketingEmail, now: Date): Evaluation {
   const route = routeAction(action);
   const requirements = definitions(action, route.policy).map((requirement): RequirementResult => {
     const result = (status: RequirementResult["status"], detail: string) => ({ ...requirement, status, detail });

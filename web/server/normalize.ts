@@ -55,7 +55,7 @@ function sourceUrl(value: unknown): string | null {
   } catch { return null; }
 }
 
-const tools = new Set(["check_action", "get_requirements", "get_remediation_plan"]);
+const tools = new Set(["check_action", "get_requirements", "get_remediation_plan", "check_marketing_email", "screen_restricted_party"]);
 
 // Project a gateway event into explicitly allowed product fields. Never forward
 // headers, IP addresses, actor IDs, session metadata, or entire captured bodies.
@@ -78,7 +78,8 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   // Legacy deployments recorded `purchase`, before adding action and routing.
   const echoed = object(data.action ?? data.purchase);
   const action = Object.keys(input).length ? input : echoed;
-  const category = action.action_type === "marketing_email" ? "marketing"
+  const category = action.action_type === "restricted_party_screening" || tool === "screen_restricted_party" ? "screening"
+    : action.action_type === "marketing_email" || tool === "check_marketing_email" ? "marketing"
     : action.action_type === "purchase" || (action.product && action.from_country && action.to_country) ? "trade" : "unknown";
   const error = object(response.error);
   const failed = result.isError === true || event.tool_call_success === false
@@ -93,7 +94,26 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   const fact = (label: string, value: string | null) => { if (value) facts.push({ label, value }); };
   let title = "Request details not captured";
   let route = "Action not recorded";
-  if (category === "marketing") {
+  if (category === "screening") {
+    const screening = object(data.screening);
+    const source = object(screening.source);
+    title = `Screen ${string(action.name, 200) ?? "counterparty"}`;
+    route = `${country(action.country) ?? "Country not supplied"} · U.S. list screening`;
+    fact("Requested action", "Restricted-party name screening");
+    fact("Party name", string(action.name, 200));
+    fact("Known aliases", list(action.aliases).map((value) => string(value, 200)).filter(Boolean).join(", ") || null);
+    fact("Party country", country(action.country));
+    fact("Party address", string(action.address, 500));
+    fact("Screening result", string(screening.status));
+    fact("Possible matches", number(screening.total_matches)?.toLocaleString("en-US") ?? null);
+    fact("Records screened", number(source.records_screened)?.toLocaleString("en-US") ?? null);
+    fact("Data mode", source.mode === "bundled_json" ? "Bundled JSON snapshot; no live lookup" : null);
+    fact("Snapshot freshness", string(source.freshness));
+    fact("Snapshot age (hours)", number(source.age_hours)?.toLocaleString("en-US") ?? null);
+    fact("Data generated", string(source.dataset_generated_at));
+    fact("Data retrieved", string(source.retrieved_at));
+    fact("Snapshot SHA-256", string(source.sha256));
+  } else if (category === "marketing") {
     const recipientCountry = country(action.recipient_country);
     const count = number(action.recipient_count);
     title = string(action.purpose, 500) ?? "Marketing email campaign";
@@ -126,9 +146,20 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   const summary = failed ? string(error.message) ?? string(event.error_message) ?? "The tool call failed. No successful compliance result was recorded."
     : string(data.summary) ?? (outcome === "CHECKLIST" ? "The tool returned a checklist of requirements to review. This is not a clearance decision."
       : "The captured response does not contain a readable compliance result. Payload capture may have been off or the response may be incomplete.");
+  const screening = object(data.screening);
   return {
     id, time, tool, category, title, route, outcome, summary,
     durationMs: number(event.duration_ms), facts, requirements,
+    ...(category === "screening" ? { screening: {
+      status: string(screening.status), totalMatches: number(screening.total_matches),
+      truncated: screening.truncated === true, error: string(screening.error),
+      candidates: list(screening.matches).slice(0, 20).map((raw, index) => {
+        const candidate = object(raw);
+        return { id: string(candidate.id) ?? String(index), name: string(candidate.name, 500) ?? "Unnamed candidate",
+          source: string(candidate.source, 500) ?? "Source not captured", matchedName: string(candidate.matched_name, 500),
+          sourceUrl: sourceUrl(candidate.source_list_url) ?? sourceUrl(candidate.source_information_url) };
+      }),
+    } } : {}),
     policy: {
       id: string(routing.policy_id), version: string(data.policy_version),
       reason: string(routing.reason), scope: string(data.scope), kind: string(routing.kind),

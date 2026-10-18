@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ExampleLabel, Icon, Logo, SectionLabel } from "./ui.tsx";
-import { CampaignCompliance, PurchaseFlow } from "./Illustrations.tsx";
+import { CampaignCompliance, RestrictedPartyScreening, PurchaseFlow } from "./Illustrations.tsx";
 
 const tradeExamples = {
   import: {
@@ -86,6 +86,10 @@ export function Home() {
               </a>
               <a className="button button-blue" href="#marketing">
                 Marketing
+                <Icon name="arrow" size={17} />
+              </a>
+              <a className="button button-blue" href="#restricted-party-screening">
+                Restricted-party screening
                 <Icon name="arrow" size={17} />
               </a>
             </div>
@@ -206,6 +210,33 @@ export function Home() {
             </p>
           </div>
           <CampaignCompliance />
+        </div>
+      </section>
+
+      <section
+        className="screening-section container"
+        id="restricted-party-screening"
+        aria-labelledby="screening-title"
+      >
+        <div className="use-case-layout screening-layout">
+          <div className="use-case-copy">
+            <SectionLabel number="03">RESTRICTED-PARTY SCREENING</SectionLabel>
+            <h2 id="screening-title">
+              Screen counterparties <span>before acting.</span>
+            </h2>
+            <p>
+              Your agent checks a person or organization against a dated U.S.
+              Consolidated Screening List snapshot and receives possible matches,
+              source links, and next steps for review.
+            </p>
+            <p>
+              <strong>Example:</strong> You ask your agent to place an order
+              with an overseas supplier. A similar listed name is flagged,
+              so the agent holds the order while a reviewer checks the identity
+              and applicable restrictions. No candidates does not clear the transaction.
+            </p>
+          </div>
+          <RestrictedPartyScreening />
         </div>
         <div className="page-note">
           <span>Agent Passport</span>

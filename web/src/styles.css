@@ -177,10 +177,10 @@ button:focus-visible {
 }
 .overview-links {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 29px;
-  max-width: 360px;
+  max-width: 500px;
 }
 .overview-links .button {
   gap: 8px;
@@ -421,20 +421,20 @@ h2 > span {
   background: #8d9e92;
   border-radius: 50%;
 }
-.marketing-section {
+:is(.marketing-section, .screening-section) {
   padding-top: 94px;
 }
-.marketing-layout {
+:is(.marketing-layout, .screening-layout) {
   align-items: start;
 }
-.marketing-section .section-label {
+:is(.marketing-section, .screening-section) .section-label {
   color: #697a91;
 }
-.marketing-section .section-label > span {
+:is(.marketing-section, .screening-section) .section-label > span {
   border-color: #cbd4e2;
   color: #8194b1;
 }
-.marketing-section h2 > span {
+:is(.marketing-section, .screening-section) h2 > span {
   color: #6e83a3;
 }
 .page-note {
@@ -472,11 +472,18 @@ h2 > span {
   .trade-section {
     padding-block: 100px;
   }
-  .marketing-section {
+  :is(.marketing-section, .screening-section) {
     padding-top: 105px;
   }
 }
 @media (max-width: 1100px) {
+  .overview-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 360px;
+  }
+  .overview-links .button:last-child {
+    grid-column: 1 / -1;
+  }
   .container {
     width: calc(100% - 56px);
   }
@@ -618,7 +625,7 @@ h2 > span {
   .example-label {
     font-size: 8px;
   }
-  .marketing-section {
+  :is(.marketing-section, .screening-section) {
     padding-top: 70px;
   }
   .page-note {
@@ -752,7 +759,7 @@ h2 > span {
   .example-label {
     font-size: 9px;
   }
-  .marketing-section {
+  :is(.marketing-section, .screening-section) {
     padding-top: 53px;
   }
   .page-note {

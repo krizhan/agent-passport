@@ -1,0 +1,10 @@
+{
+  "source_url": "https://data.trade.gov/downloadable_consolidated_screening_list/v1/consolidated.json",
+  "retrieved_at": "2026-10-18T00:31:23.000Z",
+  "http_last_modified": "Sun, 18 Oct 2026 00:15:05 GMT",
+  "dataset_generated_at": "2026-10-18T00:15:00.014137+00:00",
+  "records": 26154,
+  "sources": 13,
+  "sha256": "a017733206c574868720337fd997025f3d447e5b76032d13cec592e696c30af3",
+  "upstream_sha256": "f5bdee00afcf7219902d7cec2a2e3359d82be655a053d4c809c587688460f275"
+}

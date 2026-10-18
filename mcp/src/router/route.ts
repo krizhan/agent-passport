@@ -21,6 +21,18 @@ export function routeAction(action: Action): PolicyRoute {
     };
   }
 
+  if (action.action_type === "restricted_party_screening") {
+    const policy = policyRegistry["us-restricted-party"];
+    return {
+      policy,
+      routing: {
+        policy_id: policy.id,
+        kind: "list_screening",
+        reason: "Screen the submitted names against the U.S. Consolidated Screening List, regardless of the party's country. This is U.S. list coverage, not global transaction clearance.",
+      },
+    };
+  }
+
   if (action.from_country === action.to_country) return {
     policy: null,
     routing: {

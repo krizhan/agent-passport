@@ -5,15 +5,16 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.5.0",
-  "description": "Advisory cross-border purchase MCP with requirements, checks, and remediation",
+  "version": "0.8.0",
+  "description": "Advisory purchase and marketing checks with U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {
     "build": "mcp-use build",
     "dev": "mcp-use dev",
     "start": "mcp-use start",
     "deploy": "mcp-use deploy",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "refresh:screening-list": "node scripts/refresh-screening-list.mjs"
   },
   "dependencies": {
     "iso-3166": "4.4.0",

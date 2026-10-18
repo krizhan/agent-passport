@@ -5,6 +5,7 @@ import "../demo.css";
 
 const toolLabels: Record<string, string> = {
   check_action: "Action check", get_requirements: "Requirements", get_remediation_plan: "Remediation plan",
+  check_marketing_email: "Marketing review", screen_restricted_party: "Party screening",
 };
 
 function OutcomeBadge({ outcome }: { outcome: Outcome }) {
@@ -36,8 +37,20 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         <section>
           <h3><span>02</span> Result & next steps</h3>
           <p className="demo-result-summary">{record.summary}</p>
+          {record.screening && <div className="demo-screening-results">
+            <p>{record.screening.status?.replaceAll("_", " ") ?? "Screening status not captured"}
+              {record.screening.totalMatches !== null ? ` · ${record.screening.totalMatches} candidate records` : ""}</p>
+            {record.screening.error && <p>{record.screening.error}</p>}
+            {record.screening.truncated && <p>Showing the first 20 candidates. Narrow the party details for further review.</p>}
+            {record.screening.candidates.map((candidate) => <article key={`${candidate.source}/${candidate.id}`}>
+              <strong>{candidate.name}</strong>
+              <p>{candidate.source}</p>
+              {candidate.matchedName && <p>Matched name or alias: {candidate.matchedName}</p>}
+              {candidate.sourceUrl && <a href={candidate.sourceUrl} target="_blank" rel="noreferrer">Original agency listing <Icon name="arrow" size={13} /></a>}
+            </article>)}
+          </div>}
           <p className="demo-execution"><Icon name="shield" size={15} />{record.execution === "not_performed"
-            ? "This check did not execute the purchase or send an email."
+            ? "This assessment did not execute a business action."
             : "The gateway does not report whether the requested business action was completed."}</p>
           {record.nextSteps.length > 0 && <ol className="demo-steps">{record.nextSteps.map((step, index) => (
             <li key={index}><span>{step.owner}</span><p>{step.instruction}</p></li>
@@ -73,7 +86,7 @@ function RequestDetails({ record }: { record: RequestRecord }) {
 
 export function Demo() {
   const [data, setData] = useState<RequestPage | null>(null);
-  const [category, setCategory] = useState<"trade" | "marketing">("trade");
+  const [category, setCategory] = useState<"trade" | "marketing" | "screening">("trade");
   const [openId, setOpenId] = useState<string | null>(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -128,7 +141,7 @@ export function Demo() {
         <section className="demo-activity" aria-label="Requests">
           <div className="demo-toolbar">
             <div className="demo-tabs" role="group" aria-label="Request type">
-              {([['trade', 'Import & export'], ['marketing', 'Marketing']] as const).map(([value, label]) => (
+              {([['trade', 'Import & export'], ['marketing', 'Marketing'], ['screening', 'Restricted parties']] as const).map(([value, label]) => (
                 <button key={value} aria-pressed={category === value} onClick={() => { setCategory(value); setOpenId(null); }}>{label}</button>
               ))}
             </div>
@@ -141,13 +154,13 @@ export function Demo() {
               <div className="demo-request-list">{filtered.map((record) => (
                 <article className={`demo-request ${openId === record.id ? "demo-request-open" : ""}`} key={record.id}>
                   <button className="demo-request-row" aria-expanded={openId === record.id} aria-controls={`detail-${record.id}`} onClick={() => setOpenId(openId === record.id ? null : record.id)}>
-                    <span className="demo-request-main"><span className={`demo-type-icon demo-type-${record.category}`}><Icon name={record.category === "marketing" ? "mail" : record.category === "trade" ? "briefcase" : "file"} size={18} /></span><span><strong>{record.title}</strong><span className="demo-request-route">{record.route}</span><span className="demo-request-time">{timeLabel(record.time)} <span>·</span> {toolLabels[record.tool]}</span></span></span>
-                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
+                    <span className="demo-request-main"><span className={`demo-type-icon demo-type-${record.category}`}><Icon name={record.category === "screening" ? "shield" : record.category === "marketing" ? "mail" : record.category === "trade" ? "briefcase" : "file"} size={18} /></span><span><strong>{record.title}</strong><span className="demo-request-route">{record.route}</span><span className="demo-request-time">{timeLabel(record.time)} <span>·</span> {toolLabels[record.tool]}</span></span></span>
+                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
                   </button>
                   {openId === record.id && <RequestDetails record={record} />}
                 </article>
               ))}</div>
-              {filtered.length === 0 && <div className="demo-empty"><Icon name="route" size={30} /><h3>{category === "marketing" ? "No marketing requests yet" : "No import/export requests yet"}</h3><p>Requests will appear here once their details are captured.</p></div>}
+              {filtered.length === 0 && <div className="demo-empty"><Icon name="route" size={30} /><h3>{category === "screening" ? "No screening requests yet" : category === "marketing" ? "No marketing requests yet" : "No import/export requests yet"}</h3><p>Requests will appear here once their details are captured.</p></div>}
             </>}
         </section>
         <footer className="demo-footnote"><Icon name="shield" size={16} /><p>Advisory results only. A successful check does not mean an action was approved or completed.</p></footer>

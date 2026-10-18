@@ -4,7 +4,16 @@ import { countrySchema } from "./countries.js";
 const text = z.string().trim().min(1).max(500);
 const money = z.number().nonnegative().max(Number.MAX_SAFE_INTEGER);
 
-export const actionTypeSchema = z.enum(["purchase", "marketing_email"]);
+export const marketingInputSchema = z.object({
+  recipient_country: countrySchema.describe("Recipient country/territory as an assigned ISO 3166-1 alpha-2 code. Submit a separate check for each country."),
+  recipient_count: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).optional()
+    .describe("Optional marketing-email recipient count; a positive integer"),
+  purpose: text.optional().describe("Optional campaign purpose or context"),
+}).strict();
+
+export const marketingEmailSchema = marketingInputSchema.extend({
+  action_type: z.literal("marketing_email"),
+});
 
 export const purchaseSchema = z.object({
   action_type: z.literal("purchase").default("purchase"),
@@ -15,37 +24,25 @@ export const purchaseSchema = z.object({
   budget: money.optional().describe("Optional spending limit, in the same currency and units as amount; zero is allowed"),
 }).strict();
 
-export const marketingEmailSchema = z.object({
-  action_type: z.literal("marketing_email"),
-  recipient_country: countrySchema.describe("Required for marketing_email: recipient country/territory as an assigned ISO 3166-1 alpha-2 code. Submit a separate action for each recipient country."),
-  recipient_count: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).optional()
-    .describe("Optional marketing-email recipient count; a positive integer"),
-  purpose: text.optional().describe("Optional marketing-email campaign purpose or context"),
+const partyName = z.string().trim().min(2).max(200)
+  .refine((value) => (value.match(/[\p{L}\p{N}]/gu) ?? []).length >= 2,
+    "Supply a name with at least two letters or numbers.");
+
+export const screeningInputSchema = z.object({
+  name: partyName.describe("Person or organization to screen against the U.S. Consolidated Screening List"),
+  aliases: z.array(partyName).max(10).default([]).describe("Additional known names or spellings; all are screened"),
+  country: countrySchema.optional().describe("Optional party country. Used as context, never to exclude name matches."),
+  address: text.optional().describe("Optional address for a human to compare with candidate records; not an automatic identity check"),
 }).strict();
 
-export const actionSchema = z.discriminatedUnion("action_type", [purchaseSchema, marketingEmailSchema]);
-
-// MCP tool schemas have an object root. Branch schemas enforce each action's
-// required fields and reject fields belonging to another action type at runtime.
-export const requestSchema = z.object({
-  action_type: actionTypeSchema.default("purchase")
-    .describe("Choose purchase or marketing_email. Defaults to purchase for existing clients. Purchase requires product, from_country, and to_country; marketing_email requires recipient_country."),
-  product: purchaseSchema.shape.product.optional(),
-  from_country: purchaseSchema.shape.from_country.optional(),
-  to_country: purchaseSchema.shape.to_country.optional(),
-  amount: purchaseSchema.shape.amount,
-  budget: purchaseSchema.shape.budget,
-  recipient_country: marketingEmailSchema.shape.recipient_country.optional(),
-  recipient_count: marketingEmailSchema.shape.recipient_count,
-  purpose: marketingEmailSchema.shape.purpose,
-}).strict().superRefine((input, context) => {
-  // Supplied field values were checked above; do not report their errors twice.
-  if (context.issues.length) return;
-  const result = actionSchema.safeParse(input);
-  if (!result.success) {
-    for (const issue of result.error.issues) context.addIssue({ ...issue });
-  }
+export const restrictedPartySchema = screeningInputSchema.extend({
+  action_type: z.literal("restricted_party_screening"),
 });
+
+export const actionSchema = z.discriminatedUnion("action_type", [purchaseSchema, marketingEmailSchema, restrictedPartySchema]);
+
+// Purchase tools retain their inputs; marketing and screening have dedicated tools.
+export const requestSchema = purchaseSchema;
 
 export const requirementSchema = z.object({
   id: z.string(),
@@ -69,7 +66,7 @@ export const stepSchema = z.object({
 export const routingSchema = z.union([
   z.object({
     policy_id: z.string(),
-    kind: z.enum(["destination_specific", "general"]),
+    kind: z.enum(["destination_specific", "general", "list_screening"]),
     reason: z.string(),
   }),
   z.object({
@@ -103,8 +100,13 @@ export const evaluationSchema = contextSchema.extend({
   execution_performed: z.literal(false),
 });
 
+export const marketingEvaluationSchema = evaluationSchema.extend({ action: marketingEmailSchema });
+
 export type Purchase = z.infer<typeof purchaseSchema>;
 export type MarketingEmail = z.infer<typeof marketingEmailSchema>;
+export type MarketingInput = z.input<typeof marketingInputSchema>;
+export type ScreeningInput = z.input<typeof screeningInputSchema>;
+export type RestrictedParty = z.infer<typeof restrictedPartySchema>;
 export type Action = z.infer<typeof actionSchema>;
 export type Routing = z.infer<typeof routingSchema>;
 export type CheckInput = z.input<typeof requestSchema>;
@@ -112,6 +114,6 @@ export type Requirement = z.infer<typeof requirementSchema>;
 export type RequirementResult = z.infer<typeof requirementResultSchema>;
 export type Evaluation = z.infer<typeof evaluationSchema>;
 
-export function parseAction(raw: CheckInput): Action {
-  return actionSchema.parse(requestSchema.parse(raw));
+export function parseAction(raw: CheckInput): Purchase {
+  return requestSchema.parse(raw);
 }
