@@ -57,7 +57,7 @@ export function Home() {
         <div className="brand-line">
           <Logo />
           <a className="button button-demo" href="/demo">
-            Demo
+            History
             <Icon name="arrow" size={15} />
           </a>
         </div>
