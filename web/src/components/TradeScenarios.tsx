@@ -9,6 +9,7 @@ type Finding = {
   rule_id: string; rule_version: string; jurisdiction: string; direction: Direction; title: string;
   code: string; condition_status: "MATCHED" | "UNKNOWN"; detail: string;
   missing_fields: string[]; required_documents: string[]; sources: Source[];
+  check?: { status: "SATISFIED" | "MISSING" | "FAILED" | "REVIEW"; reason_code: string; evidence_refs: string[] };
 };
 type Scenario = {
   id: string; title: string;
@@ -56,6 +57,7 @@ function FindingCard({ finding }: { finding: Finding }) {
     <div className="scenario-finding-top"><span className="scenario-code">{readable(finding.code)}</span>
       <span className={`scenario-condition${potential ? " scenario-condition-unknown" : ""}`}>{potential ? "Potential · missing information" : "Matched scenario"}</span></div>
     <h4>{finding.title}</h4>
+    {finding.check && <p><strong>Check: {readable(finding.check.status.toLowerCase())}</strong></p>}
     <p>{finding.detail}</p>
     {potential && <p className="scenario-potential-note">Applicability is unresolved. This finding is not confirmed.</p>}
     {finding.missing_fields.length > 0 && <div className="scenario-field-tags" aria-label="Missing fields">{finding.missing_fields.map(field => <span key={field}>{readable(field)}</span>)}</div>}

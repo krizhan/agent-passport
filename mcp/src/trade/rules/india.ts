@@ -1,4 +1,5 @@
 import type { LegalSource, TradeRule } from "../types.js";
+import { check, reviewApproval } from "./checks.js";
 
 const scometSource: LegalSource = {
   title: "DGFT Foreign Trade Policy 2023, Chapter 10: SCOMET",
@@ -12,6 +13,33 @@ const importSource: LegalSource = {
 };
 
 export const indiaRules: readonly TradeRule[] = [
+  {
+    id: "IN-IMPORT-ELECTRONIC-CIGARETTE", version: "1.0.0", jurisdiction: "IN", direction: "import",
+    title: "Indian electronic-cigarette prohibition and licensed-product exclusion",
+    categories: ["electronic_cigarette"], transaction_types: ["shipment", "reexport"],
+    conditions: { field: "to_country", op: "eq", value: "IN" }, required_inputs: [], finding: "PROHIBITED",
+    explanation: "Declared electronic cigarettes need a prohibition assessment, including nicotine-free devices and any claimed licensed-product exclusion.",
+    required_documents: [], remediation_steps: [],
+    sources: [{ title: "India: Prohibition of Electronic Cigarettes Act 2019, sections 3(d) and 4",
+      url: "https://www.indiacode.nic.in/bitstream/123456789/13078/1/A2019-42.pdf",
+      verified_as_of: "2026-10-17", verification_status: "verified_guidance" }],
+    assess(input, { plannedDate }) {
+      const claimed = input.technical_specifications?.licensed_medicine_claimed;
+      if (typeof claimed !== "boolean") return check("MISSING", "MEDICINAL_EXCLUSION_UNKNOWN", "Establish whether a product licence under the Drugs and Cosmetics Act is claimed. Nicotine-free status is not an exclusion.", {
+        missing_fields: ["technical_specifications.licensed_medicine_claimed"],
+        remediation_steps: [{ owner: "agent", instruction: "Establish the product classification and whether a statutory licensed-product exclusion is claimed." }],
+      });
+      if (!claimed && input.documents.some((doc) => doc.type === "medicinal_licence")) {
+        return check("REVIEW", "CONFLICTING_MEDICINAL_FACTS", "A supplied medicinal licence conflicts with the negative exclusion claim.", {
+          remediation_steps: [{ owner: "human", instruction: "Resolve the conflicting product and licence statements before importing." }],
+        });
+      }
+      if (!claimed) return check("FAILED", "IN_E_CIGARETTE_PROHIBITED", "The declared electronic cigarette has no claimed licensed-product exclusion. This check includes nicotine-free devices.", {
+        remediation_steps: [{ owner: "agent", instruction: "Hold this proposed electronic-cigarette import into India." }],
+      });
+      return reviewApproval(input, "medicinal_licence", plannedDate);
+    },
+  },
   {
     id: "IN-EXPORT-SCOMET-CLASSIFICATION", version: "1.0.0", jurisdiction: "IN", direction: "export",
     title: "Determine SCOMET classification and licensing authority",

@@ -1496,5 +1496,1353 @@
         }
       ]
     }
+  },
+  {
+    "id": "sg-ordinary-gum",
+    "title": "Ordinary chewing gum import is blocked",
+    "input": {
+      "product": "DEMO ordinary chewing gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "ordinary",
+        "hsa_approval_claimed": false
+      }
+    }
+  },
+  {
+    "id": "sg-gum-type-missing",
+    "title": "Gum type must be established before an import decision",
+    "input": {
+      "product": "DEMO unspecified gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG"
+    }
+  },
+  {
+    "id": "sg-gum-approval-missing",
+    "title": "Dental gum exception needs a product-bound HSA record",
+    "input": {
+      "product": "DEMO dental gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "oral_dental",
+        "hsa_approval_claimed": true
+      }
+    }
+  },
+  {
+    "id": "sg-gum-approval-review",
+    "title": "Supplied HSA approval still requires human review",
+    "input": {
+      "product": "DEMO dental gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "oral_dental",
+        "hsa_approval_claimed": true
+      },
+      "documents": [
+        {
+          "type": "hsa_approval",
+          "reference": "DEMO approval; not real",
+          "product": "DEMO dental gum"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sg-gum-conflicting-claims",
+    "title": "Ordinary-gum and HSA-approval claims conflict",
+    "input": {
+      "product": "DEMO ordinary chewing gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "ordinary",
+        "hsa_approval_claimed": true
+      }
+    }
+  },
+  {
+    "id": "sg-gum-wrong-product",
+    "title": "Another product's HSA approval cannot establish an exclusion",
+    "input": {
+      "product": "DEMO dental gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "oral_dental",
+        "hsa_approval_claimed": true
+      },
+      "documents": [
+        {
+          "type": "hsa_approval",
+          "reference": "DEMO other-product record",
+          "product": "Different demo product"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sg-gum-negative-approval-conflict",
+    "title": "An HSA record conflicts with a negative approval claim",
+    "input": {
+      "product": "DEMO dental gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "oral_dental",
+        "hsa_approval_claimed": false
+      },
+      "documents": [
+        {
+          "type": "hsa_approval",
+          "reference": "DEMO contradictory approval record",
+          "product": "DEMO dental gum"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sg-gum-expired-approval",
+    "title": "Expired HSA approval needs replacement",
+    "input": {
+      "product": "DEMO medicinal gum",
+      "product_category": "chewing_gum",
+      "from_country": "MY",
+      "to_country": "SG",
+      "technical_specifications": {
+        "gum_type": "medicinal",
+        "hsa_approval_claimed": true
+      },
+      "documents": [
+        {
+          "type": "hsa_approval",
+          "reference": "DEMO expired record",
+          "product": "DEMO medicinal gum",
+          "expires_on": "2025-01-01"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sg-category-controls-scope",
+    "title": "A product name alone does not activate a gum prohibition",
+    "input": {
+      "product": "DEMO chewing gum display stand",
+      "product_category": "general_goods",
+      "from_country": "MY",
+      "to_country": "SG"
+    }
+  },
+  {
+    "id": "india-nicotine-free-vape",
+    "title": "Nicotine-free electronic cigarette import is blocked",
+    "input": {
+      "product": "DEMO nicotine-free vaping device",
+      "product_category": "electronic_cigarette",
+      "from_country": "CN",
+      "to_country": "IN",
+      "technical_specifications": {
+        "licensed_medicine_claimed": false,
+        "contains_nicotine": false
+      }
+    }
+  },
+  {
+    "id": "india-vape-exclusion-unknown",
+    "title": "Unknown medicinal exclusion requests product facts",
+    "input": {
+      "product": "DEMO inhalation device",
+      "product_category": "electronic_cigarette",
+      "from_country": "CN",
+      "to_country": "IN"
+    }
+  },
+  {
+    "id": "india-vape-licence-missing",
+    "title": "Medicinal-product claim needs a product-specific licence",
+    "input": {
+      "product": "DEMO inhalation device",
+      "product_category": "electronic_cigarette",
+      "from_country": "CN",
+      "to_country": "IN",
+      "technical_specifications": {
+        "licensed_medicine_claimed": true
+      }
+    }
+  },
+  {
+    "id": "india-vape-licence-review",
+    "title": "Supplied medicinal licence requires exclusion review",
+    "input": {
+      "product": "DEMO inhalation device",
+      "product_category": "electronic_cigarette",
+      "from_country": "CN",
+      "to_country": "IN",
+      "technical_specifications": {
+        "licensed_medicine_claimed": true
+      },
+      "documents": [
+        {
+          "type": "medicinal_licence",
+          "reference": "DEMO licence; not real",
+          "product": "DEMO inhalation device"
+        }
+      ]
+    }
+  },
+  {
+    "id": "india-vape-licence-conflict",
+    "title": "Licence record conflicts with a negative exclusion claim",
+    "input": {
+      "product": "DEMO vaping device",
+      "product_category": "electronic_cigarette",
+      "from_country": "CN",
+      "to_country": "IN",
+      "technical_specifications": {
+        "licensed_medicine_claimed": false
+      },
+      "documents": [
+        {
+          "type": "medicinal_licence",
+          "reference": "DEMO contradictory record",
+          "product": "DEMO vaping device"
+        }
+      ]
+    }
+  },
+  {
+    "id": "coffee-context-missing",
+    "title": "Coffee filing checks wait for shipment context",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "coffee-road-outside-scope",
+    "title": "Road shipment needs a separate FDA applicability review",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "road",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "coffee-notice-missing",
+    "title": "Commercial coffee shipment needs a matching prior notice",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        }
+      ]
+    }
+  },
+  {
+    "id": "coffee-evidence-binding-missing",
+    "title": "A notice without shipment binding stays unresolved",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-evidence-mismatch",
+    "title": "Another shipment's notice requires conflict review",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-DIFFERENT-SHIPMENT"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-evidence-rechecked",
+    "title": "Matching notice evidence satisfies scoped checks and retains review",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-air-four-hour-boundary",
+    "title": "Air arrival at the four-hour minimum satisfies timing",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-18T06:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-air-too-late",
+    "title": "Three-hour air notice fails the filing window",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-18T05:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-sea-eight-hour-boundary",
+    "title": "Sea arrival at the eight-hour minimum satisfies timing",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "sea",
+        "arrival_at": "2026-10-18T10:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-sea-too-late",
+    "title": "Seven-hour sea notice fails the filing window",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "sea",
+        "arrival_at": "2026-10-18T09:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-pnsi-fifteen-calendar-days",
+    "title": "PNSI allows fifteen calendar days, including a partial last day",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-31T23:30:00.000Z",
+        "arrival_timezone": "UTC"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-16T00:30:00.000Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-pnsi-sixteen-calendar-days",
+    "title": "PNSI notice sixteen calendar days before arrival fails",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-11-01T00:30:00.000Z",
+        "arrival_timezone": "UTC"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-16T23:30:00.000Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-ace-thirty-calendar-days",
+    "title": "ABI/ACE allows thirty calendar days",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-11-15T23:30:00.000Z",
+        "arrival_timezone": "UTC"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-16T00:30:00.000Z",
+        "submission_method": "abi_ace",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-port-timezone",
+    "title": "The first U.S. port time zone determines calendar-day boundaries",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-31T04:30:00.000Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-16T03:30:00.000Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-future-confirmation",
+    "title": "Future-dated confirmation requires record review",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-19T03:30:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T04:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
+  },
+  {
+    "id": "coffee-past-arrival",
+    "title": "An already-past arrival cannot use the pre-arrival workflow",
+    "input": {
+      "product": "DEMO packaged roasted coffee",
+      "product_category": "food_agriculture",
+      "from_country": "BR",
+      "to_country": "US",
+      "origin_country": "BR",
+      "hs_code": "090121",
+      "quantity": 100,
+      "value": 1200,
+      "currency": "USD",
+      "end_use_flags": [],
+      "classification_evidence": "DEMO manufacturer classification; unverified",
+      "technical_specifications": {
+        "food_type": "packaged_roasted_coffee",
+        "manufacturer": "DEMO roaster",
+        "intended_food_use": "Retail human consumption",
+        "plant_material": false
+      },
+      "end_user": "Example Coffee 9F21 Ltd",
+      "end_use": "Retail sale",
+      "parties": [
+        {
+          "name": "Example Coffee 9F21 Ltd",
+          "role": "importer",
+          "country": "US"
+        }
+      ],
+      "ownership": {
+        "blocked_ownership_percent": 0,
+        "evidence": "DEMO ownership record"
+      },
+      "shipment": {
+        "id": "DEMO-COFFEE-01",
+        "purpose": "commercial_sale",
+        "transport_mode": "air",
+        "arrival_at": "2026-10-18T03:00:41.592Z",
+        "arrival_timezone": "America/New_York"
+      },
+      "documents": [
+        {
+          "type": "classification_record",
+          "reference": "DEMO classification_record; unverified"
+        },
+        {
+          "type": "commercial_invoice",
+          "reference": "DEMO commercial_invoice; unverified"
+        },
+        {
+          "type": "customs_classification_record",
+          "reference": "DEMO customs_classification_record; unverified"
+        },
+        {
+          "type": "food_import_applicability_record",
+          "reference": "DEMO food_import_applicability_record; unverified"
+        },
+        {
+          "type": "fda_prior_notice_confirmation",
+          "reference": "DEMO notice record",
+          "product": "DEMO packaged roasted coffee",
+          "shipment_id": "DEMO-COFFEE-01"
+        }
+      ],
+      "prior_notice": {
+        "confirmation_number": "DEMO-NOT-A-REAL-CONFIRMATION",
+        "confirmed_at": "2026-10-18T02:30:41.592Z",
+        "submission_method": "pnsi",
+        "evidence_reference": "DEMO notice record"
+      }
+    }
   }
 ]
