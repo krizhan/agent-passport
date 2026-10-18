@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { handleRequests } from "../server/requests-handler.ts";
+import { handleRequests } from "../server/requests-handler.js";
 
 export default function handler(request: IncomingMessage, response: ServerResponse) {
   return handleRequests(request, response, {
