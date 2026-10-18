@@ -15,14 +15,17 @@ export const marketingEmailSchema = marketingInputSchema.extend({
   action_type: z.literal("marketing_email"),
 });
 
-export const purchaseSchema = z.object({
-  action_type: z.literal("purchase").default("purchase"),
+export const purchaseInputSchema = z.object({
   product: text.describe("Required for purchase: what you want to purchase"),
   from_country: countrySchema.describe("Required for purchase: shipping country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
   to_country: countrySchema.describe("Required for purchase: destination country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
   amount: money.optional().describe("Optional purchase total, in the same currency and units as budget"),
   budget: money.optional().describe("Optional spending limit, in the same currency and units as amount; zero is allowed"),
 }).strict();
+
+export const purchaseSchema = purchaseInputSchema.extend({
+  action_type: z.literal("purchase"),
+});
 
 const partyName = z.string().trim().min(2).max(200)
   .refine((value) => (value.match(/[\p{L}\p{N}]/gu) ?? []).length >= 2,
@@ -41,8 +44,8 @@ export const restrictedPartySchema = screeningInputSchema.extend({
 
 export const actionSchema = z.discriminatedUnion("action_type", [purchaseSchema, marketingEmailSchema, restrictedPartySchema]);
 
-// Purchase tools retain their inputs; marketing and screening have dedicated tools.
-export const requestSchema = purchaseSchema;
+// The selected tool identifies the workflow; only internal actions carry a type.
+export const requestSchema = purchaseInputSchema;
 
 export const requirementSchema = z.object({
   id: z.string(),
@@ -115,5 +118,6 @@ export type RequirementResult = z.infer<typeof requirementResultSchema>;
 export type Evaluation = z.infer<typeof evaluationSchema>;
 
 export function parseAction(raw: CheckInput): Purchase {
-  return requestSchema.parse(raw);
+  const input = requestSchema.parse(raw);
+  return purchaseSchema.parse({ ...input, action_type: "purchase" });
 }

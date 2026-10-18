@@ -4,7 +4,10 @@ import { latestRequests, outcomeLabels, policyLabels, type Outcome, type Request
 import "../demo.css";
 
 const toolLabels: Record<string, string> = {
-  check_action: "Action check", get_requirements: "Requirements", get_remediation_plan: "Remediation plan",
+  check_import_export: "Import & export check",
+  get_import_export_requirements: "Import & export requirements",
+  get_import_export_remediation_plan: "Import & export remediation plan",
+  check_action: "Import & export check", get_requirements: "Import & export requirements", get_remediation_plan: "Import & export remediation plan",
   check_marketing_email: "Marketing review", screen_restricted_party: "Party screening",
 };
 

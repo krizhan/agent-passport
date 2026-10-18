@@ -4,13 +4,13 @@ Five advisory MCP tools, built with mcp-use v2. Purchase readiness, marketing re
 
 | Tool | Inputs and behavior |
 | --- | --- |
-| `get_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
-| `check_action` | Purchase inputs → review needs, optional budget comparison, and remediation. |
-| `get_remediation_plan` | Purchase inputs → the same evaluation and next steps as `check_action`. |
+| `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
+| `check_import_export` | Purchase inputs → review needs, optional budget comparison, and remediation. |
+| `get_import_export_remediation_plan` | Purchase inputs → the same evaluation and next steps as `check_import_export`. |
 | `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
 | `screen_restricted_party` | Party name and optional aliases/country/address → bundled U.S. CSL snapshot search, provenance, and review steps. |
 
-Marketing and screening have dedicated tools. Purchase tools continue to accept purchase inputs only.
+Each workflow has dedicated tools. Import/export tools accept international purchase inputs, and none of the public tools accepts an `action_type` field. The router adds this discriminator internally.
 
 ## Run locally
 
@@ -103,7 +103,7 @@ All three purchase tools accept:
 }
 ```
 
-`action_type` may be omitted or set to `purchase`. Product and both countries are required. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. Unknown fields and screening fields are rejected.
+Product and both countries are required. The tool selects the workflow; `action_type` is rejected in public inputs and added internally for routing. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. Unknown fields and screening fields are rejected.
 
 | Route | Policy | Routing kind |
 | --- | --- | --- |
