@@ -4,9 +4,7 @@
 
 ## Try through MCP
 
-Start `npm run dev` from `mcp/` and open [MCP Inspector](http://localhost:3000/mcp/inspector). Read the `marketing://examples` resource for fresh synthetic requests, then call `check_marketing_email` with an example's `input`. Edit the input and call the tool again to recheck.
-
-Run `npm run demo:marketing` from `mcp/` to evaluate and export the 18 examples to [requests.json](requests.json). That file is a dated demonstration artifact; the MCP resource generates fresh observation/send timestamps.
+Start `npm run dev` from `mcp/` and open [MCP Inspector](http://localhost:3000/mcp/inspector). Call `check_marketing_email` with the rendered message, recipient, planned send time, sender details, and available evidence. Use the returned missing-information and fingerprint fields to collect evidence and recheck the final message.
 
 The website's Marketing tab at `/demo` shows captured gateway requests and their results. Marketing checks are executed through MCP, with no separate website checker or proxy API. Direct local Inspector calls do not appear in Manufact gateway history.
 
@@ -18,7 +16,7 @@ Each evidence record carries `reference`, `source`, `observed_at`, `status` and 
 
 To assess a new draft, first submit the draft and available records. Use the returned fingerprint when attaching reviews for that exact content. Changing the subject, headers, body, purpose or opt-out target changes the hash. Updating a hash does not perform a content or consent review: a reviewer or connected provider must substantiate the associated facts.
 
-The engine checks record scope and freshness, but does not authenticate provenance labels or independently verify caller assertions. Human judgment about deceptive subjects, identification, consent standards and product similarity is supplied as explicit review facts. All examples are synthetic, including their consent events and functional-test claims.
+The engine checks record scope and freshness, but does not authenticate provenance labels or independently verify caller assertions. Human judgment about deceptive subjects, identification, consent standards and product similarity is supplied as explicit review facts.
 
 | Evidence | Main facts | Maximum age at assessment or planned send |
 | --- | --- | --- |

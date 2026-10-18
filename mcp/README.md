@@ -62,9 +62,9 @@ npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
   --output /tmp/food-import-review.png
 ```
 
-## Import and export scenarios
+## Import and export checks
 
-`check_import_export` combines **57 hardcoded rules** and **100 example requests** across U.S., EU, Great Britain/UK scope, China, India, Singapore, Canada, Australia, Japan and South Korea, plus shared evidence and ownership checks. This is partial scenario coverage, not full country coverage. The public tool names are retained. Requirement/remediation and screening inputs remain compatible. Marketing uses the independent evidence-based schema described below.
+`check_import_export` combines **57 hardcoded rules** across U.S., EU, Great Britain/UK scope, China, India, Singapore, Canada, Australia, Japan and South Korea, plus shared evidence and ownership checks. This is partial scenario coverage, not full country coverage. The public tool names are retained. Requirement/remediation and screening inputs remain compatible. Marketing uses the independent evidence-based schema described below.
 
 ```json
 {
@@ -82,7 +82,7 @@ npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
 
 Only `product`, `from_country`, and `to_country` are required at submission. Missing category, classifications, technical details, parties or evidence become explicit follow-up requests. Categories are `general_goods`, `food_agriculture`, `medical`, `chemicals`, `wildlife`, `waste`, `dual_use`, `advanced_computing`, `encryption`, `military`, `nuclear`, `rare_earth`, `chewing_gum`, and `electronic_cigarette`. Categories and technical flags are caller assertions; they do not establish controlled status.
 
-Optional inputs include `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, `documents`, `shipment`, and `prior_notice`. Documents use `type`, `reference`, optional `expires_on`, and optional `product`/`shipment_id` bindings. Parties use a name and role, with optional aliases/country/address. See [copyable requests](src/trade/examples/requests.json) for technical keys and document types.
+Optional inputs include `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, `documents`, `shipment`, and `prior_notice`. Documents use `type`, `reference`, optional `expires_on`, and optional `product`/`shipment_id` bindings. Parties use a name and role, with optional aliases/country/address. Inspect the MCP tool schema for the current technical keys and document types.
 
 The evaluator normalizes ISO countries, maps EU members to the EU pack, and combines applicable rules. Use member-country codes such as `DE`, not `EU`. Conditions are `MATCHED`, `NOT_MATCHED`, or `UNKNOWN`; missing facts never establish negative applicability. Rules with effective intervals use the planned date (inclusive start, exclusive end). Source review dates are separate from legal effective dates, and rules without intervals require current-law review.
 
@@ -100,31 +100,19 @@ For this coffee workflow, `shipment` accepts `id`, `purpose`, `transport_mode`, 
 
 Timing uses FDA confirmation time: at least four hours before air arrival or eight hours before sea arrival, and no more than 15 calendar days for PNSI or 30 for ABI/ACE in the declared port time zone. Future confirmations and past arrivals require review. Supplied evidence and filing contents remain unverified; satisfied reference/timing checks retain all other customs, FDA, screening, export-side and coverage requirements. The existing food-import form continues to collect unverified references; detailed facts can be supplied through its shipment input or directly to `check_import_export`.
 
-Examples include prohibition, exception, conflict, expired/mismatched evidence, missing shipment context, missing notice → matching evidence, air/sea minimum boundaries, calendar-day limits, and time-zone cases. Rerun `demo:trade` to refresh timestamped synthetic evidence before presenting the demo.
-
 Every result has `advisory_only: true`, `can_proceed_under_checked_rules: false`, `execution_performed: false`, and `coverage.full_transaction_coverage: false`. Unsupported route sides remain explicit. Sources include verification status/date; Japanese METI references that could not be fetched are marked `reference_only` with a null review date. EU national overlays, Northern Ireland, indirect ownership, FDP/de minimis calculations, current quotas, tariffs/duties and emergency measures require additional review.
 
 The narrow Canadian `general_goods` import-readiness check can support a `NO_BLOCKERS_FOUND` demo when the request supplies a Canadian importer BN15/CARM reference, origin, proposed classification, quantity/value/currency, commercial invoice, classification record, end-user statement, ownership evidence, low-risk end use and parties whose recent bundled screening returns no candidates. Product-specific controls, final tariff treatment, duties, taxes and customs release remain outside that result.
 
-### Regenerate the demo
+### Add or update a rule
 
-```bash
-npm run typecheck
-npm run demo:trade
-npm run build
-```
-
-`demo:trade` compiles to ignored `.trade-build/`, runs the actual evaluator, exports copyable request JSON, and writes the recorded results used at `/scenarios`. The gallery needs no credentials/server connection; it shows assessment timestamps and does not recompute requests in the browser. `/demo` remains captured gateway history and recognizes the new tool.
-
-### Add a scenario
-
-Add a `TradeRule` to `src/trade/rules/`, verify its official sources, and add a demo example to `src/trade/examples/`. Contracts live in `types.ts` and `schemas.ts`; `conditions.ts` evaluates predicates and `evaluate.ts` combines rules. Supported predicates are `eq`, `in`, `contains`, `gte`, `lte`, `exists`, and nested `all`/`any`/`not`, with dotted technical-specification paths. `exists` explicitly tests presence; other missing operands are `UNKNOWN`. An optional `assess` callback supports evidence binding and calendar-time calculations after category and condition applicability are established. Its schema-validated result supplies missing fields, check status and remediation; evaluation errors require review. Regenerate the demo after changing rules, examples or screening data.
+Add a `TradeRule` to `src/trade/rules/` and verify its official sources. Contracts live in `types.ts` and `schemas.ts`; `conditions.ts` evaluates predicates and `evaluate.ts` combines rules. Supported predicates are `eq`, `in`, `contains`, `gte`, `lte`, `exists`, and nested `all`/`any`/`not`, with dotted technical-specification paths. `exists` explicitly tests presence; other missing operands are `UNKNOWN`. An optional `assess` callback supports evidence binding and calendar-time calculations after category and condition applicability are established. Its schema-validated result supplies missing fields, check status and remediation; evaluation errors require review. Run the normal typecheck and build before deployment.
 
 ## Marketing review
 
 `check_marketing_email` now requires `sender`, `recipient`, `message` and `planned_send_at`, with `dispatch_country` and typed `evidence`. The former country/count/purpose contract has been replaced. It evaluates one rendered commercial email for one recipient, using candidate US CAN-SPAM, Canada CASL and UK PECR packs.
 
-Start the MCP server and use the Inspector at http://localhost:3000/mcp/inspector. Read `marketing://examples` for fresh copyable requests, then call `check_marketing_email`. Run `npm run demo:marketing` to evaluate and export the 18 examples. See the [engine guide](src/marketing/README.md) and [copyable demonstration requests](src/marketing/requests.json). The website displays captured marketing results at `/demo`; it does not run marketing checks.
+Start the MCP server and use the Inspector at http://localhost:3000/mcp/inspector, then call `check_marketing_email` with the rendered message, recipient, planned send time, sender details, and available evidence. See the [engine guide](src/marketing/README.md). The website displays captured marketing results at `/demo`; it does not run marketing checks.
 
 Results distinguish `BLOCK`, `NEEDS_EVIDENCE`, `REVIEW`, and `NO_BLOCKERS_FOUND`. They include sources, evidence scope/freshness, exact message SHA-256, proposed corrections and recheck instructions. Supplied evidence is not independently authenticated. No live provider calls or email sending occur, and no-blockers results remain limited to the implemented checks. Changed drafts need fresh reviews bound to the new fingerprint.
 
@@ -161,15 +149,7 @@ The committed `data/consolidated-screening-list.json` contains all 26,154 record
 6. Return at most 20 candidate records, with the full candidate count and a truncation flag. Different source listings are preserved even if their party ID is the same.
 7. Attach original download time, dataset generation time, upstream Last-Modified, committed/upstream SHA-256 hashes, source metadata, record count, method/version, limitations, and remediation. `source.mode` is `bundled_json` and `source.live_lookup_performed` is always false.
 
-To refresh the committed files explicitly:
-
-```bash
-npm run refresh:screening-list
-npm run typecheck
-npm run build
-```
-
-Commit the JSON, metadata, and compressed copy and redeploy to publish a refreshed snapshot. Tool calls never update the snapshot automatically. The compressed copy fits Manufact's 25 MiB source-file limit; `npm run build` verifies and restores the raw JSON before bundling it.
+The normal build verifies and bundles the committed snapshot. Replacing that source data is a separate maintainer operation, not a deployment prerequisite. Tool calls never update the snapshot automatically. The compressed copy fits Manufact's 25 MiB source-file limit; `npm run build` verifies and restores the raw JSON before bundling it.
 
 | `screening.status` | Meaning | Overall decision |
 | --- | --- | --- |
@@ -215,7 +195,7 @@ Snapshots marked `STALE` can still return `POTENTIAL_MATCH` or `NO_CANDIDATES`, 
 - `src/router/`: policy registration, selection, and reasons.
 - `src/policies/`: independent `us-import`, `general-purchase`, and `us-restricted-party` packs.
 - `src/policy.ts`: purchase checks with remediation.
-- `src/marketing/`: independent schemas, evidence validation, three policy packs and demonstration scenarios.
+- `src/marketing/`: independent schemas, evidence validation, and three policy packs.
 - `src/screening/`: bundled snapshot validation, age reporting, matching, results.
 - `data/`: full CSL JSON snapshot and provenance metadata, embedded by the build.
 - `scripts/refresh-screening-list.mjs`: explicit refresh from the official public download.
@@ -234,8 +214,8 @@ Existing endpoint: https://bold-cloud-g95ht.run.mcp-use.com/mcp
 
 [Management dashboard](https://manufact.com/cloud/org-312cbb99-5qvf5/servers/ff38bb29-7976-4069-84af-c3c190735e2d/overview).
 
-Deployment is separate from local implementation. From `mcp/`, when deployment is requested:
+From the repository root, the normal deployment command type-checks and builds the MCP and website, then deploys both:
 
 ```bash
-npm run deploy -- --no-github -y --build-command "npm run build"
+npm run deploy
 ```
