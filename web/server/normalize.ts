@@ -1,4 +1,4 @@
-import type { RequestRecord, Outcome } from "../src/lib/requests.ts";
+import type { RequestRecord, Outcome } from "../src/lib/requests.js";
 
 type ObjectValue = Record<string, unknown>;
 const object = (value: unknown): ObjectValue =>

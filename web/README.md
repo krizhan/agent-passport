@@ -37,6 +37,8 @@ MANUFACT_SERVER_ID=ff38bb29-7976-4069-84af-c3c190735e2d
 
 These are **server-only** values. Never use `VITE_` prefixes for credentials. Restart Vite after changing them. The Vite development and preview servers provide the same `/api/requests` handler as the production Vercel Function in `api/requests.ts`.
 
+Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules resolve correctly. Vite resolves these imports to the TypeScript source during local development.
+
 - Show at most the **latest 10 import/export requests and latest 10 marketing requests** with captured inputs and readable results. The **Requests** demo switches only between **Import & export** and **Marketing**. It has no all-requests view, counts, summary cards, gateway status, refresh button, or advanced filters. It uses the latest seven days of retained activity.
 - Open a request to read the original action, assessment, policy pack/version, routing explanation, requirements, source links, and next steps.
 - Auto-refresh replaces the feed every 20 seconds while the tab is visible; there is no older-history pagination.
