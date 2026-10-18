@@ -197,7 +197,6 @@ export function Home() {
             <h2 id="marketing-title">
               Check campaign compliance <span>before sending.</span>
             </h2>
-            <p><a className="source-link" href="/marketing">Try marketing policy checks <Icon name="arrow" size={15} /></a></p>
             <p>
               Your agent submits a rendered email and recipient evidence for
               US, Canadian and UK policy checks, then resolves missing details

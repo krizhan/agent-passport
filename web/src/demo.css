@@ -11,8 +11,7 @@
 .demo-heading .eyebrow > span { background: #39846c; box-shadow: 0 0 0 4px #39846c0d; }
 .demo-activity { background: #fff; border: 1px solid #dce3dd; border-radius: 11px; overflow: hidden; box-shadow: 0 5px 18px #263b2d03; }
 .demo-page button:disabled { opacity: .5; cursor: wait; }
-.demo-toolbar { padding: 18px 25px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
-.demo-toolbar > a { color: #547343; font-size: 11px; display: inline-flex; gap: 5px; align-items: center; }
+.demo-toolbar { padding: 18px 25px; }
 .demo-tabs { display: flex; align-items: center; gap: 7px; }
 .demo-tabs button { font-size: 11px; color: #78867d; border-radius: 5px; padding: 8px 10px; display: flex; align-items: center; gap: 7px; min-height: 34px; white-space: nowrap; }
 .demo-tabs button[aria-pressed="true"] { background: #edf3ee; color: #294e3a; }

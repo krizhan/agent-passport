@@ -25,13 +25,9 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
-## Marketing policy editor
+## Marketing request results
 
-Start `npm run dev` from `mcp/` and open **http://127.0.0.1:5173/marketing**. Select a synthetic example, edit its JSON and click **Run policy check**. The editor calls the actual `check_marketing_email` MCP tool; examples come from the `marketing://examples` resource with fresh demonstration timestamps. It needs no Manufact or InsForge credentials. Set server-only `MARKETING_MCP_URL` if the MCP server runs somewhere other than `http://127.0.0.1:3000/mcp`.
-
-The tool checks one rendered email and one recipient against selected US CAN-SPAM, Canada CASL and UK PECR rules. Results include blockers, evidence gaps, source links, proposed corrections, freshness and message-hash checks. Evidence is supplied by the caller; CRM, consent and email platforms are not connected. No email or real unsubscribe request is sent. New message content needs a fresh review for its returned fingerprint. See the [marketing engine guide](../mcp/src/marketing/README.md).
-
-The playground works through the local Vite server and preview middleware. A hosted playground needs a reachable MCP server configured through `MARKETING_MCP_URL`; localhost is only appropriate for local use. Its direct MCP calls are separate from Manufact gateway history at `/demo`.
+Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Read `marketing://examples` in the MCP Inspector for fresh synthetic requests, and see the [marketing engine guide](../mcp/src/marketing/README.md).
 
 ## Request-history demo
 

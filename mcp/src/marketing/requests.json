@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-10-18T02:22:56.422Z",
-  "note": "Synthetic demonstration records. For fresh examples read the MCP resource marketing://examples or open /marketing locally.",
+  "note": "Synthetic demonstration records. For fresh examples read the MCP resource marketing://examples.",
   "scenarios": [
     {
       "id": "us-missing-footer",

@@ -150,7 +150,6 @@ export function Demo() {
                 <button key={value} aria-pressed={category === value} onClick={() => { setCategory(value); setOpenId(null); }}>{label}</button>
               ))}
             </div>
-            {category === "marketing" && <a href="/marketing">Try a marketing check <Icon name="arrow" size={13} /></a>}
           </div>
 
           {error && <div className="demo-error" role="alert"><strong>{data ? "History could not refresh." : "History could not load."}</strong><p>{error}</p><button onClick={() => void load()} disabled={!!busy}>Try again <Icon name="arrow" size={14} /></button></div>}

@@ -2,13 +2,13 @@
 
 `check_marketing_email` evaluates one rendered commercial email for one recipient. The input contract replaces the earlier country/count/purpose checklist. The engine combines candidate US CAN-SPAM, Canada CASL and UK PECR packs from recipient, sender and dispatch locations. Cross-border applicability, unsupported jurisdictions and noncommercial classifications remain explicit review items.
 
-## Try locally
+## Try through MCP
 
-Start `npm run dev` from `mcp/`, and `npm run dev -- --port 5173` from `web/`. Open [the marketing editor](http://127.0.0.1:5173/marketing) or [MCP Inspector](http://localhost:3000/mcp/inspector).
+Start `npm run dev` from `mcp/` and open [MCP Inspector](http://localhost:3000/mcp/inspector). Read the `marketing://examples` resource for fresh synthetic requests, then call `check_marketing_email` with an example's `input`. Edit the input and call the tool again to recheck.
 
-The editor retrieves fresh synthetic examples from the MCP resource `marketing://examples` and sends checks to the real MCP tool through `/api/marketing/check`. It does not use a second evaluator. The editor's calls do not appear in Manufact gateway history; `/demo` shows actual captured gateway traffic. Server-side `MARKETING_MCP_URL` defaults to `http://127.0.0.1:3000/mcp` and can point to another running MCP endpoint.
+Run `npm run demo:marketing` from `mcp/` to evaluate and export the 18 examples to [requests.json](requests.json). That file is a dated demonstration artifact; the MCP resource generates fresh observation/send timestamps.
 
-Run `npm run demo:marketing` from `mcp/` to evaluate and export the 18 examples to [requests.json](requests.json). That file is a dated demonstration artifact; the MCP resource generates new observation/send timestamps for interactive use.
+The website's Marketing tab at `/demo` shows captured gateway requests and their results. Marketing checks are executed through MCP, with no separate website checker or proxy API. Direct local Inspector calls do not appear in Manufact gateway history.
 
 ## Input and evidence
 

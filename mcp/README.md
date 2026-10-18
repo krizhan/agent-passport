@@ -28,7 +28,7 @@ Open http://localhost:3000/mcp/inspector. If that port is occupied, use `npm run
 
 `check_marketing_email` now requires `sender`, `recipient`, `message` and `planned_send_at`, with `dispatch_country` and typed `evidence`. The former country/count/purpose contract has been replaced. It evaluates one rendered commercial email for one recipient, using candidate US CAN-SPAM, Canada CASL and UK PECR packs.
 
-Start the MCP server, then open the web editor at http://127.0.0.1:5173/marketing. Load a synthetic example, edit its JSON and run the actual MCP tool. In Inspector, read `marketing://examples` for fresh copyable requests. Run `npm run demo:marketing` to evaluate and export the 18 examples. See the [engine guide](src/marketing/README.md) and [copyable demonstration requests](src/marketing/requests.json).
+Start the MCP server and use the Inspector at http://localhost:3000/mcp/inspector. Read `marketing://examples` for fresh copyable requests, then call `check_marketing_email`. Run `npm run demo:marketing` to evaluate and export the 18 examples. See the [engine guide](src/marketing/README.md) and [copyable demonstration requests](src/marketing/requests.json). The website displays captured marketing results at `/demo`; it does not run marketing checks.
 
 Results distinguish `BLOCK`, `NEEDS_EVIDENCE`, `REVIEW`, and `NO_BLOCKERS_FOUND`. They include sources, evidence scope/freshness, exact message SHA-256, proposed corrections and recheck instructions. Supplied evidence is not independently authenticated. No live provider calls or email sending occur, and no-blockers results remain limited to the implemented checks. Changed drafts need fresh reviews bound to the new fingerprint.
 
