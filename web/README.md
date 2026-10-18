@@ -25,6 +25,10 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
+## Scenario gallery
+
+Open `/scenarios` to browse 70 recorded assessments from 52 hardcoded rules. Select a scenario, read separate import/export findings, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
+
 ## Request-history demo
 
 Open **http://127.0.0.1:5173/demo** (or the port printed by Vite). It reads real captured requests from the existing Manufact gateway; it does not generate examples or execute business actions.

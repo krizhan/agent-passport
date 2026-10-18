@@ -1,16 +1,16 @@
 # Customs · Agent Passport
 
-Five advisory MCP tools, built with mcp-use v2. Purchase readiness, marketing review, and U.S. restricted-party screening have separate public input schemas. No backend, database, API key, or environment variables are required. Screening works offline against the bundled official JSON snapshot. Only the optional manual refresh command needs outbound HTTPS.
+Five advisory MCP tools, built with mcp-use v2. Scenario-based trade, purchase readiness, marketing review, and U.S. restricted-party screening have separate public input schemas. No backend, database, API key, or environment variables are required. Screening works offline against the bundled official JSON snapshot. Only the optional manual refresh command needs outbound HTTPS.
 
 | Tool | Inputs and behavior |
 | --- | --- |
+| `check_import_export` | Product and route → combined scenario rules, import/export/transit findings, party screening, evidence/document gaps, sources and next steps. |
 | `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
-| `check_import_export` | Purchase inputs → review needs, optional budget comparison, and remediation. |
-| `get_import_export_remediation_plan` | Purchase inputs → the same evaluation and next steps as `check_import_export`. |
+| `get_import_export_remediation_plan` | Purchase inputs → original readiness checklist, optional budget comparison and next steps. |
 | `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
 | `screen_restricted_party` | Party name and optional aliases/country/address → bundled U.S. CSL snapshot search, provenance, and review steps. |
 
-Each workflow has dedicated tools. Import/export tools accept international purchase inputs, and none of the public tools accepts an `action_type` field. The router adds this discriminator internally.
+Each workflow has explicit tool names. The requirement/remediation tools retain their purchase checklist inputs; the trade check accepts the expanded scenario input. Public inputs do not accept action_type.
 
 ## Run locally
 
@@ -23,6 +23,50 @@ npm run dev
 ```
 
 Open http://localhost:3000/mcp/inspector. If that port is occupied, use `npm run dev -- --port 3011` and the matching Inspector URL.
+
+## Import and export scenarios
+
+`check_import_export` combines **52 hardcoded rules** and **70 example requests** across U.S., EU, Great Britain/UK scope, China, India, Canada, Australia, Japan and South Korea, plus shared evidence and ownership checks. This is partial scenario coverage, not full country coverage. The public tool names are retained. Requirement/remediation, marketing and screening inputs remain compatible; the expanded trade tool also accepts the existing amount/budget fields.
+
+```json
+{
+  "product": "Industrial controller",
+  "from_country": "US",
+  "to_country": "DE",
+  "origin_country": "US",
+  "product_category": "dual_use",
+  "transaction_type": "shipment",
+  "end_user": "Example factory",
+  "end_use": "Civilian production line",
+  "parties": [{ "name": "Example Factory GmbH", "role": "end_user", "country": "DE" }]
+}
+```
+
+Only `product`, `from_country`, and `to_country` are required at submission. Missing category, classifications, technical details, parties or evidence become explicit follow-up requests. Categories are `general_goods`, `food_agriculture`, `medical`, `chemicals`, `wildlife`, `waste`, `dual_use`, `advanced_computing`, `encryption`, `military`, `nuclear`, and `rare_earth`. Categories and technical flags are caller assertions; they do not establish controlled status.
+
+Optional inputs include `amount`, `budget`, `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, and `documents`. Documents use `type`, `reference`, and optional `expires_on`. Parties use a name and role, with optional aliases/country/address. See [copyable requests](src/trade/examples/requests.json) for technical keys and document types.
+
+The evaluator normalizes ISO countries, maps EU members to the EU pack, and combines applicable rules. Use member-country codes such as `DE`, not `EU`. Conditions are `MATCHED`, `NOT_MATCHED`, or `UNKNOWN`; missing facts never establish negative applicability. Rules with effective intervals use the planned date (inclusive start, exclusive end). Source review dates are separate from legal effective dates, and rules without intervals require current-law review.
+
+Supplied documents remain `PROVIDED_UNVERIFIED`; expired documents are checked against the planned date. Each supplied party is searched against the bundled CSL. Stale/unavailable screening adds a current-evidence gap while retaining historical candidates. A candidate is neither confirmed identity nor an automatic legal prohibition.
+
+Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, `purchase_constraint`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or an exceeded caller budget, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, otherwise `REVIEW`. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. The shipped catalog uses classification/review/conditional authorization findings and contains no categorical automatic legal prohibition. Caller-supplied amount/budget constraints are tracked separately from legal findings; exceeding the submitted budget can also return BLOCK.
+
+Every result has `advisory_only: true`, `can_proceed_under_checked_rules: false`, `execution_performed: false`, and `coverage.full_transaction_coverage: false`. Unsupported route sides remain explicit. Sources include verification status/date; Japanese METI references that could not be fetched are marked `reference_only` with a null review date. EU national overlays, Northern Ireland, indirect ownership, FDP/de minimis calculations, current quotas, tariffs/duties and emergency measures require additional review.
+
+### Regenerate the demo
+
+```bash
+npm run typecheck
+npm run demo:trade
+npm run build
+```
+
+`demo:trade` compiles to ignored `.trade-build/`, runs the actual evaluator, exports copyable request JSON, and writes the recorded results used at `/scenarios`. The gallery needs no credentials/server connection; it shows assessment timestamps and does not recompute requests in the browser. `/demo` remains captured gateway history and recognizes the new tool.
+
+### Add a scenario
+
+Add a `TradeRule` to `src/trade/rules/`, verify its official sources, and add a demo example to `src/trade/examples/`. Contracts live in `types.ts` and `schemas.ts`; `conditions.ts` evaluates predicates and `evaluate.ts` combines rules. Supported predicates are `eq`, `in`, `contains`, `gte`, `lte`, `exists`, and nested `all`/`any`/`not`, with dotted technical-specification paths. `exists` explicitly tests presence; other missing operands are `UNKNOWN`. Regenerate the demo after changing rules, examples or screening data.
 
 ## Marketing review
 
@@ -93,7 +137,7 @@ A possible name match never automatically establishes identity or a legal prohib
 
 ## Purchase checks
 
-All three purchase tools accept:
+The requirement/remediation tools retain the original purchase checklist and accept:
 
 ```json
 {
@@ -103,7 +147,7 @@ All three purchase tools accept:
 }
 ```
 
-Product and both countries are required. The tool selects the workflow; `action_type` is rejected in public inputs and added internally for routing. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. Unknown fields and screening fields are rejected.
+Public inputs do not accept `action_type`; the selected tool identifies the workflow. Product and both countries are required. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. These checklist inputs reject unknown and screening fields. The expanded trade tool accepts the additional scenario fields described above.
 
 | Route | Policy | Routing kind |
 | --- | --- | --- |
@@ -113,7 +157,7 @@ Product and both countries are required. The tool selects the workflow; `action_
 | Separate marketing tool, any recipient country | `general-marketing` | `general` |
 | Separate screening tool, any party country | `us-restricted-party` | `list_screening` |
 
-Purchase requirement checks remain advisory. Amount above budget → `BLOCK`; budget without amount → `NEEDS_EVIDENCE`; other valid purchase inputs → `REVIEW`. Product names are retained without classification. Purchase results retain both `action` and legacy `purchase`; screening results have `action` and `screening`.
+For `get_import_export_remediation_plan`, the original advisory checklist behavior remains: amount above budget → `BLOCK`; budget without amount → `NEEDS_EVIDENCE`; other valid purchase inputs → `REVIEW`. Product names are retained without classification. Checklist results retain both `action` and legacy `purchase`; the expanded trade check returns the grouped scenario result described above. Standalone screening results have `action` and `screening`.
 
 Countries use the local `iso-3166` dataset, pinned to `4.4.0`. Whitespace/lowercase normalize; assigned territory codes are accepted. Three-letter, obsolete, unassigned, `UK`, and `XK` codes are rejected. A recognized country does not imply jurisdiction-specific policy coverage.
 
@@ -123,7 +167,7 @@ Snapshots marked `STALE` can still return `POTENTIAL_MATCH` or `NO_CANDIDATES`, 
 
 ## Code and verification
 
-- `index.ts`: five public tools, distinct purchase/marketing/screening schemas, and MCP envelopes.
+- `index.ts`: five public tools, distinct trade/purchase/marketing/screening schemas, and MCP envelopes.
 - `src/schemas.ts`, `src/countries.ts`: shared action/result schemas and country validation.
 - `src/router/`: policy registration, selection, and reasons.
 - `src/policies/`: independent `us-import`, `general-purchase`, `general-marketing`, and `us-restricted-party` packs.

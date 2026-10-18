@@ -4,7 +4,7 @@ import { latestRequests, outcomeLabels, policyLabels, type Outcome, type Request
 import "../demo.css";
 
 const toolLabels: Record<string, string> = {
-  check_import_export: "Import & export check",
+  check_import_export: "Import & export assessment",
   get_import_export_requirements: "Import & export requirements",
   get_import_export_remediation_plan: "Import & export remediation plan",
   check_action: "Import & export check", get_requirements: "Import & export requirements", get_remediation_plan: "Import & export remediation plan",
@@ -40,6 +40,12 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         <section>
           <h3><span>02</span> Result & next steps</h3>
           <p className="demo-result-summary">{record.summary}</p>
+          {record.trade && <div className="demo-screening-results">
+            <p>Scenario coverage: {record.trade.checkedJurisdictions.join(", ") || "No country-specific rules"}. Full transaction coverage is not provided.</p>
+            {record.trade.unsupported.map((side, index) => <p key={index}><strong>{side.country} {side.direction}:</strong> {side.reason}</p>)}
+            {record.trade.missingFields.length > 0 && <p>Missing inputs: {record.trade.missingFields.join(", ")}</p>}
+            {record.trade.screening.map((party, index) => <article key={index}><strong>{party.party}</strong><p>{party.status.replaceAll("_", " ")} · {party.totalMatches ?? "Unknown"} candidates</p><p>Bundled CSL: {party.freshness}; generated {party.generatedAt ?? "unknown"}. No live lookup.</p></article>)}
+          </div>}
           {record.screening && <div className="demo-screening-results">
             <p>{record.screening.status?.replaceAll("_", " ") ?? "Screening status not captured"}
               {record.screening.totalMatches !== null ? ` · ${record.screening.totalMatches} candidate records` : ""}</p>
@@ -71,7 +77,12 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         </div>
         {record.policy.kind === "general" && <p className="demo-coverage-note">A general review checklist was selected. Country-specific legal requirements still need review.</p>}
         {record.policy.scope && <details className="demo-scope"><summary>Policy coverage</summary><p>{record.policy.scope}</p></details>}
-        {record.requirements.length > 0 && <div className="demo-requirements">{record.requirements.map((requirement) => (
+        {record.trade && <div className="demo-requirements">{record.trade.findings.map((finding) => <article key={finding.id}>
+          <div className="demo-requirement-title"><h4>{finding.direction.toUpperCase()} · {finding.title}</h4><span>{finding.conditionStatus === "UNKNOWN" ? "Potential · needs evidence" : "For review"}</span></div>
+          <p><strong>{finding.code.replaceAll("_", " ")}.</strong> {finding.detail}</p>
+          {finding.sourceUrl && <a href={finding.sourceUrl} target="_blank" rel="noreferrer">Read official source <Icon name="arrow" size={13} /></a>}
+        </article>)}</div>}
+        {record.requirements.length > 0 && <div className="demo-requirements">{record.requirements.filter((requirement) => !record.trade || !record.trade.findings.some((finding) => finding.id === requirement.id)).map((requirement) => (
           <article key={requirement.id}>
             <div className="demo-requirement-title"><h4>{requirement.title}</h4><span>{requirement.basis === "purchase_constraint"
               ? "Your budget constraint" : requirement.status === "SATISFIED" ? "Satisfied" : requirement.status === "FAILED" ? "Failed"
@@ -158,7 +169,7 @@ export function Demo() {
                 <article className={`demo-request ${openId === record.id ? "demo-request-open" : ""}`} key={record.id}>
                   <button className="demo-request-row" aria-expanded={openId === record.id} aria-controls={`detail-${record.id}`} onClick={() => setOpenId(openId === record.id ? null : record.id)}>
                     <span className="demo-request-main"><span className={`demo-type-icon demo-type-${record.category}`}><Icon name={record.category === "screening" ? "shield" : record.category === "marketing" ? "mail" : record.category === "trade" ? "briefcase" : "file"} size={18} /></span><span><strong>{record.title}</strong><span className="demo-request-route">{record.route}</span><span className="demo-request-time">{timeLabel(record.time)} <span>·</span> {toolLabels[record.tool]}</span></span></span>
-                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
+                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "composed" ? "Combined scenario rules" : record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
                   </button>
                   {openId === record.id && <RequestDetails record={record} />}
                 </article>

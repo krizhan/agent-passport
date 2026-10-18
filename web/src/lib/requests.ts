@@ -21,6 +21,13 @@ export interface RequestRecord {
     kind: string | null;
   };
   facts: { label: string; value: string }[];
+  trade?: {
+    checkedJurisdictions: string[];
+    unsupported: { country: string; direction: string; reason: string }[];
+    missingFields: string[];
+    findings: { id: string; title: string; direction: string; code: string; conditionStatus: string; detail: string; sourceUrl: string | null }[];
+    screening: { party: string; status: string; freshness: string; generatedAt: string | null; totalMatches: number | null }[];
+  };
   screening?: {
     status: string | null;
     totalMatches: number | null;
@@ -72,6 +79,7 @@ export const outcomeLabels: Record<Outcome, string> = {
 };
 
 export const policyLabels: Record<string, string> = {
+  "hardcoded-trade": "Import & export scenarios",
   "us-import": "US import readiness",
   "general-purchase": "International purchase review",
   "general-marketing": "Marketing email review",

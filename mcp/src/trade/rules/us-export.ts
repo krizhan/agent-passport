@@ -1,0 +1,143 @@
+import type { Condition, LegalSource, TradeRule } from "../types.js";
+
+const verified = (title: string, url: string): LegalSource => ({
+  title, url, verified_as_of: "2026-10-17", verification_status: "verified_guidance",
+});
+const classificationSource = verified("BIS: classify your item", "https://www.bis.gov/licensing/classify-your-item");
+const endUseSource = verified("BIS: end-user/end-use controls and U.S. person controls", "https://www.bis.gov/licensing/guidance-on-end-user-and-end-use-controls-and-us-person-controls");
+const exportRoute: Condition = { any: [
+  { field: "from_country", op: "eq", value: "US" },
+  { all: [{ field: "transaction_type", op: "eq", value: "reexport" }, { field: "origin_country", op: "eq", value: "US" }] },
+  { all: [{ field: "transaction_type", op: "eq", value: "reexport" }, { field: "technical_specifications.subject_to_ear", op: "eq", value: true }] },
+] };
+
+export const usExportRules: readonly TradeRule[] = [
+  {
+    id: "us-export-general-classification", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "General goods: establish export jurisdiction and classification",
+    categories: ["general_goods"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["control_classification", "classification_evidence", "end_user", "end_use"],
+    finding: "CLASSIFICATION_REQUIRED",
+    explanation: "Retain a supported export classification and review destination, parties, and end use. EAR99 is a classification within the EAR, not universal permission to export; a customs HS code cannot substitute for an ECCN determination.",
+    required_documents: ["classification_record", "end_user_statement"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Request the manufacturer's jurisdiction/ECCN or EAR99 record and collect the final consignee, end user, and intended use." },
+      { owner: "human", instruction: "Validate jurisdiction and classification against current controls, then assess destination, end-use, party, and filing requirements; record the authorization basis." },
+    ],
+    sources: [classificationSource],
+  },
+  {
+    id: "us-export-dual-use", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Dual-use equipment: technical classification and licensing review",
+    categories: ["dual_use"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["technical_specifications.manufacturer_model", "control_classification", "classification_evidence", "end_user", "end_use"],
+    finding: "CLASSIFICATION_REQUIRED",
+    explanation: "Dual-use is a scenario label. Establish the exact ECCN and technical parameters before assessing control reasons, destination, end-use/end-user controls, or any license exception.",
+    required_documents: ["classification_record", "technical_datasheet", "end_user_statement"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Obtain the model-specific datasheet and manufacturer classification; map the specification evidence to the proposed control entry." },
+      { owner: "human", instruction: "Confirm the ECCN and current licensing analysis for the ultimate destination and use; validate any exception before claiming authorization." },
+    ],
+    sources: [classificationSource],
+  },
+  {
+    id: "us-export-advanced-computing", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Advanced computing: model, performance, and ultimate-use review",
+    categories: ["advanced_computing"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["technical_specifications.manufacturer_model", "technical_specifications.performance", "control_classification", "classification_evidence", "end_user", "end_use"],
+    finding: "HUMAN_REVIEW_REQUIRED",
+    explanation: "Advanced-computing controls require the exact control entry, performance characteristics, destination, and end-user analysis. This pack routes specialist review; it does not encode changing performance thresholds, country groups, approved entities, or model-specific licensing outcomes.",
+    required_documents: ["classification_record", "technical_datasheet", "advanced_computing_licensing_assessment"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect the exact chip/server model, relevant compute and bandwidth specifications, supplied ECCN, ultimate recipients, installation sites, and intended workload." },
+      { owner: "human", instruction: "Review current EAR 742.6 and applicable end-use controls and amendments; confirm exclusions, exceptions, and recipient-specific authorizations for the planned date." },
+    ],
+    sources: [verified("15 CFR 742.6: regional stability and advanced-computing controls", "https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-742/section-742.6")],
+  },
+  {
+    id: "us-export-encryption", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Encryption: Category 5 Part 2 and ENC assessment",
+    categories: ["encryption"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["technical_specifications.cryptographic_function", "technical_specifications.manufacturer_model", "control_classification", "classification_evidence", "end_user", "end_use"],
+    finding: "CLASSIFICATION_REQUIRED",
+    explanation: "Review Category 5 Part 2 applicability, classification, and the relevant ENC or mass-market pathway. Eligibility and reporting/classification steps depend on the item, recipient, use, and destination; encryption functionality alone does not prove a license requirement.",
+    required_documents: ["classification_record", "encryption_authorization_assessment"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect cryptographic functionality, model/version, manufacturer ECCN, and any available CCATS or self-classification record." },
+      { owner: "human", instruction: "Confirm control jurisdiction, decontrol notes, ENC/mass-market eligibility, and applicable review/reporting steps for the exact transfer before relying on an exception." },
+    ],
+    sources: [verified("BIS: encryption controls", "https://www.bis.gov/learn-support/encryption-controls")],
+  },
+  {
+    id: "us-export-military-jurisdiction", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Military goods or data: DDTC/BIS jurisdiction review",
+    categories: ["military"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["technical_specifications.manufacturer_model", "control_classification", "classification_evidence", "end_user", "end_use"],
+    finding: "HUMAN_REVIEW_REQUIRED",
+    explanation: "Determine whether the item or technical data is controlled under the USML/ITAR or the EAR. ITAR defense-article exports generally require prior DDTC approval unless an applicable exemption is established; the military category itself does not establish ITAR jurisdiction or eliminate exemptions.",
+    required_documents: ["jurisdiction_and_classification_record", "military_export_authorization_assessment"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect manufacturer jurisdiction/classification, item or technical-data description, transaction purpose, all recipients, and any claimed approval or exemption reference." },
+      { owner: "human", instruction: "Have an export specialist confirm DDTC/BIS jurisdiction and the applicable approval, agreement, license, or exemption, including retransfer restrictions and technical-data handling." },
+    ],
+    sources: [verified("22 CFR 123.1: defense-article export and temporary import approval", "https://www.ecfr.gov/current/title-22/chapter-I/subchapter-M/part-123/section-123.1")],
+  },
+  {
+    id: "us-export-nuclear", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Nuclear material/equipment: jurisdiction and authorization review",
+    categories: ["nuclear"], transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: exportRoute,
+    required_inputs: ["technical_specifications.nuclear_item_type", "technical_specifications.nuclear_material_details", "quantity", "end_user", "end_use"],
+    finding: "HUMAN_REVIEW_REQUIRED",
+    explanation: "Determine the responsible agency and whether an NRC general or specific license covers the exact nuclear equipment/material transaction. General-license eligibility has item, destination, and use conditions. Nuclear technology assistance needs separate jurisdiction review and is not implemented by this NRC equipment/material scenario.",
+    required_documents: ["nuclear_jurisdiction_and_authorization_assessment"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect equipment/material identity, isotope/enrichment or composition where relevant, quantity, recipient facility, intended activity, and any existing authorization." },
+      { owner: "human", instruction: "Confirm NRC/DOE/BIS jurisdiction. For NRC items, verify current general-license conditions or obtain the required specific license; refer nuclear technology assistance for separate review." },
+    ],
+    sources: [verified("10 CFR 110.20: NRC general-license conditions and specific-license route", "https://www.ecfr.gov/current/title-10/chapter-I/part-110/subpart-C/section-110.20")],
+  },
+  {
+    id: "us-export-end-use-concern", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "Military/WMD/nuclear/diversion end-use concern",
+    transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: { all: [exportRoute, { any: [
+      { field: "end_use_flags", op: "contains", value: "military" },
+      { field: "end_use_flags", op: "contains", value: "wmd" },
+      { field: "end_use_flags", op: "contains", value: "nuclear" },
+      { field: "end_use_flags", op: "contains", value: "diversion" },
+    ] }] },
+    required_inputs: ["end_user", "end_use", "technical_specifications.end_use_evidence"],
+    finding: "END_USE_REVIEW",
+    explanation: "Reported sensitive end use or diversion risk calls for an EAR Part 744 assessment, including for EAR99 items. This flag does not establish that the specific legal end-use control applies; destination, knowledge, item scope, and recipient facts need review.",
+    required_documents: ["end_user_statement", "end_use_risk_assessment"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect the actual end user's identity, facility, intended activities, intermediaries, and evidence explaining the reported risk." },
+      { owner: "human", instruction: "Resolve the risk against current Part 744 controls and red-flag guidance; verify the applicable restriction and authorization before approving execution." },
+    ],
+    sources: [endUseSource],
+  },
+  {
+    id: "us-export-bis-specific-notice", version: "1.0.0", jurisdiction: "US", direction: "export",
+    title: "BIS specific notice: supplied transaction license requirement",
+    transaction_types: ["shipment", "reexport", "technology_transfer"],
+    conditions: { all: [exportRoute,
+      { field: "technical_specifications.subject_to_ear", op: "eq", value: true },
+      { field: "technical_specifications.bis_specific_notice_requires_license", op: "eq", value: true },
+    ] },
+    required_inputs: ["technical_specifications.bis_notice_reference", "classification_evidence", "end_user", "end_use"],
+    finding: "LICENSE_REQUIRED",
+    explanation: "The supplied facts state that the item is subject to the EAR and BIS issued a specific notice requiring a license for this transaction. Retain and verify that notice and its exact scope. This finding relies on caller-supplied facts and does not authenticate the notice or validate a supplied license.",
+    required_documents: ["bis_specific_notice", "export_license"],
+    remediation_steps: [
+      { owner: "agent", instruction: "Collect the BIS notice, its reference, item scope, transaction parties, and any existing license and conditions." },
+      { owner: "human", instruction: "Authenticate the BIS notice and confirm transaction coverage; obtain or validate the required license and every condition before execution." },
+    ],
+    sources: [endUseSource],
+  },
+];

@@ -2,20 +2,22 @@ import { MCPServer } from "mcp-use";
 import { checkAction, checkMarketingEmail, getRequirements } from "./src/policy.js";
 import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, requestSchema, requirementsResponseSchema, screeningInputSchema } from "./src/schemas.js";
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
+import { checkImportExport } from "./src/trade/evaluate.js";
+import { tradeInputSchema, tradeEvaluationSchema } from "./src/trade/schemas.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.9.0",
-  description: "Advisory international purchase and marketing checks, plus point-in-time U.S. restricted-party screening.",
-  instructions: "Use check_import_export, get_import_export_requirements, and get_import_export_remediation_plan for international purchases with product, from_country, and to_country. The tool selects the workflow; do not supply action_type. Optional amount and budget must use the same currency and units. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It screens names and aliases against a bundled U.S. CSL JSON snapshot without network access and returns candidate records, snapshot date/age, provenance, and review steps. Report stale snapshots explicitly; they must be refreshed and redeployed to include later list changes. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Invalid or incomplete bundled data returns UNAVAILABLE. No business actions are authorized or executed.",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.10.0",
+  description: "Scenario-based import/export assessments, advisory purchase and marketing checks, and bundled U.S. restricted-party screening.",
+  instructions: "Use check_import_export for scenario-based shipment, reexport, transit and technology-transfer assessment. Supply product, from_country and to_country, then use missing_information and remediation_plan to gather evidence. Product categories, classifications and technical flags are caller assertions. Report partial coverage, rule/source dates and bundled screening freshness. Optional amount/budget are caller constraints, separate from legal findings. Use get_import_export_requirements and get_import_export_remediation_plan for the original purchase-readiness checklists with optional amount/budget. Public inputs do not accept action_type. Use check_marketing_email for the general permission, sender-identification and unsubscribe checklist, which always requires review. Use screen_restricted_party for a standalone bundled U.S. CSL name search. Screening is offline: report snapshot date/age, stale or unavailable data, and candidates requiring identity review; no candidates is not clearance. No business actions are authorized or executed.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
 
 server.tool({
   name: "check_import_export", title: "Check import and export",
-  description: "Check an international purchase using product, from_country, and to_country. Return its policy pack, review needs, and optional purchase budget comparison. No purchase is authorized or executed.",
-  inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
-}, async (input) => {
-  const result = checkAction(input);
+  description: "Assess a shipment, reexport, transit or technology transfer against hardcoded scenario rules. Supply product, from_country and to_country; add product_category, origin_country, classifications/evidence, technical_specifications, end user/use, parties and documents as available. Combines US, EU, GB, CN, IN, CA, AU, JP and KR packs; use actual member-country ISO codes for the EU. Returns separate import/export/transit/screening findings, missing evidence/documents, sources, coverage gaps and remediation. Optional amount/budget retain caller-supplied purchase constraints. Supplied parties are screened against the bundled dated US CSL snapshot without live lookup. Categories and technical flags are caller assertions, not verified classifications. No transaction is cleared or executed.",
+  inputSchema: tradeInputSchema, outputSchema: tradeEvaluationSchema, annotations,
+}, async (input, context) => {
+  const result = await checkImportExport(input, { signal: context.signal });
   return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
 });
 
@@ -30,7 +32,7 @@ server.tool({
 
 server.tool({
   name: "get_import_export_remediation_plan", title: "Get import and export remediation plan",
-  description: "Return next steps for an international purchase. Uses the same checklist and optional purchase budget comparison as check_import_export.",
+  description: "Return the original purchase-readiness checklist and optional amount/budget comparison. Use check_import_export for expanded scenario rules, party screening and evidence-based remediation.",
   inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
 }, async (input) => {
   const result = checkAction(input);
