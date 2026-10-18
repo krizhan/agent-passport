@@ -28,7 +28,12 @@ const sourceKey = (source: LegalSource) => `${source.url}/${source.verified_as_o
 
 export async function checkImportExport(raw: unknown, options: EvaluationOptions = {}): Promise<TradeEvaluation> {
   options.signal?.throwIfAborted();
-  const input = tradeInputSchema.parse(raw);
+  const parsedInput = tradeInputSchema.parse(raw);
+  // The common one-recipient case should not require callers to repeat the end user in a party array.
+  const input: TradeInput = parsedInput.parties.length || !parsedInput.end_user ? parsedInput : {
+    ...parsedInput,
+    parties: [{ name: parsedInput.end_user, aliases: [], country: parsedInput.to_country, role: "end_user" }],
+  };
   const now = options.now ?? new Date();
   const plannedDate = input.planned_date ?? now.toISOString().slice(0, 10);
   const rules = options.rules ?? tradeRules;
@@ -54,6 +59,10 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
       || (rule.legal_effective_to && plannedDate >= rule.legal_effective_to)) {
       evaluations.push({ ...base, outcome: "NOT_EFFECTIVE", missing_fields: [] }); continue;
     }
+    // Positive-risk rules are opt-in: an absent trigger is not evidence that the risk exists.
+    if (rule.activation && evaluateCondition(rule.activation, input).status !== "MATCHED") {
+      evaluations.push({ ...base, outcome: "NOT_MATCHED", missing_fields: [] }); continue;
+    }
     const categoryUnknown = Boolean(rule.categories && !input.product_category);
     const evaluatedCondition = evaluateCondition(rule.conditions, input);
     if (evaluatedCondition.status === "NOT_MATCHED") {
@@ -75,12 +84,14 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
     }
     // Executable checks request their own evidence only after applicability is established.
     const required = categoryUnknown ? ["product_category"] : rule.assess && !check ? [] : rule.required_inputs;
-    const missingFields = [...new Set([...condition.missing, ...(check ? check.missing_fields : required.filter((field) => isMissing(fieldValue(input, field))))])];
+    const evidenceMissing = check ? check.missing_fields : required.filter((field) => isMissing(fieldValue(input, field)));
+    const missingFields = [...new Set([...condition.missing, ...(rule.evidence_mode === "advisory" ? [] : evidenceMissing)])];
     const outcome = condition.status === "UNKNOWN" || missingFields.length > 0 ? "UNKNOWN" as const : "MATCHED" as const;
     evaluations.push({ ...base, outcome, missing_fields: missingFields });
     missingFields.forEach((field) => addMissing(field, rule.id));
     rule.sources.forEach((source) => sources.set(sourceKey(source), source));
-    const ruleDocs = categoryUnknown || (rule.assess && !check) ? [] : check?.required_documents ?? rule.required_documents;
+    const ruleDocs = categoryUnknown || (rule.assess && !check) || rule.evidence_mode === "advisory"
+      ? [] : check?.required_documents ?? rule.required_documents;
     for (const type of ruleDocs) {
       const supplied = input.documents.filter((doc) => doc.type === type);
       const valid = supplied.filter((doc) => !doc.expires_on || doc.expires_on >= plannedDate);
@@ -146,9 +157,11 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
   ));
   const noBlockersFound = !confirmedBlock && !needsEvidence && !unsupported.length && !screeningNeedsReview && !substantiveReview;
   const decision = confirmedBlock ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : noBlockersFound ? "NO_BLOCKERS_FOUND" : "REVIEW";
+  const ruleById = new Map(rules.map((rule) => [rule.id, rule]));
   const requirements: TradeEvaluation["requirements"] = allFindings.map((finding) => ({
     id: finding.rule_id, title: finding.title, basis: "legal_readiness", source_url: finding.sources[0]?.url ?? null,
-    description: finding.detail, status: finding.check?.status ?? (noBlockersFound ? "SATISFIED" : finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
+    description: finding.detail, status: finding.check?.status ?? (ruleById.get(finding.rule_id)?.evidence_mode === "advisory" ? "REVIEW"
+      : noBlockersFound ? "SATISFIED" : finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
       : finding.missing_fields.length ? "MISSING" : "REVIEW"),
     detail: `${finding.code}: ${finding.detail}${finding.missing_fields.length ? ` Missing: ${finding.missing_fields.join(", ")}.` : ""}`,
   }));
