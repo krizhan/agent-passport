@@ -55,7 +55,10 @@ function sourceUrl(value: unknown): string | null {
   } catch { return null; }
 }
 
-const tools = new Set(["check_action", "get_requirements", "get_remediation_plan", "check_marketing_email", "screen_restricted_party"]);
+// Retain names from recorded history; only the explicit names are public tools.
+const tradeTools = new Set(["check_import_export", "get_import_export_requirements", "get_import_export_remediation_plan",
+  "check_action", "get_requirements", "get_remediation_plan"]);
+const tools = new Set([...tradeTools, "check_marketing_email", "screen_restricted_party"]);
 
 // Project a gateway event into explicitly allowed product fields. Never forward
 // headers, IP addresses, actor IDs, session metadata, or entire captured bodies.
@@ -80,7 +83,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   const action = Object.keys(input).length ? input : echoed;
   const category = action.action_type === "restricted_party_screening" || tool === "screen_restricted_party" ? "screening"
     : action.action_type === "marketing_email" || tool === "check_marketing_email" ? "marketing"
-    : action.action_type === "purchase" || (action.product && action.from_country && action.to_country) ? "trade" : "unknown";
+    : tradeTools.has(tool) || action.action_type === "purchase" || (action.product && action.from_country && action.to_country) ? "trade" : "unknown";
   const error = object(response.error);
   const failed = result.isError === true || event.tool_call_success === false
     || event.mcp_response_status === "error" || event.status === "error"
@@ -88,7 +91,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
   const decision = string(data.decision);
   const outcome: Outcome = failed ? "ERROR"
     : decision === "BLOCK" || decision === "NEEDS_EVIDENCE" || decision === "REVIEW" ? decision
-    : tool === "get_requirements" && Array.isArray(data.requirements) ? "CHECKLIST" : "UNAVAILABLE";
+    : (tool === "get_import_export_requirements" || tool === "get_requirements") && Array.isArray(data.requirements) ? "CHECKLIST" : "UNAVAILABLE";
   const routing = object(data.routing);
   const facts: RequestRecord["facts"] = [];
   const fact = (label: string, value: string | null) => { if (value) facts.push({ label, value }); };

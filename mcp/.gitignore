@@ -5,6 +5,9 @@ node_modules/
 # Build output
 dist/
 .mcp-use/
+# Keep the full snapshot tracked in Git; managed uploads use its compressed copy
+# to fit the host's 25 MiB source-file limit. npm prebuild restores the raw JSON.
+data/consolidated-screening-list.json
 .vite/
 mcp-env.d.ts
 

@@ -8,6 +8,8 @@ The companion `.meta.json` records the original download time, upstream Last-Mod
 
 This is a dated snapshot. Each result reports its generation date, original retrieval time, age, and `RECENT`/`STALE` freshness. More than 48 hours since generation or any source import marks it `STALE`; historical matching still works and the result requires review. No live lookup is performed.
 
+The `.json.gz` copy contains the same JSON bytes. Manufact managed uploads cap individual source files at 25 MiB, so `mcp/.gitignore` excludes the 32 MB raw JSON from that upload while keeping it tracked in Git. `npm run build` runs a prebuild step that verifies the compressed checksum and restores the raw JSON when absent. The server build then embeds the complete list; runtime screening needs no network access.
+
 To replace the snapshot, from `mcp/`:
 
 ```bash
@@ -16,4 +18,4 @@ npm run typecheck
 npm run build
 ```
 
-Commit both JSON files together and redeploy when ready. The refresh command is the only screening-related step that needs outbound HTTPS; tool calls do not. Original agency restrictions and wider transaction compliance still require review.
+Commit the JSON, metadata, and compressed copy together and redeploy when ready. The refresh command is the only screening-related step that needs outbound HTTPS; tool calls do not. Original agency restrictions and wider transaction compliance still require review.
