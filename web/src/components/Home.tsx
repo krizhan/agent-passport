@@ -65,15 +65,15 @@ export function Home() {
           <div className="overview-copy">
             <div className="eyebrow">
               <span />
-              INTERNATIONAL COMPLIANCE FOR AUTONOMOUS AI AGENTS
+              LOCAL AND INTERNATIONAL COMPLIANCE FOR AI AGENTS
             </div>
             <h1 id="overview-title">
-              Give your agents a compliant <span>path across borders.</span>
+              Give your agents a compliant <span>path wherever they act.</span>
             </h1>
             <p className="overview-description">
-              Agent Passport helps autonomous AI agents check international
-              requirements before they act. It explains what’s allowed and what
-              the agent needs to resolve.
+              Agent Passport helps autonomous AI agents check local and
+              international laws and regulations before they act. It explains
+              what’s allowed and what the agent needs to resolve.
             </p>
             <p className="integration-line">
               Agents connect through MCP and carry out actions using their

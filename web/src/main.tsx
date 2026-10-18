@@ -10,7 +10,7 @@ const TradeScenarios = lazy(() => import("./components/TradeScenarios.tsx").then
 const isDemo = /^\/demo\/?$/.test(location.pathname);
 const isScenarios = /^\/scenarios\/?$/.test(location.pathname);
 if (!isDemo && !isScenarios && location.pathname !== "/") window.history.replaceState(null, "", "/");
-document.title = isScenarios ? "Trade scenarios · Agent Passport" : isDemo ? "Requests · Agent Passport" : "Agent Passport: International compliance for AI agents";
+document.title = isScenarios ? "Trade scenarios · Agent Passport" : isDemo ? "Requests · Agent Passport" : "Agent Passport: Local and international compliance for AI agents";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <a className="skip-link" href="#main-content">

@@ -2,7 +2,7 @@
 
 A simple React + TypeScript homepage with exactly four sections and no navigation bar:
 
-1. **Tool overview:** international compliance for autonomous AI agents and the MCP connection. Three equally styled buttons link to the use cases. A compact purchase flow shows food import requirements being flagged and the agent holding the order while gathering filing details for a recheck.
+1. **Tool overview:** local and international laws and regulations for autonomous AI agents and the MCP connection. Three equally styled buttons link to the use cases. A compact purchase flow shows food import requirements being flagged and the agent holding the order while gathering filing details for a recheck.
 2. **Import and export:** the default illustration follows a packaged coffee order from the Dominican Republic to a US store. The missing FDA prior notice confirmation is flagged, the agent gets instructions for arranging the filing, and the order is held. The export tab shows technical details needed before a controller shipment to Germany. Each example links to official guidance.
 3. **Marketing:** the original Canadian promotional-email illustration shows missing unsubscribe and consent evidence, with next steps before sending. It links to CRTC guidance.
 4. **Restricted-party screening:** an overseas supplier is checked against the U.S. Consolidated Screening List before an order. A possible name match prompts identity and source-agency restriction review. The illustration links to official Trade.gov guidance and does not imply that a name match confirms identity or that no candidates clears a transaction.
