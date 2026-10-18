@@ -14,7 +14,7 @@ The [policy router](./mcp/README.md#policy-routing) selects a US import, general
 
 Live website: [Agent Passport](https://vubsb6rq.insforge.site/).
 
-The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. There is no navigation bar; examples are illustrative.
+The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. Homepage examples are illustrative. An outlined **Demo** button at the top right opens `/demo`, which shows the latest 10 captured requests per category (marketing and import/export) from Manufact, with advisory results, recorded policy explanations, source links, and simple category tabs. The demo uses server-only Manufact credentials and hides calls without captured details.
 
 ```bash
 cd web
@@ -22,7 +22,7 @@ npm ci
 npm run dev -- --port 5173
 ```
 
-Open http://127.0.0.1:5173/. No backend connection or API keys are required. See [`web/README.md`](./web/README.md) for local testing and production-build instructions.
+Open http://127.0.0.1:5173/. The homepage needs no backend connection or API keys; `/demo` needs server-only Manufact credentials. See [`web/README.md`](./web/README.md) for local testing and production-build instructions.
 
 ## MCP server
 

@@ -56,6 +56,10 @@ export function Home() {
       >
         <div className="brand-line">
           <Logo />
+          <a className="button button-demo" href="/demo">
+            Demo
+            <Icon name="arrow" size={15} />
+          </a>
         </div>
         <div className="overview-layout">
           <div className="overview-copy">
