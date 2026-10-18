@@ -113,7 +113,6 @@ export function Home() {
               Your agent checks a purchase or shipment for restrictions and gets
               instructions for missing documents or required reviews.
             </p>
-            <p><a className="source-link" href="/scenarios">Explore trade scenarios <Icon name="arrow" size={15} /></a></p>
             <p>
               <strong>Example:</strong> You ask your agent to import coffee from
               the Dominican Republic for a US store. Agent Passport flags the

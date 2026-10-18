@@ -1,6 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": false, "outDir": ".marketing-build", "rootDir": "." },
-  "include": ["src/marketing/**/*.ts"],
-  "exclude": ["node_modules", "dist", ".marketing-build"]
-}

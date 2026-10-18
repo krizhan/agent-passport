@@ -10,10 +10,10 @@ This is a dated snapshot. Each result reports its generation date, original retr
 
 The `.json.gz` copy contains the same JSON bytes. Manufact managed uploads cap individual source files at 25 MiB, so `mcp/.gitignore` excludes the 32 MB raw JSON from that upload while keeping it tracked in Git. `npm run build` runs a prebuild step that verifies the compressed checksum and restores the raw JSON when absent. The server build then embeds the complete list; runtime screening needs no network access.
 
-To replace the snapshot, from `mcp/`:
+Snapshot replacement is an explicit maintainer operation and is not part of normal deployment. From `mcp/`:
 
 ```bash
-npm run refresh:screening-list
+node scripts/refresh-screening-list.mjs
 npm run typecheck
 npm run build
 ```
