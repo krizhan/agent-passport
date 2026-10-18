@@ -33,9 +33,6 @@ function RequestDetails({ record }: { record: RequestRecord }) {
           {record.facts.length ? <dl className="demo-facts">{record.facts.map((fact) => (
             <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>
           ))}</dl> : <p>The gateway did not capture the action inputs for this call.</p>}
-          {record.facts.some((fact) => fact.label === "Submitted budget" || fact.label === "Purchase amount") && (
-            <p className="demo-fact-note">Amounts use the caller’s units; no currency was supplied.</p>
-          )}
         </section>
         <section>
           <h3><span>02</span> Result & next steps</h3>
@@ -73,12 +70,11 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         {record.policy.scope && <details className="demo-scope"><summary>Policy coverage</summary><p>{record.policy.scope}</p></details>}
         {record.requirements.length > 0 && <div className="demo-requirements">{record.requirements.map((requirement) => (
           <article key={requirement.id}>
-            <div className="demo-requirement-title"><h4>{requirement.title}</h4><span>{requirement.basis === "purchase_constraint"
-              ? "Your budget constraint" : requirement.status === "SATISFIED" ? "Satisfied" : requirement.status === "FAILED" ? "Failed"
+            <div className="demo-requirement-title"><h4>{requirement.title}</h4><span>{requirement.status === "SATISFIED" ? "Satisfied" : requirement.status === "FAILED" ? "Failed"
               : requirement.status === "MISSING" ? "Missing information" : "For review"}</span></div>
             <p>{requirement.detail}</p>
             {requirement.sourceUrl ? <a href={requirement.sourceUrl} target="_blank" rel="noreferrer">Read source guidance <Icon name="arrow" size={13} /></a>
-              : <span className="demo-no-source">{requirement.basis === "purchase_constraint" ? "Caller-supplied constraint, not an international policy." : "No legal source recorded for this requirement."}</span>}
+              : <span className="demo-no-source">No legal source recorded for this requirement.</span>}
           </article>
         ))}</div>}
       </section>

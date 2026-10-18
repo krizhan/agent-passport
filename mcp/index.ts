@@ -4,15 +4,15 @@ import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, requ
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.9.0",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.9.1",
   description: "Advisory international purchase and marketing checks, plus point-in-time U.S. restricted-party screening.",
-  instructions: "Use check_import_export, get_import_export_requirements, and get_import_export_remediation_plan for international purchases with product, from_country, and to_country. The tool selects the workflow; do not supply action_type. Optional amount and budget must use the same currency and units. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It screens names and aliases against a bundled U.S. CSL JSON snapshot without network access and returns candidate records, snapshot date/age, provenance, and review steps. Report stale snapshots explicitly; they must be refreshed and redeployed to include later list changes. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Invalid or incomplete bundled data returns UNAVAILABLE. No business actions are authorized or executed.",
+  instructions: "Use check_import_export, get_import_export_requirements, and get_import_export_remediation_plan for international purchases with product, from_country, and to_country. The tool selects the workflow; do not supply action_type. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It screens names and aliases against a bundled U.S. CSL JSON snapshot without network access and returns candidate records, snapshot date/age, provenance, and review steps. Report stale snapshots explicitly; they must be refreshed and redeployed to include later list changes. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Invalid or incomplete bundled data returns UNAVAILABLE. No business actions are authorized or executed.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
 
 server.tool({
   name: "check_import_export", title: "Check import and export",
-  description: "Check an international purchase using product, from_country, and to_country. Return its policy pack, review needs, and optional purchase budget comparison. No purchase is authorized or executed.",
+  description: "Check an international purchase using product, from_country, and to_country. Return its policy pack, review needs, and next steps. No purchase is authorized or executed.",
   inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
 }, async (input) => {
   const result = checkAction(input);
@@ -30,7 +30,7 @@ server.tool({
 
 server.tool({
   name: "get_import_export_remediation_plan", title: "Get import and export remediation plan",
-  description: "Return next steps for an international purchase. Uses the same checklist and optional purchase budget comparison as check_import_export.",
+  description: "Return next steps for an international purchase. Uses the same compliance checklist as check_import_export.",
   inputSchema: requestSchema, outputSchema: evaluationSchema, annotations,
 }, async (input) => {
   const result = checkAction(input);
