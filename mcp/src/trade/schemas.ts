@@ -71,7 +71,7 @@ const finding = z.object({
 export const tradeEvaluationSchema = z.object({
   action: tradeInputSchema.extend({ action_type: z.literal("import_export") }),
   assessed_at: z.iso.datetime(), planned_date: date, policy_version: z.string(),
-  decision: z.enum(["BLOCK", "NEEDS_EVIDENCE", "REVIEW"]), summary: z.string(), scope: z.string(),
+  decision: z.enum(["BLOCK", "NEEDS_EVIDENCE", "REVIEW", "NO_BLOCKERS_FOUND"]), summary: z.string(), scope: z.string(),
   advisory_only: z.literal(true), can_proceed_under_checked_rules: z.literal(false), execution_performed: z.literal(false),
   routing: z.object({ policy_id: z.literal("hardcoded-trade"), kind: z.literal("composed"), reason: z.string() }),
   findings: z.object({ import: z.array(finding), export: z.array(finding), transit: z.array(finding), screening: z.array(finding), general: z.array(finding) }),

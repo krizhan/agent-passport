@@ -139,10 +139,16 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
   const requiredDocuments = [...documents.values()];
   const confirmedBlock = allFindings.some((finding) => (finding.code === "PROHIBITED" || finding.check?.status === "FAILED") && finding.condition_status === "MATCHED");
   const needsEvidence = missing.size > 0 || requiredDocuments.some((doc) => doc.status !== "PROVIDED_UNVERIFIED");
-  const decision = confirmedBlock ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : "REVIEW";
+  const screeningNeedsReview = screening.some(({ result }) => result.status !== "NO_CANDIDATES" || result.source.freshness !== "RECENT");
+  const substantiveReview = allFindings.some((finding) => finding.condition_status === "MATCHED" && (
+    finding.code === "LICENSE_REQUIRED" || finding.code === "HUMAN_REVIEW_REQUIRED" || finding.code === "END_USE_REVIEW"
+      || finding.code === "QUOTA_REQUIRED" || finding.rule_id === "us.ownership-review"
+  ));
+  const noBlockersFound = !confirmedBlock && !needsEvidence && !unsupported.length && !screeningNeedsReview && !substantiveReview;
+  const decision = confirmedBlock ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : noBlockersFound ? "NO_BLOCKERS_FOUND" : "REVIEW";
   const requirements: TradeEvaluation["requirements"] = allFindings.map((finding) => ({
     id: finding.rule_id, title: finding.title, basis: "legal_readiness", source_url: finding.sources[0]?.url ?? null,
-    description: finding.detail, status: finding.check?.status ?? (finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
+    description: finding.detail, status: finding.check?.status ?? (noBlockersFound ? "SATISFIED" : finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
       : finding.missing_fields.length ? "MISSING" : "REVIEW"),
     detail: `${finding.code}: ${finding.detail}${finding.missing_fields.length ? ` Missing: ${finding.missing_fields.join(", ")}.` : ""}`,
   }));
@@ -150,7 +156,7 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
     requirements.push({ id: `document.${doc.type}`, title: doc.type.replaceAll("_", " "), basis: "legal_readiness",
       source_url: allFindings.find((finding) => finding.required_documents.includes(doc.type))?.sources[0]?.url ?? null,
       description: "Potentially applicable supporting document; scope and authorization require review.",
-      status: doc.status === "PROVIDED_UNVERIFIED" ? "REVIEW" : "MISSING",
+      status: doc.status === "PROVIDED_UNVERIFIED" ? noBlockersFound ? "SATISFIED" : "REVIEW" : "MISSING",
       detail: `${doc.status}: ${doc.references.join(", ") || "No reference supplied"}. Review applicability, issuer, scope, validity and conditions; a supplied document does not automatically satisfy the rule.` });
     steps.push({ requirement_id: `document.${doc.type}`, owner: doc.status === "PROVIDED_UNVERIFIED" ? "human" : "agent",
       instruction: `${doc.status === "PROVIDED_UNVERIFIED" ? "Validate" : doc.status === "EXPIRED" ? "Renew or replace" : "Determine applicability and obtain"} ${doc.type.replaceAll("_", " ")} for the planned transaction.` });
@@ -163,7 +169,7 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
   return tradeEvaluationSchema.parse({
     action: { ...input, action_type: "import_export" }, assessed_at: now.toISOString(), planned_date: plannedDate,
     policy_version: TRADE_POLICY_VERSION, decision,
-    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${decision === "BLOCK" ? "A matched prohibition or failed shipment condition requires resolution." : "Review findings and authorization before acting."}`,
+    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${decision === "BLOCK" ? "A matched prohibition or failed shipment condition requires resolution." : decision === "NO_BLOCKERS_FOUND" ? "No blockers were found within the implemented checks and supplied evidence; this is not full legal clearance or authorization to ship." : "Review findings and authorization before acting."}`,
     scope: "Hardcoded scenario-level import/export advisory checks. Categories, classifications and documents are caller-supplied; no full legal clearance or business execution is provided.",
     routing: { policy_id: "hardcoded-trade", kind: "composed", reason: "Combine applicable origin/export, destination/import, transit and shared evidence rules. EU member countries map to the EU pack; national overlays remain review items." },
     advisory_only: true, can_proceed_under_checked_rules: false, execution_performed: false,
