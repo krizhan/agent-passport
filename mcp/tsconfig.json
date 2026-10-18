@@ -3,7 +3,8 @@
     "target": "ES2024",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2024"],
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
     "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
@@ -12,6 +13,6 @@
     "noEmit": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["index.ts", "src/**/*.ts"],
+  "include": ["index.ts", "src/**/*.ts", "views/**/*.tsx", "mcp-env.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

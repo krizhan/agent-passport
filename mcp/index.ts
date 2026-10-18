@@ -4,6 +4,8 @@ import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, requ
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
 import { checkImportExport } from "./src/trade/evaluate.js";
 import { tradeInputSchema, tradeEvaluationSchema } from "./src/trade/schemas.js";
+import { openFoodImportReview, submitFoodImportReview, reviewSummary } from "./src/food-review/evaluate.js";
+import { foodImportReviewSchema, openFoodImportReviewInputSchema, submitFoodImportReviewInputSchema } from "./src/food-review/schemas.js";
 
 const server = new MCPServer({
   name: "agent-passport", title: "Customs · Agent Passport", version: "0.10.0",
@@ -11,6 +13,25 @@ const server = new MCPServer({
   instructions: "Use check_import_export for scenario-based shipment, reexport, transit and technology-transfer assessment. Supply product, from_country and to_country, then use missing_information and remediation_plan to gather evidence. Product categories, classifications and technical flags are caller assertions. Report partial coverage, rule/source dates and bundled screening freshness. Optional amount/budget are caller constraints, separate from legal findings. Use get_import_export_requirements and get_import_export_remediation_plan for the original purchase-readiness checklists with optional amount/budget. Public inputs do not accept action_type. Use check_marketing_email for the general permission, sender-identification and unsubscribe checklist, which always requires review. Use screen_restricted_party for a standalone bundled U.S. CSL name search. Screening is offline: report snapshot date/age, stale or unavailable data, and candidates requiring identity review; no candidates is not clearance. No business actions are authorized or executed.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
+
+export const foodImportReviewForm = server.tool({
+  name: "open_food_import_review", title: "Food import evidence form",
+  description: "Open one interactive evidence form for a food shipment imported into the US. Pass known shipment facts in shipment; product and a non-US from_country are required, while to_country defaults to US and product_category to food_agriculture. Prefill only known facts. The user supplies food details, origin/classification evidence, document references and prior-notice evidence, then rechecks. Returns an advisory assessment and a form in MCP Apps hosts. For clients without UI, collect the missing facts conversationally and call submit_food_import_review. Never invent evidence or treat READY_FOR_REVIEW as authorization. No evidence is stored and no filing or business action occurs.",
+  inputSchema: openFoodImportReviewInputSchema, outputSchema: foodImportReviewSchema, annotations,
+  view: { name: "food-import-review", description: "One form for supplied food-import facts and evidence references, with a recheck and explicit handoff to the calling agent.", prefersBorder: true },
+}, async (input, context) => {
+  const result = await openFoodImportReview(input, context.signal);
+  return { content: [{ type: "text", text: reviewSummary(result) }], structuredContent: result };
+});
+
+export const foodImportReviewSubmission = server.tool({
+  name: "submit_food_import_review", title: "Recheck food import evidence",
+  description: "Recheck a US-bound food shipment with evidence supplied through the form or conversation. Pass the original shipment and evidence fields from open_food_import_review. Empty fields remain unknown; references and non-applicability statements are unverified. Preserve unresolved party, ownership, export-side and other coverage gaps. Returns structured evidence and updated findings; no case is saved, no filing is submitted, and no transaction is approved or executed.",
+  inputSchema: submitFoodImportReviewInputSchema, outputSchema: foodImportReviewSchema, annotations,
+}, async (input, context) => {
+  const result = await submitFoodImportReview(input, context.signal);
+  return { content: [{ type: "text", text: reviewSummary(result) }], structuredContent: result };
+});
 
 server.tool({
   name: "check_import_export", title: "Check import and export",
