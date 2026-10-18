@@ -8,8 +8,8 @@ Seven advisory MCP tools, built with mcp-use v2. Scenario-based trade, purchase 
 | `open_food_import_review` | Known US-bound food shipment → one interactive evidence form and initial trade assessment. |
 | `submit_food_import_review` | Original shipment and supplied form evidence → updated trade assessment, prior-notice review checklist and workflow status. |
 | `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
-| `get_import_export_remediation_plan` | Purchase inputs → original readiness checklist, optional budget comparison and next steps. |
-| `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
+| `get_import_export_remediation_plan` | Purchase inputs → original readiness checklist and next steps. |
+| `check_marketing_email` | Rendered email, recipient and supplied evidence → US CAN-SPAM, Canada CASL and UK PECR findings, missing evidence and proposed corrections. |
 | `screen_restricted_party` | Party name and optional aliases/country/address → bundled U.S. CSL snapshot search, provenance, and review steps. |
 
 Each workflow has explicit tool names. The requirement/remediation tools retain their purchase checklist inputs; the trade check accepts the expanded scenario input. Public inputs do not accept action_type.
@@ -64,7 +64,7 @@ npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
 
 ## Import and export scenarios
 
-`check_import_export` combines **52 hardcoded rules** and **70 example requests** across U.S., EU, Great Britain/UK scope, China, India, Canada, Australia, Japan and South Korea, plus shared evidence and ownership checks. This is partial scenario coverage, not full country coverage. The public tool names are retained. Requirement/remediation, marketing and screening inputs remain compatible; the expanded trade tool also accepts the existing amount/budget fields.
+`check_import_export` combines **52 hardcoded rules** and **70 example requests** across U.S., EU, Great Britain/UK scope, China, India, Canada, Australia, Japan and South Korea, plus shared evidence and ownership checks. This is partial scenario coverage, not full country coverage. The public tool names are retained. Requirement/remediation and screening inputs remain compatible. Marketing uses the independent evidence-based schema described below.
 
 ```json
 {
@@ -82,13 +82,13 @@ npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
 
 Only `product`, `from_country`, and `to_country` are required at submission. Missing category, classifications, technical details, parties or evidence become explicit follow-up requests. Categories are `general_goods`, `food_agriculture`, `medical`, `chemicals`, `wildlife`, `waste`, `dual_use`, `advanced_computing`, `encryption`, `military`, `nuclear`, and `rare_earth`. Categories and technical flags are caller assertions; they do not establish controlled status.
 
-Optional inputs include `amount`, `budget`, `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, and `documents`. Documents use `type`, `reference`, and optional `expires_on`. Parties use a name and role, with optional aliases/country/address. See [copyable requests](src/trade/examples/requests.json) for technical keys and document types.
+Optional inputs include `origin_country`, `transit_countries`, `planned_date`, `transaction_type` (`shipment`, `reexport`, `technology_transfer`, `transit`), `hs_code` (6/8/10 digits), `control_classification`, `classification_evidence`, `technical_specifications`, `end_user`, `end_use`, `end_use_flags`, `quantity`, `value`, `currency`, `ownership`, `parties`, and `documents`. Documents use `type`, `reference`, and optional `expires_on`. Parties use a name and role, with optional aliases/country/address. See [copyable requests](src/trade/examples/requests.json) for technical keys and document types.
 
 The evaluator normalizes ISO countries, maps EU members to the EU pack, and combines applicable rules. Use member-country codes such as `DE`, not `EU`. Conditions are `MATCHED`, `NOT_MATCHED`, or `UNKNOWN`; missing facts never establish negative applicability. Rules with effective intervals use the planned date (inclusive start, exclusive end). Source review dates are separate from legal effective dates, and rules without intervals require current-law review.
 
 Supplied documents remain `PROVIDED_UNVERIFIED`; expired documents are checked against the planned date. Each supplied party is searched against the bundled CSL. Stale/unavailable screening adds a current-evidence gap while retaining historical candidates. A candidate is neither confirmed identity nor an automatic legal prohibition.
 
-Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, `purchase_constraint`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition or an exceeded caller budget, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, otherwise `REVIEW`. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. The shipped catalog uses classification/review/conditional authorization findings and contains no categorical automatic legal prohibition. Caller-supplied amount/budget constraints are tracked separately from legal findings; exceeding the submitted budget can also return BLOCK.
+Results include grouped `findings`, `rule_evaluations`, `coverage`, `missing_information`, `required_documents`, `screening`, `sources`, `requirements`, and `remediation_plan`. Overall status is `BLOCK` for a fully matched prohibition, `NEEDS_EVIDENCE` for missing inputs/documents/current screening, otherwise `REVIEW`. Unknown applicability or missing required evidence downgrades binding licensing/prohibition findings to review. The shipped catalog uses classification/review/conditional authorization findings and contains no categorical automatic legal prohibition.
 
 Every result has `advisory_only: true`, `can_proceed_under_checked_rules: false`, `execution_performed: false`, and `coverage.full_transaction_coverage: false`. Unsupported route sides remain explicit. Sources include verification status/date; Japanese METI references that could not be fetched are marked `reference_only` with a null review date. EU national overlays, Northern Ireland, indirect ownership, FDP/de minimis calculations, current quotas, tariffs/duties and emergency measures require additional review.
 
@@ -108,19 +108,11 @@ Add a `TradeRule` to `src/trade/rules/`, verify its official sources, and add a 
 
 ## Marketing review
 
-Select `check_marketing_email` and submit:
+`check_marketing_email` now requires `sender`, `recipient`, `message` and `planned_send_at`, with `dispatch_country` and typed `evidence`. The former country/count/purpose contract has been replaced. It evaluates one rendered commercial email for one recipient, using candidate US CAN-SPAM, Canada CASL and UK PECR packs.
 
-```json
-{
-  "recipient_country": "CA",
-  "recipient_count": 1000,
-  "purpose": "Product launch campaign"
-}
-```
+Start the MCP server and use the Inspector at http://localhost:3000/mcp/inspector. Read `marketing://examples` for fresh copyable requests, then call `check_marketing_email`. Run `npm run demo:marketing` to evaluate and export the 18 examples. See the [engine guide](src/marketing/README.md) and [copyable demonstration requests](src/marketing/requests.json). The website displays captured marketing results at `/demo`; it does not run marketing checks.
 
-Only `recipient_country` is required. Recipient count, if supplied, must be a positive integer; purpose is optional context. Submit one check per recipient country. The dedicated tool does not require `action_type`; the response echoes `action_type: "marketing_email"`.
-
-This restores the original `general-marketing` policy pack: recipient-permission, sender-identification, and unsubscribe/suppression review tasks. It always returns `REVIEW`, with requirements and remediation. It does not inspect email content, verify consent records, maintain suppression lists, or send email. Count and purpose are context and do not change the assessment. Country-specific legal sources have not been curated; requirement URLs remain null.
+Results distinguish `BLOCK`, `NEEDS_EVIDENCE`, `REVIEW`, and `NO_BLOCKERS_FOUND`. They include sources, evidence scope/freshness, exact message SHA-256, proposed corrections and recheck instructions. Supplied evidence is not independently authenticated. No live provider calls or email sending occur, and no-blockers results remain limited to the implemented checks. Changed drafts need fresh reviews bound to the new fingerprint.
 
 ## Restricted-party screening
 
@@ -185,17 +177,16 @@ The requirement/remediation tools retain the original purchase checklist and acc
 }
 ```
 
-Public inputs do not accept `action_type`; the selected tool identifies the workflow. Product and both countries are required. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. These checklist inputs reject unknown and screening fields. The expanded trade tool accepts the additional scenario fields described above.
+Product and both countries are required. The tool selects the workflow; `action_type` is rejected in public inputs and added internally for routing. Unknown fields and screening fields are rejected.
 
 | Route | Policy | Routing kind |
 | --- | --- | --- |
 | Same shipping and destination country | No pack; separate domestic review required | `unsupported` |
 | Different countries, destination US | `us-import` | `destination_specific` |
 | Different countries, other destination | `general-purchase` | `general` |
-| Separate marketing tool, any recipient country | `general-marketing` | `general` |
 | Separate screening tool, any party country | `us-restricted-party` | `list_screening` |
 
-For `get_import_export_remediation_plan`, the original advisory checklist behavior remains: amount above budget → `BLOCK`; budget without amount → `NEEDS_EVIDENCE`; other valid purchase inputs → `REVIEW`. Product names are retained without classification. Checklist results retain both `action` and legacy `purchase`; the expanded trade check returns the grouped scenario result described above. Standalone screening results have `action` and `screening`.
+Purchase requirement checks remain advisory. Valid checks return `REVIEW` with the applicable requirements and next steps; missing or invalid required inputs are rejected. Product names are retained without classification. Purchase results retain both `action` and legacy `purchase`; screening results have `action` and `screening`.
 
 Countries use the local `iso-3166` dataset, pinned to `4.4.0`. Whitespace/lowercase normalize; assigned territory codes are accepted. Three-letter, obsolete, unassigned, `UK`, and `XK` codes are rejected. A recognized country does not imply jurisdiction-specific policy coverage.
 
@@ -208,8 +199,9 @@ Snapshots marked `STALE` can still return `POTENTIAL_MATCH` or `NO_CANDIDATES`, 
 - `index.ts`: seven public tools, distinct trade/purchase/marketing/screening schemas, and MCP envelopes.
 - `src/schemas.ts`, `src/countries.ts`: shared action/result schemas and country validation.
 - `src/router/`: policy registration, selection, and reasons.
-- `src/policies/`: independent `us-import`, `general-purchase`, `general-marketing`, and `us-restricted-party` packs.
-- `src/policy.ts`: purchase and marketing checks with remediation.
+- `src/policies/`: independent `us-import`, `general-purchase`, and `us-restricted-party` packs.
+- `src/policy.ts`: purchase checks with remediation.
+- `src/marketing/`: independent schemas, evidence validation, three policy packs and demonstration scenarios.
 - `src/screening/`: bundled snapshot validation, age reporting, matching, results.
 - `data/`: full CSL JSON snapshot and provenance metadata, embedded by the build.
 - `scripts/refresh-screening-list.mjs`: explicit refresh from the official public download.

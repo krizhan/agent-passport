@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Hardcoded trade scenarios, advisory purchase and marketing checks, and bundled U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {
@@ -16,7 +16,8 @@
     "deploy": "mcp-use deploy",
     "typecheck": "mcp-use typecheck",
     "refresh:screening-list": "node scripts/refresh-screening-list.mjs",
-    "demo:trade": "tsc -p tsconfig.trade.json && node scripts/prepare-trade-build.mjs && node scripts/export-trade-demo.mjs"
+    "demo:trade": "tsc -p tsconfig.trade.json && node scripts/prepare-trade-build.mjs && node scripts/export-trade-demo.mjs",
+    "demo:marketing": "tsc -p tsconfig.marketing.json && node scripts/export-marketing-demo.mjs"
   },
   "dependencies": {
     "iso-3166": "4.4.0",

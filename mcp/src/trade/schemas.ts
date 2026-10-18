@@ -30,8 +30,6 @@ export const tradeInputSchema = z.object({
   quantity: z.number().positive().finite().optional(),
   value: z.number().nonnegative().finite().optional(),
   currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/).optional(),
-  amount: z.number().nonnegative().max(Number.MAX_SAFE_INTEGER).optional().describe("Optional purchase total in the same units as budget; separate from customs value."),
-  budget: z.number().nonnegative().max(Number.MAX_SAFE_INTEGER).optional().describe("Optional caller-supplied spending limit. This is not a legal trade restriction."),
   documents: z.array(z.object({ type: z.string().trim().min(1).max(100), reference: text, expires_on: date.optional() }).strict()).max(30).default([]),
 }).strict();
 
@@ -51,8 +49,6 @@ export const tradeEvaluationSchema = z.object({
   action: tradeInputSchema.extend({ action_type: z.literal("import_export") }),
   assessed_at: z.iso.datetime(), planned_date: date, policy_version: z.string(),
   decision: z.enum(["BLOCK", "NEEDS_EVIDENCE", "REVIEW"]), summary: z.string(), scope: z.string(),
-  purchase_constraint: z.object({ amount: z.number().nullable(), budget: z.number().nullable(),
-    status: z.enum(["NOT_CHECKED", "MISSING_AMOUNT", "WITHIN_BUDGET", "OVER_BUDGET"]) }),
   advisory_only: z.literal(true), can_proceed_under_checked_rules: z.literal(false), execution_performed: z.literal(false),
   routing: z.object({ policy_id: z.literal("hardcoded-trade"), kind: z.literal("composed"), reason: z.string() }),
   findings: z.object({ import: z.array(finding), export: z.array(finding), transit: z.array(finding), screening: z.array(finding), general: z.array(finding) }),

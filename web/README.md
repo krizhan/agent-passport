@@ -29,6 +29,10 @@ The homepage needs no environment variables, API keys, InsForge connection, or r
 
 Open `/scenarios` to browse 70 recorded assessments from 52 hardcoded rules. Select a scenario, read separate import/export findings, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
 
+## Marketing request results
+
+Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Read `marketing://examples` in the MCP Inspector for fresh synthetic requests, and see the [marketing engine guide](../mcp/src/marketing/README.md).
+
 ## Request-history demo
 
 Open **http://127.0.0.1:5173/demo** (or the port printed by Vite). It reads real captured requests from the existing Manufact gateway; it does not generate examples or execute business actions.
@@ -48,13 +52,13 @@ Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules
 - Open a request to read the original action, assessment, policy pack/version, routing explanation, requirements, source links, and next steps.
 - Auto-refresh replaces the feed every 20 seconds while the tab is visible; there is no older-history pagination.
 - The API scans gateway pages newest first until all three categories have 10 requests with captured details or retained history ends. Scans are bounded to 10 pages of 100 events and 12 seconds; the API reports whether the scan limit was reached. Other protocol traffic and calls without captured inputs or readable results are excluded before applying the category limit.
-- A successful HTTP/tool call is separate from the compliance outcome. Budget limits are shown as caller constraints, and the UI does not claim a business action was executed.
+- A successful HTTP/tool call is separate from the compliance outcome. The UI reports recorded compliance outcomes and does not claim a business action was executed.
 - Historical `purchase` responses and text/SSE captures are supported. Calls without captured details are hidden. Missing routing, general policy fallbacks, and captured tool errors remain explicit in the request details. Old results are never recomputed using today’s policy rules.
 - The trade tools are `check_import_export`, `get_import_export_requirements`, and `get_import_export_remediation_plan`. Their inputs have no `action_type`; the tool selects the workflow. Previously recorded calls under the old generic tool names remain readable in history.
 
 Manufact’s [gateway events API](https://manufact.com/openapi.json) is read with a bearer token on the server. [Payload capture](https://docs.manufact.com/dashboard/observability) must have been enabled when a request happened to recover its inputs and outputs. Metadata-only history cannot be reconstructed. History retention is controlled by the Manufact plan. The endpoint returns a projection of compliance fields; it excludes gateway headers, IP addresses, actor IDs, and raw request/response bodies.
 
-All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
+All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool evaluates supplied draft/evidence records against selected policies, while restricted-party screening performs an offline name search against a bundled, dated U.S. CSL JSON snapshot. Recorded results show the snapshot age and freshness.
 
 ## Check and build
 

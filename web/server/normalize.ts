@@ -90,7 +90,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     || Object.keys(error).length > 0 || (number(event.status_code) ?? 0) >= 400;
   const decision = string(data.decision);
   const outcome: Outcome = failed ? "ERROR"
-    : decision === "BLOCK" || decision === "NEEDS_EVIDENCE" || decision === "REVIEW" ? decision
+    : decision === "BLOCK" || decision === "NEEDS_EVIDENCE" || decision === "REVIEW" || decision === "NO_BLOCKERS_FOUND" ? decision
     : (tool === "get_import_export_requirements" || tool === "get_requirements") && Array.isArray(data.requirements) ? "CHECKLIST" : "UNAVAILABLE";
   const routing = object(data.routing);
   const facts: RequestRecord["facts"] = [];
@@ -117,14 +117,21 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     fact("Data retrieved", string(source.retrieved_at));
     fact("Snapshot SHA-256", string(source.sha256));
   } else if (category === "marketing") {
-    const recipientCountry = country(action.recipient_country);
-    const count = number(action.recipient_count);
-    title = string(action.purpose, 500) ?? "Marketing email campaign";
-    route = `${recipientCountry ?? "Country not recorded"}${count !== null ? ` · ${count.toLocaleString("en-US")} recipients` : ""}`;
-    fact("Requested action", "Send marketing email");
+    const recipient = object(action.recipient);
+    const sender = object(action.sender);
+    const message = object(action.message);
+    const recipientCountry = country(recipient.country ?? action.recipient_country);
+    title = string(message.subject, 500) ?? string(action.subject, 500) ?? "Marketing email check";
+    route = `${recipientCountry ?? "Country not recorded"} · One recipient`;
+    fact("Requested action", "Assess marketing email");
+    fact("Sender", string(sender.name, 500) ?? string(action.sender_id, 500));
+    fact("Recipient reference", string(recipient.id, 500) ?? string(action.recipient_id, 500));
     fact("Recipient country", recipientCountry);
-    fact("Recipients", count?.toLocaleString("en-US") ?? null);
-    fact("Campaign purpose", string(action.purpose, 500));
+    fact("Subscriber type", string(recipient.subscriber_type));
+    fact("Subject", string(message.subject, 500) ?? string(action.subject, 500));
+    fact("Planned send", string(action.planned_send_at));
+    fact("Message SHA-256", string(data.message_sha256));
+    fact("Evidence mode", data.live_lookup_performed === false ? "Caller-supplied records; no live provider lookup" : null);
   } else if (category === "trade") {
     const isTrade = action.action_type === "import_export" || Object.keys(object(data.findings)).length > 0;
     title = `${isTrade ? "Assess" : "Purchase"} ${string(action.product, 500) ?? "goods"}`;
@@ -133,8 +140,6 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     fact("Product", string(action.product, 500));
     fact("Ships from", country(action.from_country));
     fact("Destination", country(action.to_country));
-    fact("Purchase amount", number(action.amount)?.toLocaleString("en-US") ?? null);
-    fact("Submitted budget", number(action.budget)?.toLocaleString("en-US") ?? null);
     if (isTrade) {
       fact("Transaction type", string(action.transaction_type));
       fact("Manufacturing origin", country(action.origin_country));
@@ -145,7 +150,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
       fact("Planned date", string(data.planned_date) ?? string(action.planned_date));
     }
   }
-  const requirements = list(data.requirements).slice(0, 50).map((raw, index) => {
+  const requirements = list(data.requirements).slice(0, category === "marketing" ? 150 : 50).map((raw, index) => {
     const item = object(raw);
     return {
       id: string(item.id) ?? String(index),
@@ -161,6 +166,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
       : "The captured response does not contain a readable compliance result. Payload capture may have been off or the response may be incomplete.");
   const screening = object(data.screening);
   const tradeCoverage = object(data.coverage);
+  const coverage = tradeCoverage;
   const tradeFindings = object(data.findings);
   return {
     id, time, tool, category, title, route, outcome, summary,
@@ -182,6 +188,17 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
           generatedAt: string(source.dataset_generated_at), totalMatches: number(result.total_matches) };
       }),
     } } : {}),
+    ...(category === "marketing" && string(data.message_sha256) ? { marketing: {
+      messageHash: string(data.message_sha256),
+      policies: list(coverage.checked_policies).map((value) => string(value, 100)).filter((value): value is string => !!value),
+      limitations: list(coverage.limitations).slice(0, 20).map((value) => string(value, 2000)).filter((value): value is string => !!value),
+      corrections: list(data.proposed_corrections).slice(0, 20).map((raw) => {
+        const item = object(raw); return { field: string(item.field, 100) ?? "Draft", value: string(item.value, 2000) ?? "", reason: string(item.reason, 2000) ?? "Recheck the revised draft." };
+      }),
+      evidence: list(data.evidence_checks).slice(0, 20).map((raw) => {
+        const item = object(raw); return { kind: string(item.kind, 100) ?? "Evidence", reference: string(item.reference, 500), status: string(item.status, 100) ?? "MISSING", detail: string(item.detail, 2000) ?? "Evidence not established.", observedAt: string(item.observed_at) };
+      }),
+    } } : {}),
     ...(category === "screening" ? { screening: {
       status: string(screening.status), totalMatches: number(screening.total_matches),
       truncated: screening.truncated === true, error: string(screening.error),
@@ -196,7 +213,7 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
       id: string(routing.policy_id), version: string(data.policy_version),
       reason: string(routing.reason), scope: string(data.scope), kind: string(routing.kind),
     },
-    nextSteps: list(data.remediation_plan).slice(0, 50).flatMap((raw) => {
+    nextSteps: list(data.remediation_plan).slice(0, category === "marketing" ? 150 : 50).flatMap((raw) => {
       const step = object(raw);
       const instruction = string(step.instruction);
       return instruction ? [{ owner: step.owner === "agent" ? "Agent" : step.owner === "human" ? "Human reviewer" : "Reviewer", instruction }] : [];

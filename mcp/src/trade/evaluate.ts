@@ -122,28 +122,15 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
 
   const allFindings = Object.values(findings).flat();
   const requiredDocuments = [...documents.values()];
-  const budgetStatus = input.budget === undefined ? "NOT_CHECKED" : input.amount === undefined ? "MISSING_AMOUNT"
-    : input.amount > input.budget ? "OVER_BUDGET" : "WITHIN_BUDGET";
-  if (budgetStatus === "MISSING_AMOUNT") addMissing("amount", "purchase_budget");
   const confirmedBlock = allFindings.some((finding) => finding.code === "PROHIBITED" && finding.condition_status === "MATCHED");
   const needsEvidence = missing.size > 0 || requiredDocuments.some((doc) => doc.status !== "PROVIDED_UNVERIFIED");
-  const decision = confirmedBlock || budgetStatus === "OVER_BUDGET" ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : "REVIEW";
+  const decision = confirmedBlock ? "BLOCK" : needsEvidence ? "NEEDS_EVIDENCE" : "REVIEW";
   const requirements: TradeEvaluation["requirements"] = allFindings.map((finding) => ({
     id: finding.rule_id, title: finding.title, basis: "legal_readiness", source_url: finding.sources[0]?.url ?? null,
     description: finding.detail, status: finding.code === "PROHIBITED" && finding.condition_status === "MATCHED" ? "FAILED"
       : finding.missing_fields.length ? "MISSING" : "REVIEW",
     detail: `${finding.code}: ${finding.detail}${finding.missing_fields.length ? ` Missing: ${finding.missing_fields.join(", ")}.` : ""}`,
   }));
-  if (input.budget !== undefined) {
-    const detail = budgetStatus === "MISSING_AMOUNT" ? "Supply amount in the same currency and units as budget."
-      : budgetStatus === "OVER_BUDGET" ? "The submitted purchase total exceeds your submitted budget. This is a caller constraint, not a legal prohibition."
-      : "The submitted total is within your submitted budget; this does not establish trade compliance.";
-    requirements.push({ id: "purchase_budget", title: "Your purchase budget", basis: "purchase_constraint", source_url: null,
-      description: "Compare the caller-supplied amount and budget without currency conversion.",
-      status: budgetStatus === "MISSING_AMOUNT" ? "MISSING" : budgetStatus === "OVER_BUDGET" ? "FAILED" : "SATISFIED", detail });
-    if (budgetStatus !== "WITHIN_BUDGET") steps.push({ requirement_id: "purchase_budget", owner: "agent",
-      instruction: budgetStatus === "MISSING_AMOUNT" ? detail : "Revise the purchase amount or budget and submit a fresh assessment." });
-  }
   for (const doc of requiredDocuments) {
     requirements.push({ id: `document.${doc.type}`, title: doc.type.replaceAll("_", " "), basis: "legal_readiness",
       source_url: allFindings.find((finding) => finding.required_documents.includes(doc.type))?.sources[0]?.url ?? null,
@@ -161,8 +148,7 @@ export async function checkImportExport(raw: unknown, options: EvaluationOptions
   return tradeEvaluationSchema.parse({
     action: { ...input, action_type: "import_export" }, assessed_at: now.toISOString(), planned_date: plannedDate,
     policy_version: TRADE_POLICY_VERSION, decision,
-    purchase_constraint: { amount: input.amount ?? null, budget: input.budget ?? null, status: budgetStatus },
-    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${confirmedBlock ? "A matched prohibition requires resolution." : budgetStatus === "OVER_BUDGET" ? "The purchase exceeds your submitted budget; this is a caller constraint, not a legal prohibition." : "Review findings and authorization before acting."}`,
+    summary: `${allFindings.length} findings across ${new Set(applied.map((entry) => entry.jurisdiction)).size} rule jurisdictions. ${missing.size} input/evidence gaps; ${requiredDocuments.filter((doc) => doc.status !== "PROVIDED_UNVERIFIED").length} missing or expired document types; ${unsupported.length} unsupported route sides. ${decision === "BLOCK" ? "A matched prohibition requires resolution." : "Review findings and authorization before acting."}`,
     scope: "Hardcoded scenario-level import/export advisory checks. Categories, classifications and documents are caller-supplied; no full legal clearance or business execution is provided.",
     routing: { policy_id: "hardcoded-trade", kind: "composed", reason: "Combine applicable origin/export, destination/import, transit and shared evidence rules. EU member countries map to the EU pack; national overlays remain review items." },
     advisory_only: true, can_proceed_under_checked_rules: false, execution_performed: false,

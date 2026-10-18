@@ -2,25 +2,11 @@ import { z } from "zod";
 import { countrySchema } from "./countries.js";
 
 const text = z.string().trim().min(1).max(500);
-const money = z.number().nonnegative().max(Number.MAX_SAFE_INTEGER);
-
-export const marketingInputSchema = z.object({
-  recipient_country: countrySchema.describe("Recipient country/territory as an assigned ISO 3166-1 alpha-2 code. Submit a separate check for each country."),
-  recipient_count: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).optional()
-    .describe("Optional marketing-email recipient count; a positive integer"),
-  purpose: text.optional().describe("Optional campaign purpose or context"),
-}).strict();
-
-export const marketingEmailSchema = marketingInputSchema.extend({
-  action_type: z.literal("marketing_email"),
-});
 
 export const purchaseInputSchema = z.object({
   product: text.describe("Required for purchase: what you want to purchase"),
   from_country: countrySchema.describe("Required for purchase: shipping country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
   to_country: countrySchema.describe("Required for purchase: destination country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
-  amount: money.optional().describe("Optional purchase total, in the same currency and units as budget"),
-  budget: money.optional().describe("Optional spending limit, in the same currency and units as amount; zero is allowed"),
 }).strict();
 
 export const purchaseSchema = purchaseInputSchema.extend({
@@ -42,7 +28,7 @@ export const restrictedPartySchema = screeningInputSchema.extend({
   action_type: z.literal("restricted_party_screening"),
 });
 
-export const actionSchema = z.discriminatedUnion("action_type", [purchaseSchema, marketingEmailSchema, restrictedPartySchema]);
+export const actionSchema = z.discriminatedUnion("action_type", [purchaseSchema, restrictedPartySchema]);
 
 // The selected tool identifies the workflow; only internal actions carry a type.
 export const requestSchema = purchaseInputSchema;
@@ -51,7 +37,7 @@ export const requirementSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  basis: z.enum(["assessment_input", "legal_readiness", "purchase_constraint"]),
+  basis: z.enum(["assessment_input", "legal_readiness"]),
   source_url: z.url().nullable(),
 });
 
@@ -103,11 +89,7 @@ export const evaluationSchema = contextSchema.extend({
   execution_performed: z.literal(false),
 });
 
-export const marketingEvaluationSchema = evaluationSchema.extend({ action: marketingEmailSchema });
-
 export type Purchase = z.infer<typeof purchaseSchema>;
-export type MarketingEmail = z.infer<typeof marketingEmailSchema>;
-export type MarketingInput = z.input<typeof marketingInputSchema>;
 export type ScreeningInput = z.input<typeof screeningInputSchema>;
 export type RestrictedParty = z.infer<typeof restrictedPartySchema>;
 export type Action = z.infer<typeof actionSchema>;

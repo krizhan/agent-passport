@@ -6,6 +6,7 @@
 *.pem
 *.key
 .aws/
+.insforge/
 
 # OS and editor files
 .DS_Store
@@ -13,7 +14,7 @@
 .vscode/
 
 # Dependencies, builds, and caches
-node_modules/
+node_modules
 dist/
 build/
 coverage/
@@ -23,3 +24,6 @@ __pycache__/
 *.log
 
 .trade-build/
+
+# Marketing demo compiler output
+.marketing-build/

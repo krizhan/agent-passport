@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+node_modules
 .pnpm-store/
 
 # Build output
@@ -44,3 +44,6 @@ Thumbs.db
 *~
 
 .trade-build/
+
+# Marketing demo compiler output
+.marketing-build/

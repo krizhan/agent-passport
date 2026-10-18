@@ -33,9 +33,6 @@ function RequestDetails({ record }: { record: RequestRecord }) {
           {record.facts.length ? <dl className="demo-facts">{record.facts.map((fact) => (
             <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>
           ))}</dl> : <p>The gateway did not capture the action inputs for this call.</p>}
-          {record.facts.some((fact) => fact.label === "Submitted budget" || fact.label === "Purchase amount") && (
-            <p className="demo-fact-note">Amounts use the caller’s units; no currency was supplied.</p>
-          )}
         </section>
         <section>
           <h3><span>02</span> Result & next steps</h3>
@@ -45,6 +42,12 @@ function RequestDetails({ record }: { record: RequestRecord }) {
             {record.trade.unsupported.map((side, index) => <p key={index}><strong>{side.country} {side.direction}:</strong> {side.reason}</p>)}
             {record.trade.missingFields.length > 0 && <p>Missing inputs: {record.trade.missingFields.join(", ")}</p>}
             {record.trade.screening.map((party, index) => <article key={index}><strong>{party.party}</strong><p>{party.status.replaceAll("_", " ")} · {party.totalMatches ?? "Unknown"} candidates</p><p>Bundled CSL: {party.freshness}; generated {party.generatedAt ?? "unknown"}. No live lookup.</p></article>)}
+          </div>}
+          {record.marketing && <div className="demo-screening-results">
+            <p>Marketing coverage: {record.marketing.policies.join(", ") || "Separate review required"}. Evidence is supplied by the caller.</p>
+            {record.marketing.corrections.map((correction, index) => <article key={index}><strong>Proposed correction · {correction.field}</strong><p>{correction.value}</p><p>{correction.reason}</p></article>)}
+            <details className="demo-scope"><summary>Evidence freshness and scope</summary>{record.marketing.evidence.map((item) => <article key={item.kind}><strong>{item.kind.replaceAll("_", " ")} · {item.status.replaceAll("_", " ")}</strong><p>{item.detail}</p>{item.reference && <p>{item.reference}{item.observedAt ? ` · ${timeLabel(item.observedAt)}` : ""}</p>}</article>)}</details>
+            <details className="demo-scope"><summary>Message fingerprint and coverage</summary><p>{record.marketing.messageHash}</p>{record.marketing.limitations.map((note) => <p key={note}>{note}</p>)}</details>
           </div>}
           {record.screening && <div className="demo-screening-results">
             <p>{record.screening.status?.replaceAll("_", " ") ?? "Screening status not captured"}
@@ -84,12 +87,11 @@ function RequestDetails({ record }: { record: RequestRecord }) {
         </article>)}</div>}
         {record.requirements.length > 0 && <div className="demo-requirements">{record.requirements.filter((requirement) => !record.trade || !record.trade.findings.some((finding) => finding.id === requirement.id)).map((requirement) => (
           <article key={requirement.id}>
-            <div className="demo-requirement-title"><h4>{requirement.title}</h4><span>{requirement.basis === "purchase_constraint"
-              ? "Your budget constraint" : requirement.status === "SATISFIED" ? "Satisfied" : requirement.status === "FAILED" ? "Failed"
+            <div className="demo-requirement-title"><h4>{requirement.title}</h4><span>{requirement.status === "SATISFIED" ? "Satisfied" : requirement.status === "FAILED" ? "Failed"
               : requirement.status === "MISSING" ? "Missing information" : "For review"}</span></div>
             <p>{requirement.detail}</p>
             {requirement.sourceUrl ? <a href={requirement.sourceUrl} target="_blank" rel="noreferrer">Read source guidance <Icon name="arrow" size={13} /></a>
-              : <span className="demo-no-source">{requirement.basis === "purchase_constraint" ? "Caller-supplied constraint, not an international policy." : "No legal source recorded for this requirement."}</span>}
+              : <span className="demo-no-source">No legal source recorded for this requirement.</span>}
           </article>
         ))}</div>}
       </section>
@@ -169,7 +171,7 @@ export function Demo() {
                 <article className={`demo-request ${openId === record.id ? "demo-request-open" : ""}`} key={record.id}>
                   <button className="demo-request-row" aria-expanded={openId === record.id} aria-controls={`detail-${record.id}`} onClick={() => setOpenId(openId === record.id ? null : record.id)}>
                     <span className="demo-request-main"><span className={`demo-type-icon demo-type-${record.category}`}><Icon name={record.category === "screening" ? "shield" : record.category === "marketing" ? "mail" : record.category === "trade" ? "briefcase" : "file"} size={18} /></span><span><strong>{record.title}</strong><span className="demo-request-route">{record.route}</span><span className="demo-request-time">{timeLabel(record.time)} <span>·</span> {toolLabels[record.tool]}</span></span></span>
-                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "composed" ? "Combined scenario rules" : record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
+                    <span><OutcomeBadge outcome={record.outcome} /></span><span className="demo-policy-cell">{policyName(record)}<small>{record.policy.kind === "composed" ? record.category === "marketing" ? "Marketing policy checks" : "Combined scenario rules" : record.policy.kind === "list_screening" ? "U.S. list screening" : record.policy.kind === "destination_specific" ? "Destination-specific checklist" : record.policy.kind === "general" ? "General review checklist" : record.policy.kind === "unsupported" ? "Separate review required" : "Historical response"}</small></span><span className="demo-expand" aria-hidden="true">{openId === record.id ? "−" : "+"}</span>
                   </button>
                   {openId === record.id && <RequestDetails record={record} />}
                 </article>
