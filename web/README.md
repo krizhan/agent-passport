@@ -8,7 +8,7 @@ A simple React + TypeScript homepage with exactly three sections and no navigati
 
 Each use-case section has a general overview followed by a written example directly below it, with a supporting illustration alongside.
 
-The wordmark sits within the overview, with an outlined, pill-shaped **Demo** button at the top right linking to the requests page at `/demo`. The homepage has no separate navigation, developer section, FAQ, playback, or extra footer section.
+The wordmark sits within the overview, with an outlined, pill-shaped **History** button at the top right linking to the requests page at `/demo`. The homepage has no separate navigation, developer section, FAQ, playback, or extra footer section.
 
 ## Run locally
 
