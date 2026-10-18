@@ -71,9 +71,9 @@ export function Home() {
               Give your agents a compliant <span>path forward.</span>
             </h1>
             <p className="overview-description">
-              Agent Passport helps autonomous AI agents check applicable laws and
-              regulations before they act. It explains what’s allowed and what
-              the agent needs to resolve.
+              Agent Passport ensures autonomous AI agents comply with
+              local and international laws and regulations before they act. It
+              explains what’s allowed and what the agent needs to resolve.
             </p>
             <p className="integration-line">
               Agents connect through MCP and carry out actions using their
