@@ -1,6 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": false, "outDir": ".trade-build", "rootDir": "." },
-  "include": ["src/trade/**/*.ts", "src/json.d.ts"],
-  "exclude": ["node_modules", "dist", ".trade-build"]
-}

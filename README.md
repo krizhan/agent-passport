@@ -6,9 +6,9 @@ Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator
 
 The initial direction is to help agents discover jurisdiction-specific compliance requirements and return structured results with links to their sources.
 
-Import/export MVP: `check_import_export` combines **57 hardcoded rules** across ten jurisdiction packs with **100 example requests**, separate import/export findings, source links, evidence/document gaps and bundled U.S. screening. Checks include Singapore chewing gum, Indian electronic cigarettes, and product/shipment-bound FDA prior-notice evidence and timing for commercial roasted coffee arriving by air or sea. See the [trade tool guide](mcp/README.md#import-and-export-scenarios). The `/scenarios` gallery shows recorded evaluator outputs; `/demo` remains real gateway history. Coverage is partial and results remain advisory.
+Import/export MVP: `check_import_export` combines **57 hardcoded rules** across ten jurisdiction packs with separate import/export findings, source links, evidence/document gaps and bundled U.S. screening. Checks include Singapore chewing gum, Indian electronic cigarettes, and product/shipment-bound FDA prior-notice evidence and timing for commercial roasted coffee arriving by air or sea. See the [trade tool guide](mcp/README.md#import-and-export-checks). `/demo` shows real gateway history. Coverage is partial and results remain advisory.
 
-Project status: the [`mcp/`](./mcp/README.md) app provides three import/export tools (`check_import_export`, `get_import_export_requirements`, `get_import_export_remediation_plan`) plus `open_food_import_review` / `submit_food_import_review` for the food-evidence MCP App, and separate `check_marketing_email` and `screen_restricted_party` tools. The trade check accepts product and route plus optional classification, technical, party, evidence and document context; the requirement/remediation tools retain their purchase checklist inputs. The selected tool identifies the workflow; public inputs do not accept `action_type`. Marketing evaluates one rendered email and recipient using supplied evidence against selected US CAN-SPAM, Canada CASL and UK PECR rules. Read `marketing://examples` for synthetic requests. Screening accepts a party name and optional aliases, country, and address, screens against the official U.S. Consolidated Screening List bundled as a dated JSON snapshot, and returns possible matches, source provenance, and review steps. No backend or API key is required; screening works offline with the bundled snapshot.
+Project status: the [`mcp/`](./mcp/README.md) app provides three import/export tools (`check_import_export`, `get_import_export_requirements`, `get_import_export_remediation_plan`) plus `open_food_import_review` / `submit_food_import_review` for the food-evidence MCP App, and separate `check_marketing_email` and `screen_restricted_party` tools. The trade check accepts product and route plus optional classification, technical, party, evidence and document context; the requirement/remediation tools retain their purchase checklist inputs. The selected tool identifies the workflow; public inputs do not accept `action_type`. Marketing evaluates one rendered email and recipient using supplied evidence against selected US CAN-SPAM, Canada CASL and UK PECR rules. Screening accepts a party name and optional aliases, country, and address, screens against the official U.S. Consolidated Screening List bundled as a dated JSON snapshot, and returns possible matches, source provenance, and review steps. No backend or API key is required; screening works offline with the bundled snapshot.
 
 The [policy router](./mcp/README.md#purchase-checks) selects a US import, general purchase, or U.S. restricted-party pack. Marketing has an independent evidence-based evaluator. Screening compares actual bundled CSL records. Results expose the snapshot date and age; stale data is flagged for refresh, while invalid or incomplete data returns `UNAVAILABLE`; no candidates is not transaction clearance. The caller remains responsible for business actions.
 
@@ -39,3 +39,13 @@ npm run dev
 Open http://localhost:3000/mcp/inspector to call the seven tools. The server requires no backend or environment variables; screening works offline with the bundled snapshot. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.
 
 For the interactive food-import evidence form, call `open_food_import_review`. Its recheck uses `submit_food_import_review`, and supporting hosts can share the submitted evidence and remaining steps with the calling agent. See the [MCP App workflow](mcp/README.md#food-import-mcp-app).
+
+## Deploy
+
+From the repository root, one command validates and builds both applications, deploys the MCP server to Manufact, and deploys the website source to InsForge:
+
+```bash
+npm run deploy
+```
+
+The deployed MCP server executes the trade and marketing rule engines directly. Deployment does not generate or publish precomputed scenario results.

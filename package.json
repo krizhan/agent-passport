@@ -1,0 +1,7 @@
+{
+  "name": "agent-passport",
+  "private": true,
+  "scripts": {
+    "deploy": "npm --prefix mcp run typecheck && npm --prefix mcp run build && npm --prefix web run build && npx -y @insforge/cli deployments env list && npm --prefix mcp run deploy && npx -y @insforge/cli deployments deploy ./web"
+  }
+}

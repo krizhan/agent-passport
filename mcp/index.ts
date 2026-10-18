@@ -2,7 +2,6 @@ import { MCPServer } from "mcp-use";
 import { checkAction, getRequirements } from "./src/policy.js";
 import { checkMarketingEmail } from "./src/marketing/evaluate.js";
 import { marketingInputSchema, marketingEvaluationSchema } from "./src/marketing/schemas.js";
-import { marketingExamples } from "./src/marketing/examples.js";
 import { evaluationSchema, requestSchema, requirementsResponseSchema, screeningInputSchema } from "./src/schemas.js";
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
 import { checkImportExport } from "./src/trade/evaluate.js";
@@ -12,8 +11,8 @@ import { foodImportReviewSchema, openFoodImportReviewInputSchema, submitFoodImpo
 
 const server = new MCPServer({
   name: "agent-passport", title: "Customs · Agent Passport", version: "0.12.0",
-  description: "Scenario-based import/export assessments, advisory purchase and marketing checks, and bundled U.S. restricted-party screening.",
-  instructions: "Use check_import_export for scenario-based shipment, reexport, transit and technology-transfer assessment. Supply product, from_country and to_country, then use missing_information and remediation_plan to gather evidence. Product categories, classifications and technical flags are caller assertions. Report partial coverage, rule/source dates and bundled screening freshness. Use get_import_export_requirements and get_import_export_remediation_plan for the original purchase-readiness checklists without budget fields. Public inputs do not accept action_type. Use open_food_import_review to gather evidence for a US-bound food shipment in an MCP App; submit_food_import_review rechecks supplied evidence. Use check_marketing_email for one rendered email and recipient, planned send time and supplied evidence against candidate US CAN-SPAM, Canada CASL and UK PECR rules. Report evidence gaps, source links and proposed corrections; bind content reviews to message_sha256. NO_BLOCKERS_FOUND is limited to implemented checks. Evidence is not independently authenticated and no provider calls occur. Get copyable marketing requests from marketing://examples. Use screen_restricted_party for a standalone bundled U.S. CSL name search. Screening is offline: report snapshot date/age, stale or unavailable data, and candidates requiring identity review; no candidates is not clearance. No business actions are authorized or executed.",
+  description: "Live import/export and marketing assessments, advisory purchase checks, and bundled U.S. restricted-party screening.",
+  instructions: "Use check_import_export for shipment, reexport, transit and technology-transfer assessment. Supply product, from_country and to_country, then use missing_information and remediation_plan to gather evidence. Product categories, classifications and technical flags are caller assertions. Report partial coverage, rule/source dates and bundled screening freshness. Use get_import_export_requirements and get_import_export_remediation_plan for the original purchase-readiness checklists without budget fields. Public inputs do not accept action_type. Use open_food_import_review to gather evidence for a US-bound food shipment in an MCP App; submit_food_import_review rechecks supplied evidence. Use check_marketing_email for one rendered email and recipient, planned send time and supplied evidence against candidate US CAN-SPAM, Canada CASL and UK PECR rules. Report evidence gaps, source links and proposed corrections; bind content reviews to message_sha256. NO_BLOCKERS_FOUND is limited to implemented checks. Evidence is not independently authenticated and no provider calls occur. Use screen_restricted_party for a standalone bundled U.S. CSL name search. Screening is offline: report snapshot date/age, stale or unavailable data, and candidates requiring identity review; no candidates is not clearance. No business actions are authorized or executed.",
 });
 const annotations = { readOnlyHint: true, destructiveHint: false, openWorldHint: false };
 
@@ -38,7 +37,7 @@ export const foodImportReviewSubmission = server.tool({
 
 server.tool({
   name: "check_import_export", title: "Check import and export",
-  description: "Assess a shipment, reexport, transit or technology transfer against hardcoded scenario rules. Supply product, from_country and to_country; add product_category, origin_country, classifications/evidence, technical_specifications, end user/use, parties and documents as available. Combines US, EU, GB, CN, IN, SG, CA, AU, JP and KR packs; use actual member-country ISO codes for the EU. Includes Singapore chewing-gum and Indian electronic-cigarette checks. For commercial packaged roasted coffee arriving in the US by air/sea, supply shipment and prior_notice plus a product/shipment-bound fda_prior_notice_confirmation document. Returns separate findings, individual check statuses, missing evidence/documents, sources, coverage gaps and remediation. Supplied parties are screened against the bundled dated US CSL snapshot without live lookup. Categories and technical flags are caller assertions, not verified classifications. No transaction is cleared or executed.",
+  description: "Assess a shipment, reexport, transit or technology transfer against versioned trade rules. Supply product, from_country and to_country; add product_category, origin_country, classifications/evidence, technical_specifications, end user/use, parties and documents as available. Combines US, EU, GB, CN, IN, SG, CA, AU, JP and KR packs; use actual member-country ISO codes for the EU. Includes Singapore chewing-gum and Indian electronic-cigarette checks. For commercial packaged roasted coffee arriving in the US by air/sea, supply shipment and prior_notice plus a product/shipment-bound fda_prior_notice_confirmation document. Returns separate findings, individual check statuses, missing evidence/documents, sources, coverage gaps and remediation. Supplied parties are screened against the bundled dated US CSL snapshot without live lookup. Categories and technical flags are caller assertions, not verified classifications. No transaction is cleared or executed.",
   inputSchema: tradeInputSchema, outputSchema: tradeEvaluationSchema, annotations,
 }, async (input, context) => {
   const result = await checkImportExport(input, { signal: context.signal });
@@ -65,7 +64,7 @@ server.tool({
 
 server.tool({
   name: "check_marketing_email", title: "Check marketing email",
-  description: "Assess one rendered commercial email for one recipient using sender, recipient, message, planned_send_at, dispatch_country and supplied evidence. Combines candidate US CAN-SPAM, Canada CASL and UK PECR packs; cross-border applicability remains explicit. Checks identity, postal/contact details, opt-out, suppression, and supported consent or commercial soft-opt-in conditions. Return BLOCK, NEEDS_EVIDENCE, REVIEW or NO_BLOCKERS_FOUND, source links, exact message_sha256 and proposed corrections. Supplied review/consent records are not independently authenticated; no provider calls or email sending occur. Use marketing://examples for copyable requests. Recheck changed drafts and refresh suppression near sending.",
+  description: "Assess one rendered commercial email for one recipient using sender, recipient, message, planned_send_at, dispatch_country and supplied evidence. Combines candidate US CAN-SPAM, Canada CASL and UK PECR packs; cross-border applicability remains explicit. Checks identity, postal/contact details, opt-out, suppression, and supported consent or commercial soft-opt-in conditions. Return BLOCK, NEEDS_EVIDENCE, REVIEW or NO_BLOCKERS_FOUND, source links, exact message_sha256 and proposed corrections. Supplied review/consent records are not independently authenticated; no provider calls or email sending occur. Recheck changed drafts and refresh suppression near sending.",
   inputSchema: marketingInputSchema, outputSchema: marketingEvaluationSchema, annotations,
 }, async (input) => {
   const result = checkMarketingEmail(input);
@@ -81,10 +80,5 @@ server.tool({
   const result = await screenRestrictedParty(input, { signal: context.signal });
   return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
 });
-
-server.resource({ name: "marketing_examples", title: "Marketing policy examples", uri: "marketing://examples", mimeType: "application/json",
-  description: "Synthetic copyable marketing requests with fresh demonstration evidence. No real consent or platform records." }, async () => ({
-  contents: [{ uri: "marketing://examples", mimeType: "application/json", text: JSON.stringify({ generated_at: new Date().toISOString(), examples: marketingExamples() }) }],
-}));
 
 export default server;

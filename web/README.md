@@ -25,13 +25,9 @@ Open **http://127.0.0.1:5173/**. Keep the terminal running; stop with **Ctrl+C**
 
 The homepage needs no environment variables, API keys, InsForge connection, or running MCP server. Fonts and SVG assets are bundled locally. The existing MCP app remains independent in `../mcp/`. The `/demo` page needs a server-side Manufact connection as described below.
 
-## Scenario gallery
-
-Open `/scenarios` to browse 100 recorded assessments from 57 hardcoded rules. Select a scenario, read separate import/export findings, individual check statuses, missing evidence/documents, screening, source links and coverage, and copy its MCP input. This static gallery needs no credentials or running MCP server. Regenerate it from the repository root with `npm --prefix mcp run demo:trade`. Recorded timestamps and bundled screening dates remain explicit.
-
 ## Marketing request results
 
-Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Read `marketing://examples` in the MCP Inspector for fresh synthetic requests, and see the [marketing engine guide](../mcp/src/marketing/README.md).
+Marketing assessments run through the MCP server's `check_marketing_email` tool. The website's Marketing tab at `/demo` displays captured requests, policy findings, evidence gaps, freshness and proposed corrections. There is no website form or API for running marketing checks. Use the MCP Inspector or another MCP client to submit the actual workflow input; see the [marketing engine guide](../mcp/src/marketing/README.md).
 
 ## Request-history demo
 
@@ -72,18 +68,17 @@ npm run preview -- --port 4173
 
 Open **http://127.0.0.1:4173/** to inspect the production bundle. The build includes TypeScript checking and writes to `web/dist/`.
 
-## Deploy with InsForge
+## Deploy
 
 Live website: [Agent Passport](https://vubsb6rq.insforge.site/).
 
-From the repository root, with the existing InsForge project linked:
+From the repository root, with the existing Manufact and InsForge projects linked:
 
 ```bash
-npm --prefix web run build
-npx -y @insforge/cli deployments deploy ./web
+npm run deploy
 ```
 
-Deploy the `web/` source directory. InsForge builds the Vite app using `web/vercel.json` and returns the hosted URL. The homepage needs no environment variables or backend credentials. To publish the demo with live history, configure `MANUFACT_API_KEY` and `MANUFACT_SERVER_ID` as server environment variables on the deployment; local `.env` files are excluded from uploads. The `/api/requests` Vercel Function must be deployed alongside the static app. A static-only host can serve the homepage but cannot query Manufact securely.
+The root command validates and builds both applications, deploys the MCP server to Manufact, and deploys the `web/` source directory to InsForge. InsForge builds the Vite app using `web/vercel.json` and returns the hosted URL. The homepage needs no environment variables or backend credentials. To publish the demo with live history, configure `MANUFACT_API_KEY` and `MANUFACT_SERVER_ID` as server environment variables on the deployment; local `.env` files are excluded from uploads. The `/api/requests` Vercel Function must be deployed alongside the static app. A static-only host can serve the homepage but cannot query Manufact securely.
 
 ## Code map
 

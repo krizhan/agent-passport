@@ -42,8 +42,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
+# Legacy local compiler output
 .trade-build/
-
-# Marketing demo compiler output
 .marketing-build/
