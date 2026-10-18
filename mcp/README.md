@@ -1,10 +1,12 @@
 # Customs · Agent Passport
 
-Five advisory MCP tools, built with mcp-use v2. Scenario-based trade, purchase readiness, marketing review, and U.S. restricted-party screening have separate public input schemas. No backend, database, API key, or environment variables are required. Screening works offline against the bundled official JSON snapshot. Only the optional manual refresh command needs outbound HTTPS.
+Seven advisory MCP tools, built with mcp-use v2. Scenario-based trade, purchase readiness, marketing review, and U.S. restricted-party screening have separate public input schemas. No backend, database, API key, or environment variables are required. Screening works offline against the bundled official JSON snapshot. Only the optional manual refresh command needs outbound HTTPS.
 
 | Tool | Inputs and behavior |
 | --- | --- |
 | `check_import_export` | Product and route → combined scenario rules, import/export/transit findings, party screening, evidence/document gaps, sources and next steps. |
+| `open_food_import_review` | Known US-bound food shipment → one interactive evidence form and initial trade assessment. |
+| `submit_food_import_review` | Original shipment and supplied form evidence → updated trade assessment, prior-notice review checklist and workflow status. |
 | `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
 | `get_import_export_remediation_plan` | Purchase inputs → original readiness checklist, optional budget comparison and next steps. |
 | `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
@@ -23,6 +25,42 @@ npm run dev
 ```
 
 Open http://localhost:3000/mcp/inspector. If that port is occupied, use `npm run dev -- --port 3011` and the matching Inspector URL.
+
+## Food-import MCP App
+
+In the Inspector, call `open_food_import_review` with:
+
+```json
+{
+  "shipment": {
+    "product": "Packaged roasted coffee beans",
+    "from_country": "DO",
+    "to_country": "US",
+    "product_category": "food_agriculture"
+  }
+}
+```
+
+The form collects food/manufacturer facts, manufacturing origin, a proposed customs code and classification evidence, document references, and prior-notice confirmation or a supported non-applicability statement. Prefill only known facts; blank fields remain unknown. Existing shipment parties, end use, quantities, documents and other supplied inputs are retained. Use the original `shipment` when resubmitting, so removing a newly added form reference does not silently retain it from an earlier recheck.
+
+1. The calling agent opens the tool. In a host supporting MCP Apps, its tool result renders the form in a sandboxed UI. Every client also receives structured JSON and a text summary.
+2. The user fills in the form. Unsubmitted edits are React state in that mounted form, not automatically shared with the agent.
+3. **Recheck evidence** calls the data-only `submit_food_import_review` tool through the host bridge. It adds supplied references, preserves original expiration dates, reruns the actual trade evaluator, and displays unresolved inputs, documents and route coverage. This does not upload/authenticate documents or submit FDA filings.
+4. Where the host supports model-context updates, the latest submitted result is made available for future model turns. **Share result with agent** explicitly sends the submitted facts and remaining review steps as a follow-up message. The host decides whether to accept it. Changed drafts require another recheck before sharing. Hosts without follow-up support offer selectable JSON to copy into chat.
+5. The agent can explain outstanding work and use its other tools within the user's instructions. `READY_FOR_REVIEW` means the modeled evidence is assembled; human review, unsupported route sides and all transaction-authorization limits remain explicit.
+
+Clients without MCP Apps can collect the same facts conversationally and call `submit_food_import_review` with `{ "shipment": { ... }, "evidence": { ... } }`; inspect the tool input schema for evidence keys. Omitted evidence fields retain known shipment facts; explicit blanks clear form-managed facts back to unknown. The prior-notice checklist supplements the existing FDA applicability rule; it does not establish applicability from a broad food category or resolve the broader assessment merely because a confirmation reference is supplied.
+
+This first form has no durable case store, external lookup, file upload or reviewer identity verification. Its recheck is read-only with respect to business systems. Returned results can be retained by the calling client; reloading the UI does not retrieve a saved case.
+
+Run `npx mcp-use typecheck`, `npm run typecheck`, and `npm run build` after View changes. The View lives in `views/food-import-review/`; its contracts and evaluator adapter live in `src/food-review/`. For a real rendered capture:
+
+```bash
+npx mcp-use screenshot --mcp http://127.0.0.1:3000/mcp \
+  --tool open_food_import_review \
+  '{"shipment":{"product":"Packaged roasted coffee beans","from_country":"DO"}}' \
+  --output /tmp/food-import-review.png
+```
 
 ## Import and export scenarios
 
@@ -167,7 +205,7 @@ Snapshots marked `STALE` can still return `POTENTIAL_MATCH` or `NO_CANDIDATES`, 
 
 ## Code and verification
 
-- `index.ts`: five public tools, distinct trade/purchase/marketing/screening schemas, and MCP envelopes.
+- `index.ts`: seven public tools, distinct trade/purchase/marketing/screening schemas, and MCP envelopes.
 - `src/schemas.ts`, `src/countries.ts`: shared action/result schemas and country validation.
 - `src/router/`: policy registration, selection, and reasons.
 - `src/policies/`: independent `us-import`, `general-purchase`, `general-marketing`, and `us-restricted-party` packs.

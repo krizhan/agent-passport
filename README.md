@@ -36,4 +36,6 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000/mcp/inspector to call the five tools. The server requires no backend or environment variables; screening works offline with the bundled snapshot. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.
+Open http://localhost:3000/mcp/inspector to call the seven tools. The server requires no backend or environment variables; screening works offline with the bundled snapshot. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.
+
+For the interactive food-import evidence form, call `open_food_import_review`. Its recheck uses `submit_food_import_review`, and supporting hosts can share the submitted evidence and remaining steps with the calling agent. See the [MCP App workflow](mcp/README.md#food-import-mcp-app).
