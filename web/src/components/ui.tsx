@@ -73,7 +73,7 @@ export function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 }
 export function Logo() {
   return (
-    <a className="logo" href="#overview" aria-label="Agent Passport home">
+    <a className="logo" href="/#overview" aria-label="Agent Passport home">
       <img src="/icon.svg" width="34" height="34" alt="" />
       <span>
         Agent Passport<span className="logo-period">.</span>

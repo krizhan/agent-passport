@@ -123,6 +123,17 @@ button:focus-visible {
 }
 .brand-line {
   padding-top: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand-line .button {
+  padding: 10px 14px;
+  min-height: 44px;
+  gap: 8px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 .overview-layout {
   display: grid;
@@ -207,6 +218,16 @@ button:focus-visible {
 }
 .button-blue:hover {
   background: #1946b9;
+}
+.button-demo {
+  color: var(--ink);
+  background: transparent;
+  border-color: #b8c4d0;
+  border-radius: 999px;
+}
+.button-demo:hover {
+  background: #eaf0f6;
+  border-color: #8fa2b9;
 }
 .supporting-line {
   display: flex;
