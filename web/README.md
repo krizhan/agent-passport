@@ -1,10 +1,11 @@
 # Agent Passport web app
 
-A simple React + TypeScript homepage with exactly three sections and no navigation bar:
+A simple React + TypeScript homepage with exactly four sections and no navigation bar:
 
-1. **Tool overview:** international compliance for autonomous AI agents and the MCP connection. Two equally styled buttons link to the use cases. A compact purchase flow shows food import requirements being flagged and the agent holding the order while gathering filing details for a recheck.
+1. **Tool overview:** international compliance for autonomous AI agents and the MCP connection. Three equally styled buttons link to the use cases. A compact purchase flow shows food import requirements being flagged and the agent holding the order while gathering filing details for a recheck.
 2. **Import and export:** the default illustration follows a packaged coffee order from the Dominican Republic to a US store. The missing FDA prior notice confirmation is flagged, the agent gets instructions for arranging the filing, and the order is held. The export tab shows technical details needed before a controller shipment to Germany. Each example links to official guidance.
-3. **Marketing:** a promotional email to customers in Canada is held because its unsubscribe option and proof of consent are missing. The agent receives specific corrections and rechecks before sending. The example links to CRTC guidance.
+3. **Marketing:** the original Canadian promotional-email illustration shows missing unsubscribe and consent evidence, with next steps before sending. It links to CRTC guidance.
+4. **Restricted-party screening:** an overseas supplier is checked against the U.S. Consolidated Screening List before an order. A possible name match prompts identity and source-agency restriction review. The illustration links to official Trade.gov guidance and does not imply that a name match confirms identity or that no candidates clears a transaction.
 
 Each use-case section has a general overview followed by a written example directly below it, with a supporting illustration alongside.
 
@@ -39,28 +40,16 @@ These are **server-only** values. Never use `VITE_` prefixes for credentials. Re
 
 Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules resolve correctly. Vite resolves these imports to the TypeScript source during local development.
 
-- Show at most the **latest 10 import/export requests and latest 10 marketing requests** with captured inputs and readable results. The **Requests** demo switches only between **Import & export** and **Marketing**. It has no all-requests view, counts, summary cards, gateway status, refresh button, or advanced filters. It uses the latest seven days of retained activity.
+- Show at most the **latest 10 requests in each of import/export, marketing, and screening** with captured inputs and readable results. The **Requests** demo switches between **Import & export**, **Marketing**, and **Restricted parties**. It has no all-requests view, counts, summary cards, gateway status, refresh button, or advanced filters. It uses the latest seven days of retained activity.
 - Open a request to read the original action, assessment, policy pack/version, routing explanation, requirements, source links, and next steps.
 - Auto-refresh replaces the feed every 20 seconds while the tab is visible; there is no older-history pagination.
-- The API scans gateway pages newest first until both categories have 10 requests with captured details or retained history ends. Scans are bounded to 10 pages of 100 events and 12 seconds; the API reports whether the scan limit was reached. Other protocol traffic and calls without captured inputs or readable results are excluded before applying the category limit.
-- A successful HTTP/tool call is separate from the compliance outcome. Budget limits are shown as caller constraints, and the UI does not claim a purchase or email was executed.
+- The API scans gateway pages newest first until all three categories have 10 requests with captured details or retained history ends. Scans are bounded to 10 pages of 100 events and 12 seconds; the API reports whether the scan limit was reached. Other protocol traffic and calls without captured inputs or readable results are excluded before applying the category limit.
+- A successful HTTP/tool call is separate from the compliance outcome. Budget limits are shown as caller constraints, and the UI does not claim a business action was executed.
 - Historical `purchase` responses and text/SSE captures are supported. Calls without captured details are hidden. Missing routing, general policy fallbacks, and captured tool errors remain explicit in the request details. Old results are never recomputed using today’s policy rules.
 
 Manufact’s [gateway events API](https://manufact.com/openapi.json) is read with a bearer token on the server. [Payload capture](https://docs.manufact.com/dashboard/observability) must have been enabled when a request happened to recover its inputs and outputs. Metadata-only history cannot be reconstructed. History retention is controlled by the Manufact plan. The endpoint returns a projection of compliance fields; it excludes gateway headers, IP addresses, actor IDs, and raw request/response bodies.
 
-## What to test
-
-1. Confirm there are three sections: overview, import/export, and marketing. The top has a wordmark and no navigation bar or coverage notes.
-2. Confirm **Import & export** and **Marketing** have matching button styles and follow them to their sections.
-3. Read the overview illustration: the agent holds the food order, gathers filing details, and rechecks before buying.
-4. Switch **Import example / Export example**. The import example shows coffee from the Dominican Republic to the US, explains the FDA prior notice requirement before arrival, and tells the agent to arrange the filing and return the confirmation. The export example flags missing technical details and keeps the shipment held pending review. Source links change with the example.
-5. Confirm the marketing example explains what the agent was asked to send, why Canada’s rules flag the missing unsubscribe option, and how to resolve both that and missing consent evidence before rechecking. The send stays on hold.
-6. At a 375 px width, check readable text, stacked layouts, trade-example buttons, status labels, and no horizontal page overflow.
-7. Use Tab and Enter/Space to operate the section links and example buttons. Check reduced-motion preferences.
-
-All examples are synthetic and illustrative. This homepage runs no compliance checks and performs no business actions.
-
-The food and marketing requirements shown here are presentation examples. They do not expand the current MCP server’s coverage.
+All examples are synthetic and illustrative. The homepage performs no business actions. The food-import and marketing illustrations describe product workflows; the marketing MCP tool currently returns general review tasks, while restricted-party screening performs a U.S. CSL name search.
 
 ## Check and build
 
@@ -93,8 +82,8 @@ Deploy the `web/` source directory. InsForge builds the Vite app using `web/verc
 - `server/normalize.ts`: captured gateway payloads to readable compliance records.
 - `server/requests-handler.ts` and `api/requests.ts`: bounded, server-side Manufact reads.
 - `vite.config.ts`: local API middleware for development and production preview.
-- `src/components/Home.tsx`: the three sections and illustrative import/export switch.
-- `src/components/Illustrations.tsx`: static purchase follow-up and campaign compliance illustrations.
+- `src/components/Home.tsx`: the four sections and illustrative import/export switch.
+- `src/components/Illustrations.tsx`: static purchase follow-up, marketing, and restricted-party screening illustrations.
 - `src/components/ui.tsx`: wordmark, icons, and status labels.
 - `src/styles.css`: responsive styles, bundled fonts, and reduced motion.
 - `src/illustrations.css`: readable, responsive illustration layouts and trade requirement panels.

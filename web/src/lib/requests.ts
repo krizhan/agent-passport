@@ -1,5 +1,6 @@
 export type Outcome = "BLOCK" | "NEEDS_EVIDENCE" | "REVIEW" | "CHECKLIST" | "ERROR" | "UNAVAILABLE";
-export type Category = "trade" | "marketing" | "unknown";
+export const REQUEST_CATEGORIES = ["trade", "marketing", "screening"] as const;
+export type Category = typeof REQUEST_CATEGORIES[number] | "unknown";
 export const REQUEST_LIMIT_PER_CATEGORY = 10;
 
 export interface RequestRecord {
@@ -20,6 +21,13 @@ export interface RequestRecord {
     kind: string | null;
   };
   facts: { label: string; value: string }[];
+  screening?: {
+    status: string | null;
+    totalMatches: number | null;
+    truncated: boolean;
+    error: string | null;
+    candidates: { id: string; name: string; source: string; matchedName: string | null; sourceUrl: string | null }[];
+  };
   requirements: {
     id: string;
     title: string;
@@ -42,7 +50,7 @@ export interface RequestPage {
 }
 
 export function latestRequests(records: RequestRecord[]): RequestRecord[] {
-  const counts = { trade: 0, marketing: 0 };
+  const counts = { trade: 0, marketing: 0, screening: 0 };
   const seen = new Set<string>();
   return [...records].sort((a, b) => Date.parse(b.time) - Date.parse(a.time) || a.id.localeCompare(b.id))
     .filter((record) => {
@@ -67,4 +75,5 @@ export const policyLabels: Record<string, string> = {
   "us-import": "US import readiness",
   "general-purchase": "International purchase review",
   "general-marketing": "Marketing email review",
+  "us-restricted-party": "U.S. restricted-party screening",
 };

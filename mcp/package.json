@@ -5,8 +5,8 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.5.0",
-  "description": "Advisory cross-border purchase MCP with requirements, checks, and remediation",
+  "version": "0.7.0",
+  "description": "Advisory purchase and marketing checks with U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {
     "build": "mcp-use build",

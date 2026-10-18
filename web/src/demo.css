@@ -26,7 +26,11 @@
 .demo-request-main { display: flex; align-items: start; gap: 14px; min-width: 0; }
 .demo-request-main > span:last-child { min-width: 0; }
 .demo-type-icon { color: #6a826b; background: #eff4eb; width: 36px; height: 36px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; border-radius: 8px; margin-top: 2px; }
-.demo-type-marketing { background: #edf2fa; color: #647fbb; }
+.demo-type-screening, .demo-type-marketing { background: #edf2fa; color: #647fbb; }
+.demo-screening-results { margin: 16px 0; overflow-wrap: anywhere; }
+.demo-screening-results article { padding: 12px 0; border-top: 1px solid #e2e7ed; }
+.demo-screening-results article p { margin: 4px 0; }
+.demo-screening-results a { color: #446da6; display: inline-flex; align-items: center; gap: 5px; }
 .demo-type-unknown { background: #f0f2f0; color: #7c877d; }
 .demo-request-main strong { display: block; font-size: 13px; font-weight: 550; line-height: 1.55; color: #263f30; overflow-wrap: anywhere; }
 .demo-request-route { display: block; font-size: 11px; color: #6c7e6f; margin-top: 3px; }

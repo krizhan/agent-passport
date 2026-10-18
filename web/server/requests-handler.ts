@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { normalizeEvent } from "./normalize.js";
-import { latestRequests, REQUEST_LIMIT_PER_CATEGORY, type RequestPage, type RequestRecord } from "../src/lib/requests.js";
+import { latestRequests, REQUEST_CATEGORIES, REQUEST_LIMIT_PER_CATEGORY, type RequestPage, type RequestRecord } from "../src/lib/requests.js";
 
 export type GatewayConfig = { apiKey?: string; serverId?: string };
 
@@ -33,7 +33,7 @@ export async function handleRequests(
   const url = new URL(`https://cloud.manufact.com/api/v1/servers/${encodeURIComponent(config.serverId)}/gateway-events`);
   url.searchParams.set("startTime", startTime);
   url.searchParams.set("limit", "100");
-  // Scan newest-first pages until both categories are full or history ends.
+  // Scan newest-first pages until all three categories are full or history ends.
   // Cap each scan at 1,000 gateway events and 12 seconds. Some
   // gateway deployments return no rows when using the exact `method` filter.
   try {
@@ -64,7 +64,7 @@ export async function handleRequests(
         if (record && !records.has(record.id)) records.set(record.id, record);
       }
       selected = latestRequests([...records.values()]);
-      categoriesFull = selected.length === REQUEST_LIMIT_PER_CATEGORY * 2;
+      categoriesFull = selected.length === REQUEST_LIMIT_PER_CATEGORY * REQUEST_CATEGORIES.length;
       nextCursor = typeof data.nextCursor === "string" && data.nextCursor ? data.nextCursor : null;
       if (categoriesFull || !nextCursor) break;
       if (cursors.has(nextCursor)) return send(502, { error: "Manufact returned an unreadable history cursor." });

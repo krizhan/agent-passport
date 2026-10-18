@@ -6,15 +6,15 @@ Built for Y Combinator's [Make Something Agents Want](https://events.ycombinator
 
 The initial direction is to help agents discover jurisdiction-specific compliance requirements and return structured results with links to their sources.
 
-Project status: the [`mcp/`](./mcp/README.md) app implements three advisory tools—`check_action`, `get_requirements`, and `get_remediation_plan`—for international purchases and marketing emails. Each accepts an `action_type`: `purchase` uses `product`, `from_country`, and `to_country`, with an optional amount and budget; `marketing_email` uses `recipient_country`, with optional recipient count and purpose. Existing inputs without an action type default to purchase. The server returns readiness requirements, available reference links, and next steps; the calling agent executes through its own tools.
+Project status: the [`mcp/`](./mcp/README.md) app implements three advisory purchase tools (`check_action`, `get_requirements`, `get_remediation_plan`) plus separate `check_marketing_email` and `screen_restricted_party` tools. Purchase calls accept `product`, `from_country`, and `to_country`, with optional amount and budget; omitted action types still default to purchase. Marketing accepts a recipient country and optional recipient count and purpose, returning the original general review checklist. Screening accepts a party name and optional aliases, country, and address, downloads the official public U.S. Consolidated Screening List, and returns possible matches, source provenance, and review steps. No backend or API key is required; screening requires outbound HTTPS.
 
-The [policy router](./mcp/README.md#policy-routing) selects a US import, general international purchase, or general marketing review pack and explains the selection in every tool response. Each pack stores metadata, requirements, and sources in separate files under `mcp/src/policies/`; domestic purchases return an unsupported routing result and request review. Marketing currently uses a general checklist requiring human review rather than a country-specific legal implementation.
+The [policy router](./mcp/README.md#purchase-checks) selects a US import, general purchase, general marketing, or U.S. restricted-party pack. Screening uses actual downloaded records rather than a static checklist. Source failures and stale/incomplete data return `UNAVAILABLE`; no candidates is not transaction clearance. The caller remains responsible for business actions.
 
 ## Product homepage
 
 Live website: [Agent Passport](https://vubsb6rq.insforge.site/).
 
-The Agent Passport homepage lives in [`web/`](./web/README.md). It has three sections: an international compliance overview, import/export checks, and marketing requirements. Homepage examples are illustrative. An outlined **History** button at the top right opens `/demo`, which shows the latest 10 captured requests per category (marketing and import/export) from Manufact, with advisory results, recorded policy explanations, source links, and simple category tabs. The demo uses server-only Manufact credentials and hides calls without captured details.
+The Agent Passport homepage lives in [`web/`](./web/README.md). It has four sections: overview, import/export, marketing, and restricted-party screening. Examples are illustrative. The separate `/demo` page reads real captured tool history from Manufact, showing at most the latest 10 requests per category (trade, marketing, and screening), with assessments, policy explanations, sources, and category tabs. Historical marketing requests remain readable. The demo uses server-only Manufact credentials and hides calls without captured details.
 
 ```bash
 cd web
@@ -34,4 +34,4 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000/mcp/inspector to call the tools. No backend or environment variables are required. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment instructions.
+Open http://localhost:3000/mcp/inspector to call the five tools. The server requires no backend or environment variables; screening requires outbound HTTPS. See [`mcp/README.md`](./mcp/README.md) for inputs, expected results, and deployment commands.

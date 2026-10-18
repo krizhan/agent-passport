@@ -1,5 +1,5 @@
 .agent-flow,
-.campaign-review-card {
+:is(.screening-review-card, .campaign-review-card) {
   background: #fff;
   border: 1px solid #d8e0e9;
   border-radius: 12px;
@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 .agent-flow,
-.campaign-review {
+:is(.screening-review, .campaign-review) {
   min-width: 0;
   width: 100%;
 }
@@ -35,7 +35,7 @@
 }
 .agent-plan small,
 .check-exchange small,
-.campaign-plan small,
+:is(.screening-plan, .campaign-plan) small,
 .trade-required > small {
   display: block;
   color: #5f7290;
@@ -106,7 +106,7 @@
   margin-top: 4px;
 }
 .trade-example .badge,
-.campaign-review .badge {
+:is(.screening-review, .campaign-review) .badge {
   font-size: 10px;
   padding: 5px 7px;
 }
@@ -213,7 +213,7 @@
 .trade-hold > svg {
   margin-top: 1px;
 }
-.campaign-review-body {
+:is(.screening-review-body, .campaign-review-body) {
   padding: 22px;
 }
 .review-title {
@@ -229,43 +229,43 @@
   letter-spacing: -0.7px;
   line-height: 1.4;
 }
-.campaign-plan {
+:is(.screening-plan, .campaign-plan) {
   margin-top: 20px;
   padding: 13px;
   border-radius: 6px;
   background: #f5f8fd;
 }
-.campaign-plan p {
+:is(.screening-plan, .campaign-plan) p {
   margin-top: 5px;
   font-size: 13px;
   line-height: 1.75;
   color: #465d7e;
 }
-.campaign-issues {
+:is(.screening-issues, .campaign-issues) {
   list-style: none;
   margin: 4px 0 0;
   padding: 0;
 }
-.campaign-issues li {
+:is(.screening-issues, .campaign-issues) li {
   padding-block: 18px;
   border-bottom: 1px solid #e7ecf3;
 }
-.campaign-issues li:last-child {
+:is(.screening-issues, .campaign-issues) li:last-child {
   border-bottom: 0;
 }
-.campaign-issues h4 {
+:is(.screening-issues, .campaign-issues) h4 {
   font-size: 13px;
   font-weight: 600;
   line-height: 1.65;
   color: var(--ink);
 }
-.campaign-issues p {
+:is(.screening-issues, .campaign-issues) p {
   color: #61728a;
   font-size: 12px;
   line-height: 1.75;
   margin-top: 5px;
 }
-.campaign-next-step {
+:is(.screening-next-step, .campaign-next-step) {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -275,14 +275,14 @@
   border-radius: 6px;
   color: #365b93;
 }
-.campaign-next-step > svg {
+:is(.screening-next-step, .campaign-next-step) > svg {
   margin-top: 2px;
 }
-.campaign-next-step strong {
+:is(.screening-next-step, .campaign-next-step) strong {
   font-size: 12px;
   font-weight: 600;
 }
-.campaign-next-step p {
+:is(.screening-next-step, .campaign-next-step) p {
   font-size: 12px;
   line-height: 1.75;
   margin-top: 3px;
@@ -299,7 +299,7 @@
   }
   .agent-flow,
   .trade-example,
-  .campaign-review {
+  :is(.screening-review, .campaign-review) {
     max-width: 560px;
     margin-inline: auto;
   }
@@ -332,11 +332,11 @@
   .trade-required {
     padding: 14px;
   }
-  .campaign-issues .finding-heading {
+  :is(.screening-issues, .campaign-issues) .finding-heading {
     flex-wrap: wrap;
     gap: 7px;
   }
-  .campaign-review-body {
+  :is(.screening-review-body, .campaign-review-body) {
     padding: 18px 16px;
   }
   .review-title h3 {
