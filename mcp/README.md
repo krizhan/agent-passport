@@ -81,7 +81,7 @@ npm run typecheck
 npm run build
 ```
 
-Commit both JSON files and redeploy to publish a refreshed snapshot. Tool calls never update the snapshot automatically.
+Commit the JSON, metadata, and compressed copy and redeploy to publish a refreshed snapshot. Tool calls never update the snapshot automatically. The compressed copy fits Manufact's 25 MiB source-file limit; `npm run build` verifies and restores the raw JSON before bundling it.
 
 | `screening.status` | Meaning | Overall decision |
 | --- | --- | --- |
@@ -149,5 +149,5 @@ Existing endpoint: https://bold-cloud-g95ht.run.mcp-use.com/mcp
 Deployment is separate from local implementation. From `mcp/`, when deployment is requested:
 
 ```bash
-npx -y mcp-use@latest deploy --no-github -y
+npm run deploy -- --no-github -y --build-command "npm run build"
 ```

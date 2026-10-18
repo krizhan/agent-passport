@@ -1,8 +1,10 @@
 import { createHash } from "node:crypto";
 import { readFile, writeFile, rename } from "node:fs/promises";
+import { gzipSync } from "node:zlib";
 
 const sourceUrl = "https://data.trade.gov/downloadable_consolidated_screening_list/v1/consolidated.json";
 const snapshotUrl = new URL("../data/consolidated-screening-list.json", import.meta.url);
+const archiveUrl = new URL("../data/consolidated-screening-list.json.gz", import.meta.url);
 const metadataUrl = new URL("../data/consolidated-screening-list.meta.json", import.meta.url);
 const previous = JSON.parse(await readFile(snapshotUrl, "utf8"));
 const response = await fetch(sourceUrl, { signal: AbortSignal.timeout(60_000), redirect: "error" });
@@ -35,9 +37,12 @@ const metadata = {
   sha256: checksum(content), upstream_sha256: checksum(original),
 };
 const temporarySnapshot = new URL(snapshotUrl.href + ".tmp");
+const temporaryArchive = new URL(archiveUrl.href + ".tmp");
 const temporaryMetadata = new URL(metadataUrl.href + ".tmp");
 await writeFile(temporarySnapshot, content);
+await writeFile(temporaryArchive, gzipSync(content, { level: 9 }));
 await writeFile(temporaryMetadata, JSON.stringify(metadata, null, 2) + "\n");
 await rename(temporarySnapshot, snapshotUrl);
+await rename(temporaryArchive, archiveUrl);
 await rename(temporaryMetadata, metadataUrl);
 console.log(`Updated bundled CSL: ${metadata.records} records, ${metadata.sources} sources, generated ${metadata.dataset_generated_at}. Rebuild and redeploy to publish it.`);

@@ -4,7 +4,7 @@ import { evaluationSchema, marketingInputSchema, marketingEvaluationSchema, requ
 import { screenRestrictedParty, screeningEvaluationSchema } from "./src/screening/index.js";
 
 const server = new MCPServer({
-  name: "agent-passport", title: "Customs · Agent Passport", version: "0.8.0",
+  name: "agent-passport", title: "Customs · Agent Passport", version: "0.8.1",
   description: "Advisory international purchase and marketing checks, plus point-in-time U.S. restricted-party screening.",
   instructions: "Use get_requirements, check_action, and get_remediation_plan for purchases with product, from_country, and to_country; action_type defaults to purchase. Optional amount and budget must use the same currency and units. Use check_marketing_email with recipient_country and optional recipient_count and purpose for a general review checklist covering permission, sender identification, and unsubscribe handling. Marketing always requires review and does not inspect consent records or email content. Use screen_restricted_party with name, optional aliases, country, and address. It screens names and aliases against a bundled U.S. CSL JSON snapshot without network access and returns candidate records, snapshot date/age, provenance, and review steps. Report stale snapshots explicitly; they must be refreshed and redeployed to include later list changes. Country never excludes candidates. A possible name match is not a confirmed identity; no candidates is not transaction clearance. Invalid or incomplete bundled data returns UNAVAILABLE. No business actions are authorized or executed.",
 });

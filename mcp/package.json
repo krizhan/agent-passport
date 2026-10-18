@@ -5,10 +5,11 @@
   "engines": {
     "node": ">=22.22.2"
   },
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Advisory purchase and marketing checks with U.S. restricted-party screening",
   "license": "MIT",
   "scripts": {
+    "prebuild": "node scripts/prepare-screening-list.mjs",
     "build": "mcp-use build",
     "dev": "mcp-use dev",
     "start": "mcp-use start",
