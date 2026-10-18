@@ -5,7 +5,7 @@ Five advisory MCP tools, built with mcp-use v2. Purchase readiness, marketing re
 | Tool | Inputs and behavior |
 | --- | --- |
 | `get_import_export_requirements` | Purchase inputs → destination-scoped readiness checklist and source links. |
-| `check_import_export` | Purchase inputs → review needs, optional budget comparison, and remediation. |
+| `check_import_export` | Product and route → compliance review needs and remediation. |
 | `get_import_export_remediation_plan` | Purchase inputs → the same evaluation and next steps as `check_import_export`. |
 | `check_marketing_email` | Recipient country and optional count/purpose → general permission, sender-identification, and unsubscribe review checklist. |
 | `screen_restricted_party` | Party name and optional aliases/country/address → bundled U.S. CSL snapshot search, provenance, and review steps. |
@@ -103,7 +103,7 @@ All three purchase tools accept:
 }
 ```
 
-Product and both countries are required. The tool selects the workflow; `action_type` is rejected in public inputs and added internally for routing. Optional `amount` and `budget` must use the same currency and units; both are nonnegative numbers and zero is allowed. No currency conversion occurs. Unknown fields and screening fields are rejected.
+Product and both countries are required. The tool selects the workflow; `action_type` is rejected in public inputs and added internally for routing. Unknown fields and screening fields are rejected.
 
 | Route | Policy | Routing kind |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ Product and both countries are required. The tool selects the workflow; `action_
 | Separate marketing tool, any recipient country | `general-marketing` | `general` |
 | Separate screening tool, any party country | `us-restricted-party` | `list_screening` |
 
-Purchase requirement checks remain advisory. Amount above budget → `BLOCK`; budget without amount → `NEEDS_EVIDENCE`; other valid purchase inputs → `REVIEW`. Product names are retained without classification. Purchase results retain both `action` and legacy `purchase`; screening results have `action` and `screening`.
+Purchase requirement checks remain advisory. Valid checks return `REVIEW` with the applicable requirements and next steps; missing or invalid required inputs are rejected. Product names are retained without classification. Purchase results retain both `action` and legacy `purchase`; screening results have `action` and `screening`.
 
 Countries use the local `iso-3166` dataset, pinned to `4.4.0`. Whitespace/lowercase normalize; assigned territory codes are accepted. Three-letter, obsolete, unassigned, `UK`, and `XK` codes are rejected. A recognized country does not imply jurisdiction-specific policy coverage.
 

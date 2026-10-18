@@ -132,8 +132,6 @@ export function normalizeEvent(raw: unknown): RequestRecord | null {
     fact("Product", string(action.product, 500));
     fact("Ships from", country(action.from_country));
     fact("Destination", country(action.to_country));
-    fact("Purchase amount", number(action.amount)?.toLocaleString("en-US") ?? null);
-    fact("Submitted budget", number(action.budget)?.toLocaleString("en-US") ?? null);
   }
   const requirements = list(data.requirements).slice(0, 50).map((raw, index) => {
     const item = object(raw);

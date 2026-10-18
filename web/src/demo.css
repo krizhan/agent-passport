@@ -53,7 +53,6 @@
 .demo-facts > div { display: grid; grid-template-columns: 115px 1fr; gap: 15px; font-size: 11px; line-height: 1.65; }
 .demo-facts dt { color: #8a9783; }
 .demo-facts dd { margin: 0; color: #425a3f; overflow-wrap: anywhere; }
-.demo-detail .demo-fact-note { font-size: 10px; color: #9a9f8e; margin-top: 15px; }
 .demo-detail .demo-result-summary { color: #455c40; font-size: 13px; }
 .demo-detail .demo-execution { display: flex; align-items: start; gap: 7px; color: #8c987f; font-size: 10px; margin-top: 10px; }
 .demo-execution svg { margin-top: 2px; }

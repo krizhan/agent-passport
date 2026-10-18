@@ -44,7 +44,7 @@ Server modules use `.js` import specifiers so Vercel’s emitted Node.js modules
 - Open a request to read the original action, assessment, policy pack/version, routing explanation, requirements, source links, and next steps.
 - Auto-refresh replaces the feed every 20 seconds while the tab is visible; there is no older-history pagination.
 - The API scans gateway pages newest first until all three categories have 10 requests with captured details or retained history ends. Scans are bounded to 10 pages of 100 events and 12 seconds; the API reports whether the scan limit was reached. Other protocol traffic and calls without captured inputs or readable results are excluded before applying the category limit.
-- A successful HTTP/tool call is separate from the compliance outcome. Budget limits are shown as caller constraints, and the UI does not claim a business action was executed.
+- A successful HTTP/tool call is separate from the compliance outcome. The UI reports recorded compliance outcomes and does not claim a business action was executed.
 - Historical `purchase` responses and text/SSE captures are supported. Calls without captured details are hidden. Missing routing, general policy fallbacks, and captured tool errors remain explicit in the request details. Old results are never recomputed using today’s policy rules.
 - The trade tools are `check_import_export`, `get_import_export_requirements`, and `get_import_export_remediation_plan`. Their inputs have no `action_type`; the tool selects the workflow. Previously recorded calls under the old generic tool names remain readable in history.
 

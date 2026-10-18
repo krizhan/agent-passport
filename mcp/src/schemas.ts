@@ -2,7 +2,6 @@ import { z } from "zod";
 import { countrySchema } from "./countries.js";
 
 const text = z.string().trim().min(1).max(500);
-const money = z.number().nonnegative().max(Number.MAX_SAFE_INTEGER);
 
 export const marketingInputSchema = z.object({
   recipient_country: countrySchema.describe("Recipient country/territory as an assigned ISO 3166-1 alpha-2 code. Submit a separate check for each country."),
@@ -19,8 +18,6 @@ export const purchaseInputSchema = z.object({
   product: text.describe("Required for purchase: what you want to purchase"),
   from_country: countrySchema.describe("Required for purchase: shipping country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
   to_country: countrySchema.describe("Required for purchase: destination country/territory as an assigned ISO 3166-1 alpha-2 code, such as US or GB. Whitespace and lowercase are normalized; UK and XK are rejected."),
-  amount: money.optional().describe("Optional purchase total, in the same currency and units as budget"),
-  budget: money.optional().describe("Optional spending limit, in the same currency and units as amount; zero is allowed"),
 }).strict();
 
 export const purchaseSchema = purchaseInputSchema.extend({
@@ -51,7 +48,7 @@ export const requirementSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  basis: z.enum(["assessment_input", "legal_readiness", "purchase_constraint"]),
+  basis: z.enum(["assessment_input", "legal_readiness"]),
   source_url: z.url().nullable(),
 });
 
